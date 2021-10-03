@@ -1,0 +1,61 @@
+<!DOCTYPE html><html lang="en"><head><title>Licenciamento - Amapá</title><link rel="stylesheet" href="../libs/bootstrap/css/bootstrap.min.css"><style>body {
+	width: 100%;
+	height: 100%;
+	margin: 15px 0 0 0;
+	padding: 0;
+	background-color: #FFFFFF;
+	font-size: 14px;
+	font-family: 'Montserrat',Helvetica,Arial,sans-serif;
+}
+
+.input-group-addon {
+	background-color: #fff;
+	font-weight: bold;
+}
+
+.form-control[disabled] {
+	background-color: #fbfbfb;
+}
+
+.custom-jumbotron {
+	padding-top: 20px;
+	padding-bottom: 0;
+}
+
+.titulo-jumbotron {
+	margin: 0px 0px 15px 5px;
+	font-weight: bold;
+}
+
+span {
+	line-height: 0.7em;
+	text-indent: 1em;
+	margin-bottom: 20px;
+	line-height: 1.5;
+}
+
+.qrlogo {
+	height: 90px;
+	margin: 10px 0 20px 0;
+}
+
+.custom-hr {
+	margin: 15px 0 15px 0;
+}
+
+.margin-jumbotron {
+	margin-bottom: 20px;
+}
+
+.margin-small-jumbotron {
+	margin-bottom: 7px;
+}
+</style><meta charset="UTF-8"></head><body><div class="container-fluid"><div class="text-center"><img class="logo qrlogo" src="${utils.Configuracoes.HTTP_PATH}/images/logo_verde.png"></div><div class="panel panel-default"><div class="panel-body"><div class="jumbotron custom-jumbotron margin-jumbotron"><h4 class="titulo-jumbotron">Sobre a dispensa de licenciamento</h4><hr class="custom-hr"><div class="row"><div class="col-md-6 col-xs-12"><label class="col-md-12 col-xs-12">Número do documento</label><span class="col-md-12 col-xs-12">${dla.numero}</span></div><div class="col-md-6 col-xs-12"><label class="col-md-12 col-xs-12">Data da emissão</label><span class="col-md-12 col-xs-12">${new java.text.SimpleDateFormat("dd/MM/yyyy").format(dla.dataCadastro)}</span></div></div>#{if (dla.ativo == false) && (dlaCancelada != null)}<div class="row"><div class="col-md-6 col-xs-12"><label class="col-md-12 col-xs-12">Situação</label><span class="col-md-12 col-xs-12">Dispensa de Licenciamento Cancelada</span></div><div class="col-md-6 col-xs-12"><label class="col-md-12 col-xs-12">Data de cancelamento</label><span class="col-md-12 col-xs-12">${new java.text.SimpleDateFormat("dd/MM/yyyy").format(dlaCancelada.dataCancelada)}</span></div></div><div class="row"><div class="col-md-12 col-xs-12"><label class="col-md-12 col-xs-12">Cancelada por</label><span class="col-md-12 col-xs-12">${executorCancelamento.pessoa.nome}</span></div></div><div class="row"><div class="col-md-12 col-xs-12"><label class="col-md-12 col-xs-12">Justificativa</label><span class="col-md-12 col-xs-12">${dlaCancelada.justificativa}</span></div></div>#{/if}</div><div class="jumbotron custom-jumbotron margin-small-jumbotron"><h4 class="titulo-jumbotron">Sobre o empreendimento</h4><hr class="custom-hr"><div class="row"><div class="col-md-6 col-xs-12"><label class="col-md-12 col-xs-12">Nome/Razão Social do empreendimento</label><span class="col-md-12 col-xs-12">${dla.caracterizacao.empreendimento.empreendimentoEU.pessoa.tipo.nome == "FISICA" ? dla.caracterizacao.empreendimento.empreendimentoEU.pessoa.nome : dla.caracterizacao.empreendimento.empreendimentoEU.pessoa.razaoSocial}</span></div><div class="col-md-6 col-xs-12"><label class="col-md-12 col-xs-12">CPF/CNPJ do empreendimento</label><span class="col-md-12 col-xs-12">${dla.caracterizacao.empreendimento.cpfCnpj}</span></div></div><div class="row"><div class="col-md-6 col-xs-12"><label class="col-md-12 col-xs-12">Atividade</label>	%{
+
+		for(int contadorAC = 0; contadorAC < dla.caracterizacao.atividadesCaracterizacao.size(); contadorAC++) {
+			ac = dla.caracterizacao.atividadesCaracterizacao[contadorAC];
+	}%<span class="col-md-12 col-xs-12">${ac.atividade.nome}</span>	%{
+
+		}
+
+	}%</div><div class="col-md-6 col-xs-12"><label class="col-md-12 col-xs-12">Município do empreendimento</label><span class="col-md-12 col-xs-12">${dla.caracterizacao.empreendimento.municipio.nome}/${dla.caracterizacao.empreendimento.municipio.estado.codigo}</span></div></div></div></div></div></div></body></html>
