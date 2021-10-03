@@ -1,0 +1,30 @@
+include ../../../../../layout/components/rodapeCadastro
+include ../../../../../layout/components/dynamicInputErrors
+
+#etapa-condicao
+	section
+
+		blockquote
+			div(ng-repeat="ac in cadastro.caracterizacao.atividadesCaracterizacao")
+				h4 Atividade selecionada:
+				h4.atividade {{ac.atividade.nome}}
+				span Tipologia: {{cadastro.tipologia.nome}}
+				div(ng-repeat="cnae in ac.atividadesCnae")
+					div(ng-if="empreendimento.pessoa.cpf")
+						span CNAE: {{cnae.nome}}
+					div(ng-if="empreendimento.pessoa.cnpj")
+						span CNAE: {{cnae.codigo}} - {{cnae.nome}}
+
+		form(name="formInformacoesEnquadramento", novalidate)
+
+			.bs-callout.bs-callout-success.bs-callout--inline-block(ng-repeat="pergunta in etapaCondicoes.perguntas", ng-if="pergunta.ativo == true")
+				h5.obrigatorio {{pergunta.texto}}
+
+				div(ng-class="{'color-red': formInformacoesEnquadramento.$submitted && formInformacoesEnquadramento['resposta-{{pergunta.id}}'].$error.required, 'color-off-black': !formInformacoesEnquadramento.$submitted || !formInformacoesEnquadramento['resposta-{{pergunta.id}}'].$error.required}")
+					.radio(ng-repeat="resposta in pergunta.respostas")
+						label
+							input(type='radio', name='resposta-{{pergunta.id}}', ng-model="etapaCondicoes.respostas[pergunta.id]",
+								ng-value="resposta", required)
+							|  {{resposta.texto}}
+
+		+rodapeCadastro('etapaCondicoes')

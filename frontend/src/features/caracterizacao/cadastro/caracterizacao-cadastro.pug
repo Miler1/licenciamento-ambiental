@@ -1,0 +1,43 @@
+include ../../../layout/components/passos
+
+div#caracterizacao
+
+	h1 {{cadastro.nomePagina()}}
+
+	+passos()
+
+	// Componente dados empreendimento
+	dados-empreendimento(id="cadastro.idEmpreendimento", empreendimento="cadastro.empreendimento")
+
+	div
+
+		div(ng-show="cadastro.etapa.nome === cadastro.etapas.ATIVIDADE.nome", ng-controller='caracterizacaoDLAAtividadeController as etapaAtividade')
+			form(name="formDadosAtividade", novalidate)
+				div
+					include common/selecaoTipoCaracterizacao
+
+					include common/atividade/etapa-atividade
+
+		div(ng-if="cadastro.tipoCaracterizacao === cadastro.tiposCaracterizacao.DI")
+			div(ng-if="cadastro.etapa.nome === cadastro.etapas.GEO.nome", ng-controller='caracterizacaoDLAGeoController as etapaGeo', ng-init="etapaGeo.initGeo()")
+				include dispensa/georeferenciamento/etapa-georeferencimento
+
+			div(ng-show="cadastro.etapa.nome === cadastro.etapas.CONDICOES.nome", ng-controller='caracterizacaoDLACondicoesController as etapaCondicoes')
+				include dispensa/condicao/etapa-condicao
+
+			div(ng-show="cadastro.etapa.nome === cadastro.etapas.ENQUADRAMENTO.nome", ng-controller='caracterizacaoDLAEnquadramentoController as etapaEnquadramento')
+				include dispensa/enquadramento/etapa-enquadramento
+
+		div(ng-if="cadastro.tipoCaracterizacao === cadastro.tiposCaracterizacao.SIMPLIFICADO")
+
+			div(ng-if="cadastro.etapa.nome === cadastro.etapas.GEO.nome", ng-controller='caracterizacaoLSAGeoController as etapaGeo', ng-init="etapaGeo.initGeo()")
+				include simplificado/georeferenciamento/etapa-georeferencimento
+
+			div(ng-show="cadastro.etapa.nome === cadastro.etapas.CONDICOES.nome", ng-controller='caracterizacaoLSACondicoesController as etapaCondicoes')
+				include simplificado/condicao/etapa-condicao
+
+			div(ng-if="cadastro.etapas.DOCUMENTACAO && cadastro.etapa.nome === cadastro.etapas.DOCUMENTACAO.nome", ng-controller='caracterizacaoLASDocumentacaoController as etapaDocumentacao')
+				include simplificado/documentacao/etapa-documentacao
+
+			div(ng-if="cadastro.etapa.nome === cadastro.etapas.ENQUADRAMENTO.nome", ng-controller='caracterizacaoLSAEnquadramentoController as etapaEnquadramento')
+				include simplificado/enquadramento/etapa-enquadramento

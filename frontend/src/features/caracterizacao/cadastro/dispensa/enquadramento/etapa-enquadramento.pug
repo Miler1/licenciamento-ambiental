@@ -1,0 +1,57 @@
+include ../../../../../layout/components/rodapeCadastro
+
+#etapa-enquadramento
+	section
+
+		blockquote
+			h4 DDLA - Declaração de Dispensa de Licenciamento Ambiental
+			div(ng-repeat="ac in cadastro.caracterizacao.atividadesCaracterizacao")
+				h4.atividade {{ac.atividade.nome}}
+				span Tipologia: {{cadastro.tipologia.nome}}
+				div(ng-repeat="cnae in ac.atividadesCnae")
+					div(ng-if="empreendimento.pessoa.cpf")
+						span CNAE: {{cnae.nome}}
+					div(ng-if="empreendimento.pessoa.cnpj")
+						span CNAE: {{cnae.codigo}} - {{cnae.nome}}
+
+		form(name="formInformacoesEnquadramento", novalidate)
+
+			blockquote.success
+				p.text-justify A Secretaria de Estado do Meio Ambiente - SEMA, declara que a(s) atividade(s) econômica(s) formalizada(s) pela pessoa física ou jurídica abaixo identificada não está(ão) prevista(s) na relação de atividades do anexo I do Decreto Estadual n°. 3.009, de 17 de novembro de 1998, portanto, fica a empresa dispensada de realizar o processo de licenciamento ambiental no âmbito estadual.
+
+			blockquote.success
+				h4 Disposições Gerais
+
+				ol.decimal
+				
+					li.text-justify 
+						| Esta declaração não exime o responsável pelo empreendimento de obter junto aos órgãos ambientais competentes outorga para direito de uso de recursos hídricos, autorização para intervenção em área de preservação permanente e supressão de vegetação, registro de cadastro ambiental rural, além de obter anuência do órgão gestor em caso de estar situado no entorno de unidade de conservação;
+					li.text-justify 
+						| O interessado deve atender todos os quesitos da Política Nacional de resíduos sólidos Lei 12.305/2010, especificamente, dar destinação correta aos resíduos sólidos e em hipótese alguma realizar queima ou descarte em áreas públicas, tais como margens de ruas, estradas e rios;
+					li.text-justify
+						| Esta declaração não dispensa nem substitui quaisquer alvarás ou certidões de qualquer natureza exigidos pela Legislação Federal, Estadual ou Municipal;
+					li.text-justify
+						| A dispensa de licenciamento ambiental não desobriga o responsável pela atividade do atendimento às normas de uso e ocupação do solo do município;
+					li.text-justify
+						| Deverá ser mantida uma cópia autenticada ou o original desta Declaração de Dispensa no local da atividade;
+					li.text-justify
+						| Caso haja qualquer alteração na atividade que implique na mudança nas considerações contidas na manifestação que ensejou a emissão desta dispensa, o interessado fica obrigado a requerer a licença ambiental junto ao órgão competente
+					
+			blockquote.success
+
+				h4 Disposições Finais
+
+				ol.lower-alpha
+				
+					li.text-justify Declaro que na qualidade de requerente que as informações por mim fornecidas nesta Declaração de Dispensa de Licenciamento Ambiental - DDLA são VERDADEIRAS e que o empreendimento/atividade ou obra descrita atendo o disposto na relação de atividades do anexo I do Decreto Estadual nº. 3.009, de 17 de novembro de 1998.
+				
+					li.text-justify Fico ciente, através deste documento, que declarar fato que sabe ser inverídico, com a finalidade de fraudar este órgão ambiental, pode vir a constituir em infração na esfera administrativa, civil e penal.
+
+			.col-md-12
+				label.radio-inline
+					input#inlineRadio1(type='radio', ng-click="concordaComResolucao = true")
+					| Declaro que li e estou de acordo com as disposições finais, acima listadas.
+
+			.row
+
+	+rodapeCadastro('etapaEnquadramento')

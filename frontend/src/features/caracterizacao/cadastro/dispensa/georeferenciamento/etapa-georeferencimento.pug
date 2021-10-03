@@ -1,0 +1,28 @@
+include ../../../../../layout/components/rodapeCadastro
+section
+
+	div
+
+		.panel.panel-default
+			.panel-heading
+					h3.panel-title
+						p.no-padding
+							| Para a atividade selecionada, realize o georreferenciamento da área a ser licenciada, utilizando as ferramentas disponíveis.
+
+			.panel-body(ng-if="cadastro.etapa.nome === cadastro.etapas.GEO.nome && etapaGeo.limite")
+				mapa-caracterizacao(
+					geo='etapaGeo.limite', 
+					id-mapa='"mapa-georeferenciamento"',
+					model='cadastro.geometry', 
+					layer-group="etapaGeo.layerGroup", 
+					atividades-caracterizacao="cadastro.caracterizacao.atividadesCaracterizacao",
+					controle-atualizacao="etapaGeo.controleAtualizacao", 
+					is-caracterizacao='true',
+					localizacao-empreendimento="etapaGeo.localizacaoEmpreendimento",
+					is-edicao='false',
+					estilo-geo="etapaGeo.estiloLimite",
+					possui-atividade-rural="etapaGeo.temAtividadeRural()",
+					is-edicao-sem-geo="true",
+					limite-estado="etapaGeo.limite")
+
+		+rodapeCadastro('etapaGeo')

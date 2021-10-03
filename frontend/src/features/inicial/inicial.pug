@@ -1,0 +1,21 @@
+include ../../layout/components/panelAtalhos
+
+h1 Inicial
+
+//- Breadcrumb
+
+article
+
+	p Todas as funcionalidades de acesso da Regularização Ambiental (Solicitação) estão disponíveis abaixo
+	br
+
+
+	div.row
+
+		+panelAtalhos(titulo="Empreendimento", img="images/icones/empreendimento.png")
+			p
+				a(href="#/empreendimentos/listagem") » Pesquisar Empreendimento
+
+		+panelAtalhos(titulo="Solicitação", img="images/icones/caracterizacao.png")
+			p
+				a(href="#/empreendimentos/listagem") » Pesquisar Solicitação

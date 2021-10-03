@@ -1,0 +1,53 @@
+include ../../../layout/components/paginacao
+
+div#caracterizacao
+
+	h1 Renovação de Licença
+
+	hr
+
+	h3 Empreendimento:
+
+	form.form-horizontal
+		.row
+			label.col-sm-3 Empreendedor:
+			.col-sm-9
+				span#empreendedor {{renovarCaracterizacao.empreendimento.empreendedor.pessoa.nome ? renovarCaracterizacao.empreendimento.empreendedor.pessoa.nome : renovarCaracterizacao.empreendimento.empreendedor.pessoa.razaoSocial}}
+		.row(ng-if="renovacao.empreendimento.pessoa.razaoSocial")
+			label.col-sm-3 Razão Social do Empreendimento:
+			.col-sm-9
+				span#razaoEmpreendimento {{renovarCaracterizacao.empreendimento.pessoa.razaoSocial}} ({{renovarCaracterizacao.empreendimento.pessoa.cnpj | brCnpj}})
+		.row(ng-if="renovacao.empreendimento.pessoa.razaoSocial")
+			label.col-sm-3 Nome Fantasia:
+			.col-sm-9
+				span#nomeFantasia {{renovarCaracterizacao.empreendimento.pessoa.nomeFantasia}}
+
+		.row
+			label.col-sm-3 Nome do Empreendimento:
+			.col-sm-9
+				span#nomeEmpreendimento {{renovarCaracterizacao.empreendimento.empreendimentoEU.denominacao}}
+		.row
+			label.col-sm-3 Município:
+			.col-sm-9
+				span#municipio {{renovarCaracterizacao.empreendimento.municipio.nome}} / {{renovarCaracterizacao.empreendimento.municipio.estado.codigo}}
+
+	hr
+	#renovacao-licenca
+		form.form-horizontal
+			.row.row-botao
+				button.btn.btn-renovacao(type='button', ng-click='renovarCaracterizacao.renovarLicencaSemAlteracao()')
+					span Renovar licença sem alteração de dados
+			.row.row-botao
+				button.btn.btn-renovacao(type='button', ng-click='renovarCaracterizacao.renovarLicencaComAlteracoes()')
+					span Renovar licença com alteração de dados
+
+	div.pull-left.col-sm-1
+
+			div.row
+
+				div.col-sm-6
+
+					button.btn.btn-default.btn-default.btn-block.pull-left(ng-click='renovarCaracterizacao.voltarCaracterizacoes(renovarCaracterizacao.empreendimento.id)')
+						i.glyphicon.glyphicon-arrow-left  
+						| &nbsp;Voltar
+						

@@ -1,0 +1,209 @@
+div#body
+    h2 Notificação
+    .panel.panel-default(name='protocolo')
+        .panel-heading
+            h4.panel-title Protocolo
+        .panel-body
+            .grid-container
+                .grid-item
+                    b.texto-inline Número:
+                    span.texto-inline {{caracterizacao.numero}}
+                .grid-item
+                    b.texto-inline CPF/CNPJ:
+                    span.texto-inline {{caracterizacao.cadastrante.cpf || caracterizacao.cadastrante.cnpj}}
+                .grid-item
+                    b.texto-inline Interessado:
+                    span.texto-inline {{caracterizacao.cadastrante.nome || caracterizacao.cadastrante.razaoSocial}}
+                .grid-item
+                    b.texto-inline Município:
+                    span.texto-inline {{caracterizacao.empreendimento.municipio.nome}} - {{caracterizacao.empreendimento.municipio.estado.codigo}}
+
+    .panel.panel-default(name='descricao')
+        .panel-heading
+            h4.panel-title Descrição
+        .panel-body
+            div
+                div.col-ms-12
+                    p.panel-text
+                        | Alertamos ao interessado que deixar de atender as exigências legais ou regulamentares quando devidamente notificado pela autoridade ambiental competente ao prazo concedido, acarretará em sanções previstas no Decreto Federal n° 6.514, de 22 de julho de 2008.
+                    p.panel-text
+                        | Se depois de notificado pela SEMA, o interessado deixar transcorrer mais de 180 (cento e oitenta) dias sem atender a notificação, a solicitação será arquivada, conforme Art. 23, §4° da Lei Estadual n° 3.785/2012.
+                div.col-ms-12
+                    b.row
+                        label Prazo para atendimento da notificação: {{caracterizacao.notificacao.dataFinalNotificacao}}.
+                div
+                    form
+                        .form-group
+                            label(for='descricao') Descrição das solicitações:
+                            span.descricao
+                            textarea#descricao.form-control-justificativa.descricao(ng-if="caracterizacao.notificacao.analiseGeo.parecer != null ",rows='3', ng-model="caracterizacao.notificacao.analiseGeo.parecer", ng-disabled="true")
+                            textarea#descricao.form-control-justificativa.descricao(ng-if="caracterizacao.notificacao.analiseTecnica.parecer != null ",rows='3', ng-model="caracterizacao.notificacao.analiseTecnica.parecer", ng-disabled="true")
+
+                    div(ng-if="documentosNotificacaoGeo.documentos.length > 0")
+                        div.col-md-12
+                            table.table.table-striped
+                                thead
+                                    tr
+                                        th.col-md-11 Arquivos anexados
+                                        th.col-md-1 Ação
+                                tbody
+                                    tr(ng-repeat="documento in documentosNotificacaoGeo.documentos")
+                                        td.panel-text(class="relative")
+                                            div
+                                                | {{documento.nomeDoArquivo}}
+                                            div(ng-class="margin-20", ng-if="documento.tipoDocumento.caminhoModelo")
+                                                a.traditional(ng-Href="{{documento.MODELO_URL + documento.tipoDocumento.caminhoModelo}}", target="_blank") baixar documento
+                                        td(ng-click="")
+                                            div.btn-group
+                                                button.btn.btn-default.btn-xs(title="Clique para baixar o documento",
+                                                    ng-click="download(documento.id)",
+                                                    target="_blank")
+                                                    i.fa.fa-download
+
+                    div.col-ms-12(ng-if="documentosNotificacaoGeo.documentos.length == 0")
+                        label Nenhum arquivo adicionado.
+
+                    div(ng-if="documentosNotificacaoTecnica.documentos.length > 0")
+                        div.col-md-12
+                            table.table.table-striped
+                                thead
+                                    tr
+                                        th.col-md-11 Arquivos anexados
+                                        th.col-md-1 Ação
+                                tbody
+                                    tr(ng-repeat="documento in documentosNotificacaoTecnica.documentos")
+                                        td.panel-text(class="relative")
+                                            div
+                                                | {{documento.nomeDoArquivo}}
+                                            div(ng-class="margin-20", ng-if="documento.tipoDocumento.caminhoModelo")
+                                                a.traditional(ng-Href="{{documento.MODELO_URL + documento.tipoDocumento.caminhoModelo}}", target="_blank") baixar documento
+                                        td(ng-click="")
+                                            div.btn-group
+                                                button.btn.btn-default.btn-xs(title="Clique para baixar o documento",
+                                                    ng-click="download(documento.id)",
+                                                    target="_blank")
+                                                    i.fa.fa-download
+
+                    div.col-ms-12(ng-if="documentosNotificacaoTecnica.documentos.length == 0")
+                        label Nenhum arquivo adicionado.
+
+    div(ng-if="caracterizacao.notificacao.documentacao")
+        h4.modal-title
+            b Atender Solicitações
+        br
+        .panel.panel-default(name='atender-solicitacao')
+            .panel-heading
+                h4.panel-title Documentação
+                i.glyphicon.glyphicon-ok.pull-right.item-notificacao-ok(ng-show='documentacaoFinalizada()', title="Documentação cocluída")
+                i.glyphicon.glyphicon-exclamation-sign.pull-right.item-notificacao-pendente(ng-show='!documentacaoFinalizada()', title="Documentação pendente")
+            .panel-body
+                div.col-md-12
+                    b Realize o upload dos documentos solicitados ou insira uma justificativa:
+                    row
+                        #drop-zone.upload-drop-zone(ngf-select,
+                            ngf-multiple="false",
+                            ngf-keep="false",
+                            ngf-change="selecionarArquivo($file)",
+                            ngf-accept="'application/pdf'",
+                            ng-class="{'upload-drop-zone-disable' : caracterizacao.notificacao.justificativaDocumentacao}",
+                            ng-disabled="caracterizacao.notificacao.justificativaDocumentacao")
+                            i.fa.fa-upload
+                            p(ng-class="{'upload-description-disabled' : caracterizacao.notificacao.justificativaDocumentacao}") Selecionar arquivo
+                        div
+                            table.table.table-striped(ng-if="caracterizacao.notificacao.documentos.length > 0")
+                                thead
+                                    tr
+                                        th.col-md-11 Nome
+                                        th.col-md-1 Ação
+                                tbody
+                                    tr(ng-repeat="documento in caracterizacao.notificacao.documentos")
+                                        td.panel-text(class="relative")
+                                            div {{documento.nomeDoArquivo}}
+                                        td
+                                            div.btn-group
+                                                button.btn.btn-default.btn-xs(title="Clique para baixar o documento",
+                                                    ng-click="baixarDocumento(documento.id)",
+                                                    target="_blank")
+                                                    i.fa.fa-download
+                                                button.btn.btn-default.btn-xs(title="Clique para remover o documento",
+                                                    ng-click="removerDocumento(documento.id)")
+                                                    i.fa.fa-trash
+
+                            div
+                                form
+                                    .form-group
+                                        label(for="justificativa-atender-solicitacao") Justificativa:
+                                        textarea#justificativa-atender-solicitacao.form-control-justificativa.notificacao-font-texto(
+                                            rows='3',
+                                            placeholder="Insira uma justificativa.",
+                                            ng-model="caracterizacao.notificacao.justificativaDocumentacao",
+                                            ng-disabled="!podeJustificarDocumentacao()")
+                            button.btn.btn-success.pull-right(ng-click="justificarDocumentacao()", ng-disabled="!podeJustificarDocumentacao()")
+                                | Salvar &nbsp;
+                                i.glyphicon.glyphicon-floppy-save
+
+    div(ng-if="caracterizacao.notificacao.retificacaoEmpreendimento")
+        .panel.panel-default(name='Retificação')
+            .panel-heading
+                h4.panel-title.notificacao-font-title Retificação do Empreendimento
+                i.glyphicon.glyphicon-ok.pull-right.item-notificacao-ok(ng-show='retificacaoEmpreendimentoFinalizada()', title="Retificação do empreendimento concluída")
+                i.glyphicon.glyphicon-exclamation-sign.pull-right.item-notificacao-pendente(ng-show='!retificacaoEmpreendimentoFinalizada()', title="Retificação do empreendimento pendente")
+            .panel-body(ng-show='!retificacaoEmpreendimentoFinalizada()')
+                div.col-md-12
+                    div
+                        b.col-md-9 Atualize o empreendimento para atender a notificação ou insira uma justificativa:
+                    div.col-md-3
+                        button.btn.btn-default.pull-left.btn-success.notificacao-btn-retif.pull-right.notificacao-btn-right-width(
+                            ng-click="redirectToEdicaoEmpreendimentos(caracterizacao.empreendimento.id)", ng-disabled="!podeRetificacarEmpreendimento()")
+                            | Atualizar Empreendimento &nbsp;
+                            i.fa.fa-refresh
+                div.col-md-12
+                    form
+                        .form-group
+                            label(for='justificativa-retificacao-empreendimento') Justificativa
+                            textarea#justificativa-retificacao-empreendimento.form-control-justificativa.notificacao-font-texto(
+                                rows='3', placeholder="Caso julgue que não há necessidade de alterar o empreendimento, insira uma justificativa.",
+                                ng-model="caracterizacao.notificacao.justificativaRetificacaoEmpreendimento",
+                                ng-disabled="!podeJustificarEmpreendimento()")
+                    button.btn.btn-default.btn-success.pull-right(ng-click="justificarRetificacaoEmpreendimento()", ng-disabled="!podeSalvarJustificativaEmpreendimento()")
+                        | Salvar &nbsp;
+                        i.glyphicon.glyphicon-floppy-save
+
+
+    div(ng-if="caracterizacao.notificacao.retificacaoSolicitacaoComGeo || caracterizacao.notificacao.retificacaoSolicitacao")
+        .panel.panel-default(name='Retificação')
+            .panel-heading
+                h4.panel-title.notificacao-font-title Retificação da Solicitação
+                i.glyphicon.glyphicon-ok.pull-right.item-notificacao-ok(ng-show='retificacaoSolicitacaoFinalizada()', title="Retificação da solicitação concluída")
+                i.glyphicon.glyphicon-exclamation-sign.pull-right.item-notificacao-pendente(ng-show='!retificacaoSolicitacaoFinalizada()', title="Retificação da solicitação pendente")
+            .panel-body(ng-show='!retificacaoSolicitacaoFinalizada()')
+                div.col-md-12
+                    div.col-md-9
+                        label.b Atualize a solicitação para atender a notificação:
+                    div.col-md-3
+                        button.btn.btn-default.pull-left.btn-success.notificacao-btn-retif.pull-right.notificacao-btn-right-width(
+                            ng-click="goToRetificacao()", ng-disabled="!podeRetificacarSolicitacao()")
+                            | Atualizar Solicitação &nbsp;
+                            i.fa.fa-refresh
+                div.col-md-12
+                    form
+                        .form-group
+                            label(for='justificativa-retificacao-solicitacao') Justificativa
+                            textarea#justificativa-retificacao-solicitacao.form-control-justificativa.notificacao-font-texto(
+                                rows='3', placeholder="Caso julgue que não há necessidade de alterar a solicitação, insira uma justificativa.",
+                                ng-model="caracterizacao.notificacao.justificativaRetificacaoSolicitacao",
+                                ng-disabled="!podeJustificarRetificacao()")
+                    button.btn.btn-default.btn-success.pull-right(ng-click="justificarRetificacao()", ng-disabled="!podeSalvarJustificativaSoliticacao()")
+                        | Salvar &nbsp;
+                        i.glyphicon.glyphicon-floppy-save
+
+div
+    b.col-sm-2
+        button.btn.btn-default.pull-left(ng-click="voltar()")
+            i.glyphicon.glyphicon-arrow-left
+            | &nbsp;Voltar
+    b.col-sm-8
+    b.col-sm-2
+        button.btn.btn-success.pull-right(ng-click="enviar()", ng-disabled='!podeFinalizar()')
+            | Enviar &nbsp;
+            i.glyphicon.glyphicon-arrow-right
