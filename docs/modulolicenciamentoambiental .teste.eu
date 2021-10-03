@@ -1,0 +1,71 @@
+{
+	"nome": "Licenciamento Ambiental - AP",
+	"sigla": "LAP",
+	"url": "http://ap.puma.ti.lemaf.ufla.br/licenciamento-simplificado/login",
+	"descricao": "Licenciamento Ambiental do Estado do Amapá.",
+	"cadastrarPerfis": true,
+	"loginTokenObrigatorio": false,
+	"ips": "127.0.0.1,0:0:0:0:0:0:0:1",
+	"permissoes": [
+		{
+			"nome": "Listar caracterização",
+			"codigo": "LIA_LISTAR_CARACTERIZACAO",
+			"perfis": [
+				{
+					"nome": "Externo",
+					"codigo": "EXTERNO"
+				}
+			]
+		},
+		{
+			"nome": "Cadastrar caracterização",
+			"codigo": "LIA_CADASTRAR_CARACTERIZACAO",
+			"perfis": [
+				{
+					"nome": "Externo",
+					"codigo": "EXTERNO"
+				}
+			]
+		},
+		{
+			"nome": "Listar empreendimento",
+			"codigo": "LIA_LISTAR_EMPREENDIMENTO",
+			"perfis": [
+				{
+					"nome": "Externo",
+					"codigo": "EXTERNO"
+				}
+			]
+		},
+		{
+			"nome": "Cadastrar empreendimento",
+			"codigo": "LIA_CADASTRAR_EMPREENDIMENTO",
+			"perfis": [
+				{
+					"nome": "Externo",
+					"codigo": "EXTERNO"
+				}
+			]
+		},
+		{
+			"nome": "Alterar empreendimento",
+			"codigo": "LIA_ALTERAR_EMPREENDIMENTO",
+			"perfis": [
+				{
+					"nome": "Externo",
+					"codigo": "EXTERNO"
+				}
+			]
+		},
+		{
+			"nome": "Excluir empreendimento",
+			"codigo": "LIA_EXCLUIR_EMPREENDIMENTO",
+			"perfis": [
+				{
+					"nome": "Externo",
+					"codigo": "EXTERNO"
+				}
+			]
+		}
+	]
+}
