@@ -1,0 +1,187 @@
+@altura-icone: 45px;
+@largura-icone: 45px;
+
+.sprite-passos(@x, @y){
+	background-position: -(@x * @largura-icone) -(@y * @altura-icone);
+}
+
+.passos-cadastro-empreendimento{
+	background: url("@{images-path}/passos/icones-pessoa-empreendimento-sprite.png") top left no-repeat;
+	border: 0;
+}
+
+.passos{
+
+	color: @verde-padrao;
+	cursor: pointer;
+	margin: 20px 0;
+
+  font-size: 12px;
+
+	.passo{
+
+		display: inline;
+		margin-right: 4.2%;
+
+		background: transparent;
+		border: none;
+
+		&.ultimo {
+			margin-right: 0px;
+		}
+
+		&:hover{
+			label{
+				color: @verde-escuro;
+				text-decoration: underline;
+			}
+		}
+
+		&.passo-atual{
+			border-bottom: 4px solid yellowgreen;
+		}
+
+		&.disabled{
+			color: grey;
+			cursor: not-allowed;
+
+			&:hover{
+				label{
+					color: grey;
+					text-decoration: none;
+					cursor: not-allowed;
+				}
+			}
+		}
+
+	}
+
+	.icone {
+		.passos-cadastro-empreendimento();
+		width: @altura-icone;
+		height: @largura-icone;
+		display: inline-block;
+
+		&.empreendedor{
+			.sprite-passos(0, 7);
+			&.completo{
+				.sprite-passos(1, 7);
+			}
+			&.disabled{
+				.sprite-passos(1, 6);
+			}
+		}
+		&.proprietarios{
+
+			.sprite-passos(0, 13);
+			&.completo{
+				.sprite-passos(1, 13);
+			}
+			&.disabled{
+				.sprite-passos(1, 12);
+			}			
+		}
+		&.representantes{
+			.sprite-passos(0, 9);
+			&.completo{
+				.sprite-passos(0, 10);
+			}
+			&.disabled{
+				.sprite-passos(0, 8);
+			}
+		}
+		&.empreendimento{
+			.sprite-passos(1, 5);
+			&.completo{
+				.sprite-passos(0, 6);
+			}
+			&.disabled{
+				.sprite-passos(0, 5);
+			}
+		}
+		&.responsaveis{
+			.sprite-passos(0, 13);
+			&.completo{
+				.sprite-passos(1, 13);
+			}
+			&.disabled{
+				.sprite-passos(1, 12);
+			}
+		}
+		&.resumo{
+			.sprite-passos(0, 4);
+			&.completo{
+				.sprite-passos(1, 4);
+			}
+			&.disabled{
+				.sprite-passos(1, 3);
+			}
+		}
+
+		&.geo{
+			.sprite-passos(0, 15);
+			&.completo{
+			.sprite-passos(0, 16);
+			}
+			&.disabled{
+			.sprite-passos(0, 14);
+			}
+		}
+
+		&.condicao{
+			.sprite-passos(1, 15);
+			&.completo{
+			.sprite-passos(1, 16);
+			}
+			&.disabled{
+			.sprite-passos(1, 14);
+			}
+		}
+
+		&.documentacao {
+
+			.sprite-passos(1, 17);
+			&.completo{
+				.sprite-passos(0, 18);
+			}
+			&.disabled{
+				.sprite-passos(0, 17);
+			}
+
+		}
+		
+	}
+
+	label {
+		top: -15px;
+		position: relative;
+		left: 4px;
+		max-width: 100px;
+		line-height: 15px;
+		cursor: pointer;
+		vertical-align: middle;
+	}
+
+	span.linha {
+		border-bottom: 3px dotted @verde-padrao;
+		width: 15px;
+		margin: 25px 0 0 30px;
+		position: absolute;
+		cursor: default;
+		z-index: -1;
+	}
+
+	@media only screen and (min-resolution:96dpi) and (max-resolution:264dpi) and (min-width:768px) and (max-width:1024px),
+       only screen and (-webkit-min-device-pixel-ratio: 1) and (-webkit-max-device-pixel-ratio:2) and (min-width:768px) and (max-width:1024px) {
+
+		span.linha {
+
+			margin: 25px 0 0 11px;
+		}
+
+		.passo {
+			margin-right: 1.95%;
+		}
+
+	}
+}

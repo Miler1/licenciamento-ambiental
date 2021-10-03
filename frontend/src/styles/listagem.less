@@ -1,0 +1,33 @@
+p.empty-result {
+  text-align: center;
+  font-style: italic;
+  color: #757575;
+  margin: 10px 0;
+}
+
+.icone-revisao-solicitada {
+    color: #757575;
+    font-style: italic;
+
+
+  &:before {
+    content: "";
+    background-color: red;
+    border-radius: 50%;
+    width: 12px;
+    height: 12px;
+    display: inline-block;
+	vertical-align: middle;
+	margin-left: 5px;
+	margin-right: 5px;
+	text-align: center;
+  }
+
+  &.legenda {
+	margin-left: 5px;
+
+    &:before {
+      margin-right: 5px;
+    }
+  }
+}

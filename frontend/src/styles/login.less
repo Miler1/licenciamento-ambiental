@@ -1,0 +1,151 @@
+.body-login {
+    height: 100%;
+    text-align: center;
+    // display: flex;
+    align-items: center;
+    background: linear-gradient(90deg,rgba(63, 177, 95, 0) 10%,rgba(32, 108, 22, 0) 80%), url('../images/bc.jpg') no-repeat center center fixed;
+    background-size: cover;
+}
+
+.loginsection {
+    display: table;
+    height: 100vh;
+
+    .img-position {
+        height: 90px;
+        margin: 8px 22px 30px 9px;
+    }
+
+    .center-card {
+        background-color: #FFFFFF;
+        height: 100%;
+    }
+
+    .panel-body {
+        padding: 25px 25px 25px 25px;
+        background-color: #F9F9F9;
+        font-family: 'Montserrat', sans-serif;
+        border-radius: 10px;
+    }
+
+}
+
+.custom-input {
+    font-size: 14px;
+    padding: 5px 5px 5px 10px !important;
+    height: 40px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    font-weight: 300;
+}
+
+.custom-login-btn {
+    height: 45px;
+    font-size: 14px;
+    padding: 5px 10px;
+    background-color: #536f00;
+    font-weight: 600;
+    border-color: #536f00;
+    color: #FFF;
+}
+
+.custom-login-btn:hover {
+    color: #ffffff;
+    background-color: #2d3c00;
+    border-color: #2d3c00;
+}
+
+.custom-btn-margin {
+    margin-top: 16px;
+}
+
+#formContent {
+    -webkit-border-radius: 5px 5px 5px 5px;
+    border-radius: 5px 5px 5px 5px;
+    padding: 30px;
+    width: 45%;
+    max-width: 500px;
+    position: relative;
+    padding: 0px;
+    text-align: center;
+    border-radius: 10px;
+    display: table-cell;
+    vertical-align: middle;
+
+    a {
+        text-decoration: none;
+    }
+
+    a:hover {
+        color: #344600;
+    }
+}
+
+.account-line {
+    margin-top: 20px;
+}
+
+.account-text {
+    color: #536f00;
+    font-size: 15px;
+    text-align: left;
+    font-weight: 600;
+}
+
+.account-text:hover {
+    cursor: pointer;
+}
+
+.custom-error {
+    font-size: 14px;
+}
+
+/***
+*
+* Elementos da certificação digital,
+* caso essa funcionalidade volte no futuro utilizar
+* essas classes já prontas
+*
+***/
+
+.certified {
+    background-color: #FFFFFF;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+}
+
+.certified-img {
+    padding: 15px 0;
+    height: 110px;
+}
+
+.certified-btn {
+    text-align: center;
+    border-radius: 0 0 5px 5px;
+    min-height: 50px;
+    padding: 5px 35px;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+@media screen and (max-width: 991px) {
+
+    .loginsection {
+        .panel-body {
+            .col-md-6 {
+                max-width: 100%;
+            }
+        }
+    }
+
+    .account-line {
+        margin-bottom: 12px;
+    }
+
+    .account-text {
+        font-size: 15px;
+    }
+
+    .certified-btn {
+        padding: 15px 0;
+    }
+}
