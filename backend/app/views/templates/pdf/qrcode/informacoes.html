@@ -1,0 +1,30 @@
+<!DOCTYPE html><html lang="en"><head><title>Licenciamento - Amapá</title><link rel="stylesheet" href="../libs/bootstrap/css/bootstrap.min.css"><style>body {
+	width: 100%;
+	height: 100%;
+	margin: 15px 0 0 0;
+	padding: 0;
+	background-color: #FFFFFF;
+	font-size: 14px;
+	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+.input-group-addon {
+	background-color: #fff;
+	font-weight: bold;
+}
+
+.form-control[disabled] {
+	background-color: #fbfbfb;
+}
+
+.titulo-jumbotron {
+	margin: -20px 0px 10px 0px;
+}
+
+span {
+	line-height: 0.7em;
+	text-indent: 1em;
+	margin-bottom: 20px;
+}
+</style><meta charset="UTF-8"></head><body><div class="container-fluid"><div class="text-center"><img class="logo" src="../images/brasao_ap.png" height="170"></div><div class="panel panel-default"><div class="panel-body"><div class="jumbotron"><h4 class="titulo-jumbotron">Sobre a licença</h4><div class="row"><div class="col-md-6 col-xs-12"><label class="col-md-12 col-xs-12">Tipo da licença</label><span class="col-md-12 col-xs-12">${licenca.caracterizacao.tipoLicenca.nome}</span></div><div class="col-md-6 col-xs-12"><label class="col-md-12 col-xs-12">Data da emissão</label><span class="col-md-12 col-xs-12">${new java.text.SimpleDateFormat("dd/MM/yyyy").format(licenca.dataCadastro)}</span></div></div><div class="row">#{if licenca.prorrogacao == false}<div class="col-md-6 col-xs-12"><label class="col-md-12 col-xs-12">Validade</label><span class="col-md-12 col-xs-12">${new java.text.SimpleDateFormat("dd/MM/yyyy").format(licenca.dataValidade)}</span></div>#{/if}
+#{if licenca.prorrogacao == true}<div class="col-md-6 col-xs-12"><label class="col-md-12 col-xs-12">Validade</label><span class="col-md-12 col-xs-12">Data prorrogada até a manifestação final do processo.</span></div>#{/if}<div class="col-md-6 col-xs-12"><label class="col-md-12 col-xs-12">Situação</label><span class="col-md-12 col-xs-12">Ativa</span></div></div></div><div class="jumbotron"><h4 class="titulo-jumbotron">Sobre o empreendimento</h4><div class="row"><div class="col-md-6 col-xs-12"><label class="col-md-12 col-xs-12">Nome/Razão Social do empreendimento</label><span class="col-md-12 col-xs-12">${licenca.caracterizacao.empreendimento.empreendimentoEU.pessoa.tipo.nome == "FISICA" ? licenca.caracterizacao.empreendimento.empreendimentoEU.pessoa.nome : licenca.caracterizacao.empreendimento.empreendimentoEU.pessoa.razaoSocial}</span></div><div class="col-md-6 col-xs-12"><label class="col-md-12 col-xs-12">CPF/CNPJ do empreendimento</label><span class="col-md-12 col-xs-12">${licenca.caracterizacao.empreendimento.cpfCnpj}</span></div></div><div class="row"><div class="col-md-6 col-xs-12"><label class="col-md-12 col-xs-12">Porte/Potencial poluidor/Degradador do empreendimento</label><span class="col-md-12 col-xs-12">${licenca.caracterizacao.atividadesCaracterizacao.porteEmpreendimento.nome}-${licenca.caracterizacao.atividadesCaracterizacao.atividade.potencialPoluidor.nome}</span></div><div class="col-md-6 col-xs-12"><label class="col-md-12 col-xs-12">Atividade licenciada</label><span class="col-md-12 col-xs-12">${licenca.caracterizacao.atividadesCaracterizacao.atividade.codigo ? licenca.caracterizacao.atividadesCaracterizacao.atividade.codigo : ''} ${licenca.caracterizacao.atividadesCaracterizacao.atividade.nome}</span></div></div><div class="row"><div class="col-md-6 col-xs-12"><label class="col-md-12 col-xs-12">Parâmetros da atividade licenciada</label>#{list items:licenca.caracterizacao.atividadesCaracterizacao.atividadeCaracterizacaoParametros, as:'atividadeCaracterizacaoParametro' }<span class="col-md-12 col-xs-12">${atividadeCaracterizacaoParametro.parametroAtividade.codigo}: ${atividadeCaracterizacaoParametro.valorParametro}</span>#{/list}</div><div class="col-md-6 col-xs-12"><label class="col-md-12 col-xs-12">Município do empreendimento</label><span class="col-md-12 col-xs-12">${licenca.caracterizacao.empreendimento.municipio.nome}/${licenca.caracterizacao.empreendimento.municipio.estado.codigo}</span></div></div></div></div></div></div></body></html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+%{
+  dispensaLicenciamento = dlaCancelada.dispensaLicenciamento;
+  numProcesso = dispensaLicenciamento.caracterizacao.numero;
+  nomelicenca = dispensaLicenciamento.caracterizacao.tipoLicenca.nome;
+  empreendimento = dispensaLicenciamento.caracterizacao.empreendimento;
+  empreendimentoNome = empreendimento.empreendimentoEU.pessoa.tipo.codigo == 0 ? empreendimento.empreendimentoEU.pessoa.nome : empreendimento.empreendimentoEU.pessoa.razaoSocial;
+  bairro = empreendimento.empreendimentoEU.enderecos.get(0).bairro.isEmpty() ? "" : " - " + empreendimento.empreendimentoEU.enderecos.get(0).bairro;
+  numero = empreendimento.empreendimentoEU.enderecos.get(0).numero == null ? "s/n" : empreendimento.empreendimentoEU.enderecos.get(0).numero;
+  cep = empreendimento.empreendimentoEU.enderecos.get(0).cep == null ? "-" : empreendimento.empreendimentoEU.enderecos.get(0).cep;
+  municipio = empreendimento.empreendimentoEU.enderecos.get(0).municipio.nome + " - " + empreendimento.empreendimentoEU.enderecos.get(0).municipio.estado.sigla;
+  end = empreendimento.empreendimentoEU.enderecos.get(0).descricaoAcesso == null ? empreendimento.empreendimentoEU.enderecos.get(0).logradouro + " " + numero + bairro + ", " + municipio : empreendimento.empreendimentoEU.enderecos.get(0).descricaoAcesso + ", " + municipio;
+}%
+
+<html>
+  
+  <head>
+  </head>
+  
+  <body>
+    
+	<h1 style="text-align: center">
+		#{embeddedImage src:'/public/images/brasao_ap.png', name:'Amapá', alt:'Estado do Amapá', height:'100', width:'100' /}
+	</h1>
+
+	<p style="text-align: center">GOVERNO DO ESTADO DO AMAPÁ</p>
+	
+	<p style="text-align: center">Secretaria de Estado do Meio Ambiente - SEMA</p>
+	
+	<p style="text-align: right">Amapá - AP, ${utils.DateUtil.formatarMesMinusculo(new Date())};</p>
+	
+	<p><strong>Processo N&ordm;:</strong> ${numProcesso}</p>
+	<p><strong>DI N&ordm;:</strong> ${dispensaLicenciamento.numero}</p>
+	
+	<p><b>À</b></p>
+
+	<p>${empreendimentoNome}</p>
+	
+	<p>End: ${end}</p>
+	
+	<p>CEP: ${cep}</p>
+	    
+	<p style="text-align: justify; margin-bottom: 40px;">Em atenção ao processo protocolado, sob o nº do processo ${numProcesso}, o qual solicita ${nomelicenca}, notifico V.Sa que a referida licença foi <b>CANCELADA</b>.</p>
+
+	<p style="text-align: justify; margin-bottom: 40px;"><b>Justificativa:</b> ${dlaCancelada.justificativa}</p>
+
+	<p>Procure a SEMA para maiores esclarecimentos.</p>
+	    
+
+  </body>
+  
+</html>

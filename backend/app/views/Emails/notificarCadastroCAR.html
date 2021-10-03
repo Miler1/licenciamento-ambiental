@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+
+%{
+    denominacao = empreendimento.denominacao;
+    empreendimentoCpfCnpj = empreendimento.empreendimentoEU.pessoa.nome ? utils.LicenciamentoUtils.formatarCpf(empreendimento.empreendimentoEU.pessoa.cpf) : utils.LicenciamentoUtils.formatarCnpj(empreendimento.empreendimentoEU.pessoa.cnpj);
+    municipio = empreendimento.municipio.nome + " - " + empreendimento.municipio.estado.codigo;
+}%
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<h1 style="text-align: center">
+#{embeddedImage src:'/public/images/brasao_ap.png', name:'Amapá', alt:'Estado do Amapá', height:'100', width:'100' /}
+</h1>
+
+<p style="text-align: center">GOVERNO DO ESTADO DO AMAPÁ</p>
+
+<p style="text-align: center">SECRETARIA DE ESTADO DO MEIO AMBIENTE - SEMA</p>
+
+<p><strong>Comunicado do Sistema de Licenciamento Ambiental/CAR</strong></p>
+
+<p>O usuário <strong>${empreendimentoCpfCnpj}</strong> solicita a análise do Cadastro Ambiental Rural do imóvel <strong>${denominacao}</strong> localizado no município <strong>${municipio}</strong>. </p>
+
+</body>
+</html>
