@@ -1,0 +1,172 @@
+ERRO_PADRAO =
+Desculpe, ocorreu um erro inesperado no sistema e a ação não pode ser executada. Tente novamente ou contate o administrador do sistema.
+
+ERRO_VALIDACAO = Campos inválidos.
+
+PERMISSAO_NEGADA = Você não possui permissão para efetuar esta ação.
+
+CPF_CNPJ_INVALIDO_NAO_INFORMADO = CPF/CNPJ não informado ou inválido.
+
+CODIGO_IMOVEL_INVALIDO_NAO_INFORMADO = CPF/CNPJ não informado ou inválido.
+
+PARAMETRO_NAO_INFORMADO = Parâmetro faltante para requisição: %s.
+
+EMPREENDIMENTO_JA_CADASTRADO = Já existe empreendimento cadastrado com este CPF/CNPJ
+
+ENDERECOS_EXTRAS_NAO_PERMITIDOS = É permitido cadastrar para um CPF/CNPJ apenas um endereço comum e outro de correspondência.
+
+EMPREENDIMENTO_CADASTRADO_SUCESSO = Empreendimento cadastrado com sucesso.
+
+EMPREENDIMENTO_ATUALIZADO_SUCESSO = Empreendimento atualizado com sucesso.
+
+EMPREENDIMENTO_EXCLUIDO_SUCESSO = Empreendimento excluído com sucesso.
+
+EMPREENDEDOR_REPRESENTANTE_REPETIDO = Não é possível vincular mais de uma vez o mesmo representante para este empreendedor.
+
+EMPREENDEDOR_USUARIO_NAO_REPRESENTANTE = Você não tem permissão para executar esta ação pois não é o cadastrante deste empreendimento.
+
+EMPREENDIMENTO_NAO_ENCONTRADO = Nenhum empreendimento encontrado com os parâmetros fornecidos.
+
+EMPREENDIMENTO_JA_EXISTENTE = Já existe um empreendimento cadastrado para este CPF/CNPJ.
+
+EMPREENDIMENTO_COORDENADAS_FORA_DO_MUNICIPIO = As coordenadas do empreendimento devem estar contidas em seu município.
+
+EMPREENDIMENTO_COORDENADAS_FORA_DO_ESTADO = As coordenadas do empreendimento devem estar contidas em seu estado.
+
+EMPREENDIMENTO_COORDENADAS_FORA_DO_IMOVEL = As coordenadas do empreendimento devem estar contidas em seu imóvel rural.
+
+EMPREENDIMENTO_IMOVEL_NAO_VINCULADO_AO_CPF_CNPJ = O imóvel rural informado não está vinculado ao CPF/CNPJ.
+
+CPF_CNPJ_NAO_VINCULADO_EMPREENDEDOR = O CPF/CNPJ do empreendimento não está vinculado ao empreendedor.
+
+CPF_CNPJ_NAO_ENCONTRADO_EMPREENDEDOR = Não foi encontrado nenhum CPF/CNPJ vinculado ao empreendedor.
+
+EMPREENDIMENTO_RESPONSAVEL_DOCUMENTO_OBRIGATORIO = Para cada resposável legal ou técnico do empreendimento é necessário enviar documento(s) comprobatório(s) de representação.
+
+EMPREENDIMENTO_RESPONSAVEL_LEGAL_OBRIGATORIO = É necessário informar ao menos um responsável legal para o empreendimento.
+
+EMPREENDIMENTO_FORA_DO_ESTADO = O empreendimento deve estar localizado dentro do estado.
+
+EMPREENDIMENTO_NAO_REMOVIVEL_POSSUI_CARACTERIZACOES_VINCULADAS = O empreendimento não pode ser removido pois possui solicitações associadas.
+
+EMPRENDIMENTO_ZONA_RURAL_SEM_IMOVEL = Para esta operação é obrigatório um CAR vinculado ao empreendimento.
+
+EMPREENDIMENTO_PROPRIETARIO_OBRIGATORIO = É necessário informar ao menos um proprietário para o empreendimento.
+
+EMPREENDIMENTO_PROPRIETARIO_REPETIDO = Não é possível vincular mais de uma vez o mesmo proprietário para este empreendimento.
+
+CARACTERIZACAO_CADASTRADA_SUCESSO = Caracterização cadastrada com sucesso.
+
+CARACTERIZACAO_RESPOSTAS_NAO_PERMITE_LICENCIAMENTO = As respostas da Condição não permitem concluir a solicitação.
+
+CARACTERIZACAO_RESPOSTAS_INCONSISTENTES = De acordo com as sobreposições deste empreendimento com o ZEE ou o CAR, existem restrições para esta caracterização que não foram definidas nas respostas enviadas.
+
+CARACTERIZACAO_COORDENADAS_FORA_DO_MUNICIPIO = As coordenadas devem estar contidas em seu município.
+
+CARACTERIZACAO_COORDENADAS_FORA_DO_IMOVEL = As coordenadas devem estar contidas em seu imóvel rural.
+
+CARACTERIZACAO_COORDENADAS_FORA_DO_EMPREENDIMENTO = As coordenadas devem estar contidas em seu empreendimento.
+
+CARACTERIZACAO_NAO_AGUARDANDO_EMISSAO_DAE = Não é possível emitir o DAE para esta caracterização pois ela não está aguardando emissão do DAE.
+
+CARACTERIZACAO_DAE_EMITIDO_SUCESSO = DAE emitido com sucesso.
+
+CARACTERIZACAO_ERRO_EMISSAO_DAE = Não foi possível emitir o DAE. Contacte o administrador ou tente novamente em alguns instantes.
+
+CARACTERIZACAO_PERGUNTAS_NAO_RESPONDIDAS = Existem perguntas obrigatórias que não foram respondidas.
+
+CARACTERIZACAO_DECLARACAO_VERACIDADE_INFORMACOES_PENDENTE = Para finalizar a caracterização é necessário declarar a veracidade das informações e dos documentos enviados, na etapa Documentação.
+
+CARACTERIZACAO_NUMERO_OUTORGA_OBRIGATORIO = Esse título de outorga não foi encontrado ou está vencido. Procure a SEMAS para dar regularizar a situação da outorga.ormar o número do título outorga.
+
+CARACTERIZACAO_NUMERO_OUTORGA_INVALIDO_VENCIDO = Esse título de outorga não foi encontrado ou está vencido. Procure a SEMAS para regularizar a situação da outorga.
+
+SOLICITACOES_DOCUMENTO_NAO_ATENDIDAS = Existem solicitações de documentos obrigatórios não atendidas.
+
+SOLICITACAO_DOCUMENTO_NAO_ENCONTRADA = Nenhuma solicitação de documento encontrada com os parâmetros fornecidos.
+
+DOCUMENTO_DA_SOLICITACAO_NAO_ENCONTRADO = Não foi encontrado documento para esta solicitação.
+
+DOCUMENTO_REMOVIDO_SUCESSO = Documento removido com sucesso.
+
+CARACTERIZACAO_TIPO_LICENCA_OBRIGATORIO = É necessário informar ao menos um tipo de lincença para a caracterização.
+
+CARACTERIZACAO_SIMPLIFICADO_TIPO_LICENCA_INVALIDO = Tipo de licença inválido para o licenciamento ambiental simplificado.
+
+CARACTERIZACAO_TIPO_LICENCA_REPETIDO = Não é permitido inserir tipos de licença duplicado para uma caracterização.
+
+CARACTERIZACAO_AREA_VETORIZADA_DIFERENTE_PARAMETRO = Área vetorizada é diferente do valor informado no parâmetro.
+
+CARACTERIZACAO_ATIVIDADE_NAO_PERTENCE_TIPO_LICENCA = A Atividade não pertence ao tipo de licenciamento selecionado.
+
+CONDICAO_DO_CAR_NAO_PERMITE_SOLICITACAO = A condição do CAR não permite a solicitação de Licenciamento. Favor entrar em contato com a SEMA para verificação.
+
+CARACTERIZACAO_ENQUADRAMENTO_ORDINARIO = A atividade e parâmetro informados não atendem ao ANEXO ÚNICO - RESOLUÇÃO Nº 127 DE 16 DE NOVEMBRO DE 2016. Seu licenciamento foi classificado como licenciamento ordinário. Dirigir à semas pa, para abertura do processo.
+
+CARACTERIZACAO_FINALIZADA_SUCESSO = A caracterização foi finalizada com sucesso e está aguardando a emissão do DAE.
+
+CARACTERIZACAO_REMOVIDA_SUCESSO = A caracterização foi removida com sucesso.
+
+CARACTERIZACAO_REMOVIDA_ERRO = A caracterização selecionada já foi removida.
+
+CARACTERIZACAO_OCULTAR_LISTAGEM = Não foi possível ocultar a caracterização da listagem.
+
+CARACTERIZACAO_ATIVIDADES_DENTRO_E_FORA_EMPREENDIMENTO = Existem atividades que estão dentro e outras que estão fora do empreendimento.
+
+ATIVIDADE_LICENCIAMENTO_MUNICIPAL = A atividade e parâmetro informados atendem ao ANEXO ÚNICO - RESOLUÇÃO Nº 120 DE 28 DE OUTUBRO DE 2015. Tipologia de impacto ambiental local/Tipologia compartilhada entre Estado e Municípios. Procure o município para o realizar o licenciamento.
+
+UPLOAD_DOCUMENTO=Não há documento digitalizado.
+UPLOAD_ERRO=Ocorreu um erro ao realizar o upload do arquivo.
+UPLOAD_EXTENSAO_NAO_SUPORTADA=O arquivo enviado possui extensão não aceita pelo sistema. Por favor, envie arquivo no formato .pdf
+UPLOAD_TAMANHO_DOCUMENTO=O arquivo enviado não deve exceder 25MB.
+
+ERRO_AREA_CONSOLIDADA_CLASSIFICADA_SEMAS=Erro ao buscar área consolidada classificada.
+
+SOMENTE_PESSOA_FISICA_PODE_EMITIR_DLA=Somente emprendimentos do tipo pessoa física podem emitir DI.
+ERRO_PROCESSAR_DLA=Erro ao processar DI.
+
+NAO_FORAM_ENCONTRADAS_TODAS_LICENCAS=Não foram encontradas todas as licenças informadas.
+
+LICENCA_CANCELADA_OU_SUSPENSA=A Licença informada não pode ser baixada.
+
+TELEFONE_OU_CELULAR_MAIOR_DO_QUE_PERMITIDO=O telefone ou celular informado possui mais digitos do que o permitido (11 dígitos).
+
+CONTATO_NULO=O contato está nulo.
+
+JUSTIFICATIVA_ADICIONADA_SUCESSO=Justificativa adicionada com sucesso.
+
+JUSTIFICATIVA_REMOVIDA_SUCESSO=Justificativa removida com sucesso.
+
+LEITURA_REGISTRADA_SUCESSO=Leitura registrada com sucesso.
+
+LICENCA_CANCELADA_SUCESSO=Licença cancelada com sucesso.
+
+ATUALIZACAO_EMPREENDIMENTO_EMPREENDEDOR_NECESSARIA=É necessário atualizar os dados do empreendedor e do empreendimento.
+
+EMAIL_INVALIDO_OU_NULO_EU=A pessoa informada não possuí um e-mail cadastrado no Entrada Única. Por favor solicite a edição da mesma.
+
+PESSOA_SEM_ENDERECO=%s não possui endereços cadastrados no sistema. Por favor crie/atualize essa pessoa pelo Entrada Única.
+
+PARAMETROS_INSUFICIENTES_PARA_CALCULO=Parâmetros insuficientes para cálculo do porte.
+
+PORTE_INDISPONIVEL_PARA_ATIVIDADE=Porte indisponível para atividade.
+#
+# Emails
+#
+ERRO_ENVIAR_EMAIL=O seguinte erro ocorreu ao tentar enviar o email: %s
+
+DAE_NAO_PAGA=A DAE ainda não foi quitada.
+
+LOGIN_ENTRADA_UNICA = Usuário e ou senha inválidos.
+
+ENTRADA_UNICA_FALHA_COMUNICACAO = Falha de comunicação com o Entrada Única.
+
+USUARIO_SEM_CADASTRO_ENTRADA_UNICA = Usuário sem cadastro no Entrada Única.
+
+ALP_NAO_PODE_SER_ATUALIZADA = A licença prévia só pode ser atualizada uma única vez.
+
+TIPO_DE_RENOVACAO_DE_LICENCA_NAO_PERMITIDO = O tipo de licença selecionado para renovação, evolução ou atualização não é permitido.
+
+ATIVIDADE_DE_ORIGEM_NAO_PODE_SER_BLOQUEDA = A atividade de origem não pode ser bloqueada.
+
+SEFAZ_INTEGRACAO_COMUNICACAO_FALHA = Falha de comunicação com a SEFAZ.

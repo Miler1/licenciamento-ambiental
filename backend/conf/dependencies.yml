@@ -1,0 +1,95 @@
+# Application dependencies
+
+require:
+    - play
+    - org.postgresql -> postgresql 42.1.4:
+            force: true
+    - play -> pdf 0.9
+    - com.vividsolutions -> jts 1.13
+    - log4j -> apache-log4j-extras 1.2.17
+    - org.hibernate -> hibernate-spatial 5.2.13.Final
+    - org.mockito -> mockito-core 1.10.19
+    - org.geotools -> gt-geojson 14.3
+    - org.geotools -> gt-shapefile 14.3
+    - org.geotools -> gt-wfs 14.3
+    - org.geotools -> gt-epsg-hsql 2.5.6
+    - org.apache.tika -> tika-core 1.7
+    - org.apache.james.mime4j -> ExKsoap2 1.0.3.1
+    - net.sf.flexjson -> flexjson 2.1
+    - br.com.caelum.stella -> caelum-stella-bean-validation 2.1.2
+    - com.google.zxing -> core 3.2.1
+    - com.google.zxing -> javase 2.2
+    - com.google.code.ksoap2-android -> ksoap2-android-assembly 3.6.4
+    - com.nimbusds -> nimbus-jose-jwt 3.9.2
+    - br.ufla -> tmsmap 0.1.6
+    - com.google.zxing -> core 2.2
+    - com.google.zxing -> javase 2.2
+    - com.hierynomus -> sshj 0.27.0
+    - br.com.caelum.stella -> caelum-stella-bean-validation 2.1.2
+    - br.ufla.lemaf -> cadastro-unificado-oauth-client 2.1.8
+    - br.ufla.lemaf -> gestao-pagamentos-client 1.0.0
+    #- provided -> cadastro-unificado-oauth-client 2.1.8
+
+
+repositories:
+
+    - provided:
+          type:       local
+          artifact:   "/home/lucas/Projetos/AMAPÁ/cadastro-unificado-oauth-client/build/libs/[module]-[revision].jar"
+          contains:
+              - provided -> *
+
+    - osgeo:
+          type: iBiblio
+          root: "https://repo.osgeo.org/repository/release/"
+          contains:
+              - org.geotools.ogc -> *
+              - org.geotools -> *
+              - org.geotools.xsd -> *
+              - it.geosolutions.* -> *
+              - org.eclipse.* -> *
+              - javax.media -> *
+
+    - Nexus maven Lemaf:
+          type: iBiblio
+          root: "http://repo.ti.lemaf.ufla.br/repository/maven-releases/"
+          contains:
+              - com.google.code.ksoap2-android -> *
+              - org.apache.james.mime4j -> *
+
+    - Nexus Lemaf:
+        type: iBiblio
+        root: "http://repo.ti.lemaf.ufla.br/repository/public"
+        contains:
+            - br.ufla -> *
+            - org.geotools -> *
+            - org.hibernatespatial -> *
+            - org.hibernate -> *
+            - org.postgis -> *
+            - javax.media -> *
+            - jgridshift -> *
+            - com.github.junrar -> *
+            - net.sf.flexjson -> *
+            - log4j -> *
+            - play -> *
+            - org.mockito -> *
+            - org.apache.tika -> *
+            - org.apache.xml -> *
+            - com.github.junrar -> *
+            - br.ufla -> *
+            - java3d -> *
+            - org.geotools.xsd -> *
+            - org.geotools.ogc -> *
+            - org.eclipse.emf -> *
+            - it.geosolutions -> *
+            - it.geosolutions.imageio-ext -> *
+            - org.eclipse.xsd -> *
+            - org.apache.xml -> *
+            - xml-apis -> *
+            - xml-apis.xml-apis-xerces -> *
+            - org.mongodb -> *
+            - java3d -> *
+            - javax.media -> *
+            - it.geosolutions.imageio-ext -> *
+            - com.google.zxing -> *
+            - br.ufla.lemaf -> *

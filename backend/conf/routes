@@ -1,0 +1,214 @@
+# Routesrender
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+## Versão do sistema
+GET     /versao                                     Versao.versao
+
+# Aplicação
+POST	/login										Login.login
+GET     /logout                                     Login.logout
+GET     /login/{sessionKeyEntradaUnica}   		    Login.showLoginEntradaUnica
+GET     /login                           		    Login.showLogin
+POST    /recuperarSenha/{cpf}                       Login.recuperarSenha
+GET		/aplicacao/info							    Application.findInfo(format:'js')
+GET		/versao										Application.versao
+GET     /validaUsuario/{cpfUsuario}                 Application.validaUsuario
+GET     /configuracao/urlEntradaUnicaPortal         Login.getUrlEntradaUnicaPortal
+GET     /configuracao/urlEntradaUnicaCadastro       Login.getUrlEntradaUnicaCadastro
+GET     /configuracao/urlPortalAp                   Login.getUrlPortalAp
+GET     /configuracao/urlProdapRecuperarSenha       Login.getUrlProdapRecuperarSenha
+
+# PDF
+GET     /documentos/tabela_valores_taxas                       Documentos.downloadTabelaValoresTaxa
+
+# Login
+GET		/authenticate								Login.login
+GET		/logout										Login.logout
+GET     /login/getAuthenticatedUser                 Login.getAuthenticatedUserDados
+POST    /login/perfilSetorUsuario                   Secure.setProfileSector
+GET     /usuarioSessao                              Login.getUsuarioSessao
+
+# Municipios
+GET		/estados/{uf}/municipios					Municipios.listByEstado
+GET		/municipios/{id}/limite						Municipios.getMunicipioGeometryById
+
+# Estados
+GET		/estados									Estados.list
+GET		/estados/{codigo}/limite					Estados.getEstadoGeometryByCodigo
+
+
+# Imóveis - integração com o Sicar
+GET		/imoveis/simplificados							Imoveis.getImoveisSimplificadosPorCpfCnpj
+GET		/imoveis/{codigoImovel}/completo				Imoveis.getImovelByCodigo
+GET		/imoveis/{codigoImovel}/verificarLicenciamento	Imoveis.verificaCondicoesDoImovel
+GET		/imoveis/{codigoImovel}/tema					Imoveis.getTemasByImovel
+GET		/imoveis/{codigoImovel}/camadaLDI				Imoveis.getCamadaLDI
+GET		/imoveis/{codigoImovel}/camadaPRODES			Imoveis.getCamadaPRODES
+GET		/imoveis/{codigoImovel}/camadaAreaConsolidada	Imoveis.getCamadaAreaConsolidada
+GET		/imoveis/{codigoImovel}/estado   				Imoveis.getImovelEstadoByCodigo
+POST	/imoveis/sobreposicoesMZEE						Imoveis.getSobreposicoesMacroZEE
+POST	/imoveis/{codigoImovel}/sobreposicoesTemasCAR	Imoveis.getSobreposicoesTemasCAR
+GET		/imoveis/passivoCAR/{idEmpreendimento}			Imoveis.getPassivoImovelCAR
+POST	/imoveis/sobreposicoesAreaConsolidada			Imoveis.getSobreposicoesAreaConsolidada
+
+# Caracterizacoes
+POST	/caracterizacoes								            Caracterizacoes.create
+POST	/caracterizacoes/simplificado					            Caracterizacoes.createSimplificado
+PUT     /caracterizacoes/simplificado               	            Caracterizacoes.updateSimplificado
+PUT		/caracterizacoes/{id}/etapaDocumentacao			            Caracterizacoes.updateEtapaDocumentacao
+GET	    /caracterizacoes							                Caracterizacoes.list
+GET     /downloadDla                                	            Caracterizacoes.downloadDla
+GET     /downloadLicenca                            	            Caracterizacoes.downloadLicenca
+POST	/caracterizacoes/{id}/finalizacao				            Caracterizacoes.finalizar
+POST    /caracterizacoes/{id}/renovar/finalizacao   	            Caracterizacoes.finalizarRenovacao
+POST    /caracterizacoes/{id}/notificacao/finalizacao   	        Caracterizacoes.finalizarNotificacao
+POST	/caracterizacoes/sobreposicoesNaoPermitidasDI	            Caracterizacoes.possuiSobreposicoesNaoPermitidasDI
+POST	/caracterizacoes/sobreposicoesNaoPermitidasSimplificado	    Caracterizacoes.possuiSobreposicoesNaoPermitidasSimplificado
+GET     /caracterizacoes/completo/{id}                              Caracterizacoes.listCompleto
+POST    /caracterizacoes/update/status                              Caracterizacoes.updateStatus
+GET     /caracterizacoes/historico/{id}                             Caracterizacoes.getHistoricos
+POST    /caracterizacoes/notificacao/{id}/alterarStatus             Caracterizacoes.alterarStatusPosNotificacaoEmpreendimento
+GET     /caracterizacoes/{id}/remover                               Caracterizacoes.remover
+
+# DAE de expediente da caracterizações
+POST	/caracterizacoes/{id}/dae/emissao			Daes.emitirDaeCaracterizacao
+GET		/caracterizacoes/{id}/dae					Daes.findDaeCaracterizacao
+GET		/caracterizacoes/{id}/dae/arquivo			Daes.downloadDaeCaracterizacao
+GET		/caracterizacoes/{id}						Caracterizacoes.findDadosCaracterizacao
+GET		/caracterizacoes/renovacao/{id}				Caracterizacoes.findDadosRenovacao
+GET		/caracterizacoes/notificacao/{id}			Caracterizacoes.findDadosNotificacao
+
+# DAE de licenciamento da caracterizações
+POST	/caracterizacoes/{id}/daeLicenciamento/emissao			DaesLicenciamento.emitirDaeCaracterizacao
+GET		/caracterizacoes/{id}/daeLicenciamento/arquivo			DaesLicenciamento.downloadDaeCaracterizacao
+GET		/caracterizacoes/{id}/daeLicenciamento					DaesLicenciamento.findDaeCaracterizacao
+
+# DI de caracterizações
+PUT    /caracterizacoes/{id}/di/cancelamento      Caracterizacoes.cancelarDI
+
+# Empreendimentos
+GET		/empreendimento/{idEmpreendimento}			                Empreendimentos.getEmpreendimentoPorId
+GET		/empreendimento/cpfCnpj/{cpfCnpj}			                Empreendimentos.getEmpreendimentoPorCpfCnpj
+GET		/empreendimento/cpfCnpj/outro/{cpfCnpj}  	                Empreendimentos.getEmpreendimentosParaOutroEmpreendedor
+GET		/empreendimento/completo/{cpfCnpj}			                Empreendimentos.getEmpreendimentoCompleto
+GET		/empreendimento/reduzido/{cpfCnpj}	                        Empreendimentos.getEmpreendimentoReduzido
+GET		/empreendimentos							                Empreendimentos.list
+GET		/empreendimentos/{id}/findToUpdate			                Empreendimentos.findToUpdate
+GET		/empreendimentos/pessoas/cpfCnpj/{cpfCnpj}	                Empreendimentos.getPessoaPorCpfCnpj
+POST	/empreendimentos							                Empreendimentos.create
+POST	/empreendimentos/{id}/update				                Empreendimentos.update
+GET		/empreendimentos/{id}						                Empreendimentos.findByIdResumido
+POST    /empreendimento/cpfCnpj/vinculos                            Empreendimentos.getVinculos
+DELETE	/empreendimento/{id}						                Empreendimentos.delete
+GET		/empreendimentos/pessoa/cadastrante/cpfCnpj/{cpfCnpj}	    Empreendimentos.getCadastrante
+
+# Empreendedores
+GET		/empreendedores/pessoas/{idPessoa}/representantes	Empreendedores.getRepresentantes
+GET		/empreendedores/pessoas/cpfCnpj/{cpfCnpj}			Empreendedores.findByCpfCnpj
+
+# Endereço
+GET     /enderecos/cep/{cep}						Correios.findEnderecoByCEP
+
+# Pessoas
+GET		/pessoas/cpfCnpj/{cpfCnpj}					Pessoas.findByCpfCnpj
+GET		/pessoas/cpf/{cpf}							Pessoas.findByCpf
+
+# Estados Civis
+GET		/estadosCivis								EstadosCivis.list
+
+# Esferas de Atuacao
+GET		/esferasAtuacao								Esferas.list
+
+# Tipos de responsáveis por empreendimentos
+GET		/tiposResponsaveisEmpreendimento			TipoResponsaveisEmpreendimentos.list
+
+# Órgãos de classe
+GET		/orgaosClasse								OrgaosClasse.list
+
+# Envio de arquivo
+POST	/upload/save								Uploads.upload
+
+# Atividade / Atividade CNAE
+GET		/atividades/{idAtividade}/perguntasDLA		Atividades.findPerguntasDLA
+GET		/atividades									Atividades.findAtividade
+
+GET		/perguntas/{idEmpreendimento}/simplificado		Perguntas.perguntasSimplificado
+
+# Acesso aos Tipos de Licença
+POST     /tiposlicenca/listLicencas                  TiposLicencas.listLicencas
+GET      /tiposlicenca/listarFluxo                  TiposLicencas.listarFluxo
+
+# Tipologias
+GET     /tipologias                                Tipologias.list
+
+# Solicitações de Documentos
+POST	/solicitacoesDocumentosCaracterizacao/{idSolicitacao}/documento/upload		SolicitacoesDocumentosCaracterizacao.uploadDocumento
+GET		/solicitacoesDocumentosCaracterizacao/{idSolicitacao}/documento/download	SolicitacoesDocumentosCaracterizacao.downloadDocumento
+DELETE	/solicitacoesDocumentosCaracterizacao/{idSolicitacao}/documento				SolicitacoesDocumentosCaracterizacao.deleteDocumento
+PUT     /solicitacoesDocumentosCaracterizacao/{idSolicitacao}/documento             SolicitacoesDocumentosCaracterizacao.desvincularDocumento
+
+POST	/solicitacoesGruposDocumentos/{idSolicitacao}/documento/upload		SolicitacoesGruposDocumentos.uploadDocumento
+GET		/solicitacoesGruposDocumentos/{idSolicitacao}/documento/download	SolicitacoesGruposDocumentos.downloadDocumento
+DELETE	/solicitacoesGruposDocumentos/{idSolicitacao}/documento				SolicitacoesGruposDocumentos.deleteDocumento
+PUT     /solicitacoesGruposDocumentos/{idSolicitacao}/documento             SolicitacoesGruposDocumentos.desvincularDocumento
+
+# Notificações
+GET     /notificacoes/{idCaracterizacao}                                            Notificacoes.listByCaracterizacao
+GET     /notificacao/{idCaracterizacao}                                             Notificacoes.findAtivaByCaracterizacao
+POST	/notificacoes/{idNotificacao}/documento/upload		                        Notificacoes.uploadDocumento
+GET		/notificacoes/documento/download/{idDocumento}	                            Notificacoes.downloadDocumento
+DELETE	/notificacoes/{idNotificacao}/documento/{idDocumento}                       Notificacoes.deleteDocumento
+PUT     /notificacoes/{idCaracterizacao}/ler                                        Notificacoes.read
+GET     /notificacoes/documento/{idDocumento}/download                              Notificacoes.downloadAnaliseDocumento
+POST    /notificacoes/justificar/documentacao/{idNotificacao}                       Notificacoes.justificarDocumentacao
+POST    /notificacoes/justificar/retificacao/{idNotificacao}                        Notificacoes.justificarRetificacao
+POST    /notificacoes/justificar/retificacao/empreendimento/{idNotificacao}         Notificacoes.justificarRetificacaoEmpreendimento
+DELETE	/notificacoes/{idNotificacao}/justificativa				                    Notificacoes.removerJustificativa
+
+#######################
+## SERVIÇOS EXTERNOS ##
+#######################
+
+# Integrações para sistemas externos
+GET		/external/integracao/lars/{codigoImovel}					IntegracoesDcc.consultarLarEmitidas
+GET		/external/integracao/empreendimento/{cnpj}					IntegracoesDcc.findEmpreendimentoByCnpj
+POST	/external/licencas/pdf										Licencas.gerarPdfLicencas
+POST    /external/dla/cancelar                                      DlasCanceladas.cancelar
+POST    /external/licenca/prorrogar                                 Licencas.prorrogar
+POST    /external/licenca/finalizarProrrogacao                      Licencas.finalizarProrrogacao
+
+# Caracterizacoes
+GET		/external/caracterizacoes/emAnalise			Caracterizacoes.findCaracterizacoesEmAnalise
+POST	/external/caracterizacoes/emAnalise			Caracterizacoes.adicionarCaracterizacoesEmAnalise
+
+# Envio de email
+POST /empreendimento/enviar/{cpfCnpj}/{denominacao}                            Imoveis.enviarEmail
+
+######################
+## SERVIÇOS ABERTOS ##
+######################
+
+GET		/licenca/{numero}										Application.qrcodeView
+GET		/licenca/{numero}/download								Application.downloadLicenca
+GET 	/dla/{idCaracterizacao}									Application.qrCodeViewDla
+GET 	/dla/{idCaracterizacao}/download						Application.downloadDla
+
+########################
+## SERVIÇOS ESTÁTICOS ##
+########################
+
+GET		/							                staticDir:public
+GET     /public/									staticDir:public
+GET		/app/views/pdf								staticDir:app/views/pdf/
+GET     /app/										staticDir:public/app
+GET     /modelo										staticDir:templates/modelo
+#GET 	/components/                                staticDir:public/components
+#GET 	/js/						 		        staticDir:public/js
+#GET		/css/								        staticDir:public/css
+#GET		/images/    						        staticDir:public/images
+#GET		/features/									staticDir:public/features
+#GET		/layout/									staticDir:public/layout
+#GET		/libs/									    staticDir:public/libs
+#GET		/pdf/									    staticDir:public/pdf
+#GET		/							                staticDir:public/
