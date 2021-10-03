@@ -1,0 +1,27 @@
+include ../../layout/components/dynamicInputErrors
+
+div.row
+
+	div.col-md-4
+
+		label.control-label(ng-if="$ctrl.exibirLabel", ng-class="{'obrigatorio': $ctrl.required}") {{$ctrl.labelUf || "UF:"}}
+		div
+			select.form-control.uf(ng-model="$ctrl.uf", ng-disabled=`$ctrl.disabledEstado`,
+								ng-options="uf.codigo for uf in $ctrl.ufs track by uf.codigo",
+								ng-change="$ctrl.carregarMunicipios()",
+								ng-required=`$ctrl.required`,
+								name=`{{$ctrl.ufInputName}}`)
+
+			+dynamicInputErrors(`$ctrl.form`, `$ctrl.ufInputName`, 'required')
+
+	div.col-md-8
+
+		label.control-label(ng-if="$ctrl.exibirLabel", ng-class="{'obrigatorio': $ctrl.required}") {{$ctrl.labelMunicipio || "Município:"}}
+
+		div
+			select.form-control(ng-model="$ctrl.municipio", ng-disabled="$ctrl.disabledMunicipio", name=`{{$ctrl.municipioInputName}}`,
+								ng-options="municipio.nome for municipio in $ctrl.municipios track by municipio.nome",
+								ng-required=`$ctrl.required`)
+
+			+dynamicInputErrors(`$ctrl.form`, `$ctrl.municipioInputName`, 'required')
+			

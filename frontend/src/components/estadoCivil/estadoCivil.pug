@@ -1,0 +1,14 @@
+include ../../layout/components/dynamicInputErrors
+
+div.row
+
+	div.col-xs-12
+
+		label.control-label(ng-class="{'obrigatorio': $ctrl.required}") Estado civil:
+
+		div
+			select.form-control(ng-model="$ctrl.estadoCivil", ng-disabled=`$ctrl.disabled`, name='estadoCivil',
+								ng-options="estadoCivil.nome for estadoCivil in $ctrl.estadosCivis track by estadoCivil.id",
+								ng-required=`$ctrl.required`)
+			
+			+dynamicInputErrors(`$ctrl.form`, `'estadoCivil'`, 'required')

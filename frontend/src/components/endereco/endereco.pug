@@ -1,0 +1,100 @@
+include ../../layout/components/dynamicInputErrors
+
+div
+
+	div(ng-if="!$ctrl.zonaRural")
+		.row
+			div.form-group.col-md-2
+
+				label.control-label(ng-class="{'obrigatorio': !$ctrl.disabled}") CEP:
+
+				div.input-group
+					input.form-control(type='text',
+										name=`{{$ctrl.cepInputName}}`,
+										ng-focus,
+										ng-model='$ctrl.endereco.cep',
+										ng-required='!$ctrl.disabled',
+										ng-disabled='$ctrl.disabled || $ctrl.disabledCep',
+										enter='$ctrl.pesquisarEnderecoPorCep()', ui-br-cep-mask)
+
+					span.input-group-btn
+						button.btn.btn-success(type='button',
+											ng-click='$ctrl.pesquisarEnderecoPorCep()',
+											ng-disabled='$ctrl.disabled || $ctrl.disabledCep')
+							span.glyphicon.glyphicon-search
+
+				+dynamicInputErrors(`$ctrl.form`, `$ctrl.cepInputName`, 'required')
+
+			div.form-group.col-md-7
+				label.obrigatorio.control-label Logradouro:
+				div
+					input.form-control(type='text', name=`{{$ctrl.logradouroInputName}}`, ng-model='$ctrl.endereco.logradouro',
+										placeholder='Logradouro', ng-required='$ctrl.required', maxlength='200',
+										ng-disabled='$ctrl.disabled || $ctrl.disabledLogradouro')
+
+					+dynamicInputErrors(`$ctrl.form`, `$ctrl.logradouroInputName`, 'required')
+
+			div.form-group.col-md-3
+				label.obrigatorio.control-label Número:
+
+				div.checkbox.pull-right.check-sem-numero
+					label
+						input(type='checkbox', ng-model='$ctrl.endereco.semNumero', ng-value='false',
+							ng-click='$ctrl.marcarSemNumero()', ng-disabled='$ctrl.disabled || $ctrl.disabledNumero',ng-required='false',required='false')
+						| Sem número
+
+				div
+					input.form-control#numeroEnd(type='text', name=`{{$ctrl.numeroInputName}}`, ng-model='$ctrl.endereco.numero',
+										ng-disabled='$ctrl.endereco.semNumero || $ctrl.disabled || $ctrl.disabledNumero',ng-required='!$ctrl.endereco.semNumero',
+										maxlength='50', numbers-only, placeholder="Número")
+
+				+dynamicInputErrors(`$ctrl.form`, `$ctrl.numeroInputName`, 'required')
+
+		.row
+			div.form-group.col-md-2(ng-show="$ctrl.correspondencia")
+
+				label.control-label Caixa postal:
+				div
+					input.form-control(type='text', ng-model='$ctrl.endereco.caixaPostal',
+									maxlength='10', numbers-only, ng-disabled='$ctrl.disabled || $ctrl.disabledCaixaPostal',
+									placeholder="Caixa postal")
+
+			div.form-group.col-md-3(ng-class="{'col-md-offset-2': !$ctrl.correspondencia}")
+
+				label.control-label Complemento:
+				div
+					input.form-control(type='text', ng-model='$ctrl.endereco.complemento',
+									maxlength='200', ng-disabled='$ctrl.disabled || $ctrl.disabledComplemento',
+									placeholder="Complemento")
+
+			div.form-group.col-md-3
+				label.obrigatorio.control-label Bairro:
+				div
+					input.form-control(type='text', ng-model='$ctrl.endereco.bairro',
+										maxlength='100', placeholder="Bairro",
+										ng-required='$ctrl.required', ng-disabled='$ctrl.disabled || $ctrl.disabledBairro')
+
+			div.form-group.col-md-4
+				selecao-uf-municipio(uf='$ctrl.endereco.municipio.estado'
+									municipio='$ctrl.endereco.municipio',
+									exibir-label=true, 
+									required='$ctrl.required',
+									disabled-estado='$ctrl.disabled || $ctrl.disabledUf',
+									disabled-municipio='$ctrl.disabled || $ctrl.disabledMunicipio',
+									form=`$ctrl.form`,
+									uf-input-name=`$ctrl.ufInputName`,
+									municipio-input-name=`$ctrl.municipioInputName`)
+
+	div(ng-if="$ctrl.zonaRural")
+		.row
+			div.form-group.col-md-6
+
+				selecao-uf-municipio(municipio='$ctrl.endereco.municipio',
+									exibir-label=true,
+									required='$ctrl.required',
+									disabled-estado='$ctrl.disabled || $ctrl.disabledUf',
+									disabled-municipio='$ctrl.disabled || $ctrl.disabledMunicipio',
+									form=`$ctrl.form`,
+									uf-input-name=`$ctrl.ufInputName`,
+									municipio-input-name=`$ctrl.municipioInputName`)
+

@@ -1,0 +1,114 @@
+include ../../layout/components/inputErrors
+
+mixin pessoa-fisica(form, pessoa, bloqueado, dataAtual)
+
+	div.form-group.row
+
+		div.col-xs-4
+
+			label.control-label.obrigatorio CPF:
+
+			div
+				input.form-control(type="text", name='cpf', ng-model=`${pessoa}.cpf`, ng-disabled='true', ui-br-cpfcnpj-mask, required)
+
+	div.form-group.row
+
+		div.col-xs-9
+
+			label.control-label.obrigatorio Nome completo:
+
+			span
+				input.form-control(type="text", name='nomeCompleto', placeholder='Nome completo',
+								ng-model=`${pessoa}.nome`, ng-disabled=`${bloqueado}`, maxlength="200", required)
+				+inputErrors(`${form}`, 'nomeCompleto', 'required')
+
+		div.col-xs-3
+
+			label.control-label.obrigatorio Sexo:
+
+			div(ng-class=`{'color-red': ${form}.$submitted && ${form}.radioSexoPessoa.$error.required}`)
+				label.radio-inline
+					input(type="radio", ng-value="1",
+							ng-model=`${pessoa}.sexo.codigo`,
+							ng-checked=`${pessoa}.sexo.codigo === 1`,
+							name='radioSexoPessoa',
+							ng-disabled=bloqueado,
+							required)
+					| Feminino
+
+				label.radio-inline
+					input(type="radio", ng-value="0",
+							ng-model=`${pessoa}.sexo.codigo`,
+							ng-checked=`${pessoa}.sexo.codigo === 0`,
+							name='radioSexoPessoa',
+							ng-disabled=bloqueado,
+							required)
+					| Masculino
+
+			+inputErrors(`${form}`, 'radioSexoPessoa', 'required')
+
+
+	div.form-group.row
+
+		div.col-xs-9
+
+			label.control-label.obrigatorio Nome da mãe:
+
+			div
+				input.form-control(type="text", name='nomeMae', placeholder="Nome da mãe", maxlength="200",
+								ng-model=`${pessoa}.nomeMae`, ng-disabled=bloqueado, required)
+				+inputErrors(`${form}`, 'nomeMae', 'required')
+
+		div.col-xs-3
+
+			label.control-label.obrigatorio Data de nascimento:
+
+			div.input-group
+
+				input.form-control(uib-datepicker-popup="dd/MM/yyyy",
+									required,
+									type='text',
+									name='dataNascimento',
+									ng-disabled=bloqueado,
+									ng-model=`${pessoa}.dataNascimento`,
+									datepicker-options=`{maxDate: ${dataAtual}}`,
+									show-button-bar="false",
+									is-open='isOpenData',
+									ng-click='isOpenData = !isOpenData', mascara='data')
+
+				span.input-group-btn(ng-click='isOpenData = !isOpenData')
+					a.btn.btn-default(ng-disabled=bloqueado)
+						i.glyphicon.glyphicon-calendar
+
+			+inputErrors(`${form}`, 'dataNascimento', 'required', 'date')
+
+
+	div.form-group.row
+
+		div.col-xs-3
+
+			label.control-label Número do RG:
+
+			div
+				input.form-control(type="text", name='rg.numero', placeholder="Número do RG", maxlength="15",
+								ng-model=`${pessoa}.rg.numero`, ng-disabled=bloqueado, ng-required='false')
+
+		div.col-xs-3
+
+			label.control-label Número do título de eleitor:
+
+			div
+				input.form-control(type="text", name='tituloEleitoral.numero', placeholder="Número do título de eleitor",
+								maxlength="25", ng-model=`${pessoa}.tituloEleitoral.numero`, ng-disabled=bloqueado)
+
+		div.col-xs-2
+
+			estado-civil(estado-civil=`${pessoa}.estadoCivil`, form=form, disabled=bloqueado, required="false")
+
+		div.col-xs-4
+
+			label.control-label Naturalidade:
+
+			div
+				input.form-control(type="text", name='naturalidade',
+				maxlength="100", ng-model=`${pessoa}.naturalidade`, ng-disabled=bloqueado)

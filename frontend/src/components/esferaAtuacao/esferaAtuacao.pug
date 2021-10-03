@@ -1,0 +1,14 @@
+include ../../layout/components/dynamicInputErrors
+
+div.row
+
+	div.col-xs-12
+
+		label.control-label(ng-class="{'obrigatorio': $ctrl.required}") {{$ctrl.label || "Esfera de atuação:"}}
+
+		div
+			select.form-control(ng-model="$ctrl.esferaAtuacao", ng-disabled=`$ctrl.disabled`,
+								ng-options="esferaAtuacao | capitalize for esferaAtuacao in $ctrl.esferasAtuacao",
+								ng-required=`$ctrl.required` name="esfera")
+
+			+dynamicInputErrors(`$ctrl.form`, `'esfera'`, 'required')

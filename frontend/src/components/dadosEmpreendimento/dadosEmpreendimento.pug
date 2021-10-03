@@ -1,0 +1,13 @@
+div.form-group#dadosEpreendimento
+
+	blockquote
+
+		div(ng-if="$ctrl.empreendimento.empreendimentoEU.pessoa.cnpj")
+			label CNPJ: {{$ctrl.empreendimento.empreendimentoEU.pessoa.cnpj | brCnpj}}
+		div(ng-if="$ctrl.empreendimento.empreendimentoEU.pessoa.cnpj")
+			label {{$ctrl.empreendimento.empreendimentoEU.pessoa.razaoSocial}}
+
+		div(ng-if="$ctrl.empreendimento.empreendimentoEU.pessoa.cpf")
+			label CPF: {{$ctrl.empreendimento.empreendimentoEU.pessoa.cpf | brCpf}}
+		div(ng-if="$ctrl.empreendimento.empreendimentoEU.pessoa.cpf")
+			label {{$ctrl.empreendimento.empreendimentoEU.pessoa.nome}}

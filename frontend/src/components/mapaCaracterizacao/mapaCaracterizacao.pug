@@ -1,0 +1,85 @@
+div(ng-show="$ctrl.exibirControleCoordenadas")
+
+	adicionar-coordenadas(on-geometria-adicionada-manualmente="$ctrl.onGeometriaAdicionadaManualmente",
+						toggle-componente="$ctrl.toggleComponenteCoordenadasManualmente",
+						config-geometrias="$ctrl.tipoGeometry")
+
+div(ng-show='$ctrl.mapLoaded')
+	#sidebar.leaflet-sidebar(ng-if='!_.isEmpty($ctrl.addedLayers)', ng-class='{collapsed: $ctrl.isVisualizacao || $ctrl.isComplexo}')
+		// Nav tabs
+		.leaflet-sidebar-tabs
+			ul(role='tablist')
+				li.mapLayers
+					a.mapLayersIcon(href='#mapLayers', role='tab', title='Camadas contidas no mapa')
+				li.selecionarAtividades.active(ng-if='!$ctrl.isVisualizacao && !$ctrl.isComplexo')
+					a(href='#selecionarAtividades', role='tab', title='Selecionar atividade')
+						i.fa.fa-list-ul
+
+		// Tab panes
+		.leaflet-sidebar-content
+
+			#mapLayers.leaflet-sidebar-pane
+				h1.leaflet-sidebar-header.mapLayers
+					| Geometrias contidas no mapa
+					span.leaflet-sidebar-close
+						i.fa.fa-caret-right
+
+				br
+				uib-accordion
+					.panel-default(uib-accordion-group, heading='Camadas do CAR', ng-if='!_.isEmpty($ctrl.addedLayers) && possuiAtividadesRurais')
+						ul.list-group.layer-control
+							li.list-group-item(ng-repeat='(key, layer) in $ctrl.addedLayers')
+								i.legenda(ng-if='layer.options.legend', ng-style="layer.options.legend")
+								i(ng-if='layer.options.legendIcon', ng-style="layer.options.legendIcon.css", ng-class='layer.options.legendIcon.icon')
+								| {{layer.options.title}}
+								span.badge(ng-click='$ctrl.mostrarLayer(layer)', ng-if='layer.options.escondida')
+									i.fa.fa-eye
+								span.badge(ng-click='$ctrl.esconderLayer(layer)', ng-if='!layer.options.escondida')
+									i.fa.fa-eye-slash
+
+					.panel-default(uib-accordion-group, heading='Geometrias das atividades', ng-if='!_.isEmpty($ctrl.addedLayers) && !$ctrl.isComplexo')
+						ul.list-group.layer-control
+							li.list-group-item(ng-repeat='(key, featureGroup) in $ctrl.drawLayers')
+								| {{featureGroup.title}}
+								ul.list-group.layer-control
+									li.list-group-item(ng-repeat='(key, layer) in featureGroup._layers')
+										i.legenda(ng-if='layer.options.legend', ng-style="layer.options.legend")
+										i(ng-if='layer.options.legendIcon', ng-style="layer.options.legendIcon.css", ng-class='layer.options.legendIcon.icon')
+										| Geometria {{$index + 1}}
+										span.badge(ng-click='$ctrl.mostrarLayer(layer, 0.8)', ng-if='layer.options.escondida')
+											i.fa.fa-eye
+										span.badge(ng-click='$ctrl.esconderLayer(layer)', ng-if='!layer.options.escondida')
+											i.fa.fa-eye-slash
+
+					.panel-default(uib-accordion-group, heading='Geometria do complexo', ng-if='!_.isEmpty($ctrl.addedLayers) && $ctrl.isComplexo')
+						ul.list-group.layer-control
+							li.list-group-item(ng-repeat='(key, layer) in $ctrl.drawLayers._layers')
+								i.legenda(ng-if='layer.options.legend', ng-style="layer.options.legend")
+								i(ng-if='layer.options.legendIcon', ng-style="layer.options.legendIcon.css", ng-class='layer.options.legendIcon.icon')
+								| Geometria
+								span.badge(ng-click='$ctrl.mostrarLayer(layer, 0.8)', ng-if='layer.options.escondida')
+									i.fa.fa-eye
+								span.badge(ng-click='$ctrl.esconderLayer(layer)', ng-if='!layer.options.escondida')
+									i.fa.fa-eye-slash
+
+						ul.list-group.layer-control
+							li.list-group-item(ng-repeat='atividadeCaracterizacao in $ctrl.atividadesCaracterizacao')
+								| {{atividadeCaracterizacao.atividade.nome}}
+
+			#selecionarAtividades.leaflet-sidebar-pane.active(ng-if='!$ctrl.isVisualizacao')
+				h1.leaflet-sidebar-header.selecionarAtividades
+					| Selecione uma atividade
+					.leaflet-sidebar-close
+						i.fa.fa-caret-left
+
+				br
+				uib-accordion
+					.panel-default(uib-accordion-group, is-open="true", heading='Selecione uma atividade', ng-if='$ctrl.atividadesCaracterizacao.length > 0')
+						div(ng-repeat="atividadeCaracterizacao in $ctrl.atividadesCaracterizacao")
+
+							.radio
+								label
+									input(type='radio', name='optradio', ng-model='$ctrl.atividadeSelecionada', ng-value='atividadeCaracterizacao', ng-change='$ctrl.changeAtividadeSelecionada()')
+									| {{atividadeCaracterizacao.atividade.nome}}
+
+div.mapa(ng-attr-id='{{$ctrl.idMapa}}')

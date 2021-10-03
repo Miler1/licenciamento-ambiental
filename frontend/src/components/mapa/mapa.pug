@@ -1,0 +1,7 @@
+div(ng-show="$ctrl.exibirControleCoordenadas")
+
+	adicionar-coordenadas(on-geometria-adicionada-manualmente="$ctrl.onGeometriaAdicionadaManualmente",
+						toggle-componente="$ctrl.toggleComponenteCoordenadasManualmente",
+						config-geometrias="$ctrl.tipoGeometry")
+
+div.mapa(ng-attr-id='{{$ctrl.idMapa}}')

@@ -1,0 +1,183 @@
+include ./pessoa-fisica
+include ./pessoa-juridica
+include ./contato
+include ./endereco
+
+.panel.panel-default(name='cadastrante', ng-if="$ctrl.cpfCnpjCadastrante")
+	.panel-heading
+		h4.panel-title Cadastrante 
+	.panel-body
+		div(ng-if="$ctrl.cpfCnpjCadastrante.length === 11")
+			+pessoa-fisica('$ctrl.cadastrante')
+
+		div(ng-if="$ctrl.cpfCnpjCadastrante.length === 14")
+			+pessoa-juridica('$ctrl.cadastrante')(modelEsfera="$ctrl.empreendimento.cadastrante.esfera")
+
+		+contato('$ctrl.contatoPrincipalCadastrante')
+
+		+endereco('$ctrl.enderecos.cadastrante.principal', `"Endereço do cadastrante:"`)
+
+		+endereco('$ctrl.enderecos.cadastrante.correspondencia', `"Endereço de correspondência:"`)
+
+.panel.panel-default(name='empreendedor')
+	.panel-heading
+		h4.panel-title Empreendedor
+	.panel-body
+		div(ng-if="$ctrl.empreendimento.empreendedor.pessoa.tipo.codigo === $ctrl.tipoPessoa.PESSOA_FISICA")
+			+pessoa-fisica('$ctrl.empreendimento.empreendedor.pessoa')
+
+		div(ng-if="$ctrl.empreendimento.empreendedor.pessoa.tipo.codigo === $ctrl.tipoPessoa.PESSOA_JURIDICA")
+			+pessoa-juridica('$ctrl.empreendimento.empreendedor.pessoa')(modelEsfera="$ctrl.empreendimento.empreendedor.esfera")
+
+		+contato('$ctrl.contatoPrincipalEmpreendedor')
+
+		+endereco('$ctrl.enderecos.empreendedor.principal', `"Endereço do empreendedor:"`)
+
+		+endereco('$ctrl.enderecos.empreendedor.correspondencia', `"Endereço de correspondência:"`)
+
+.panel.panel-default(name='empreendimento')
+	.panel-heading
+		h4.panel-title Empreendimento
+	.panel-body
+		div(ng-if="$ctrl.empreendimento.empreendimentoEU.pessoa.tipo.codigo === $ctrl.tipoPessoa.PESSOA_FISICA")
+			+pessoa-fisica('$ctrl.empreendimento.empreendimentoEU.pessoa')
+
+		div(ng-if="$ctrl.empreendimento.empreendimentoEU.pessoa.tipo.codigo === $ctrl.tipoPessoa.PESSOA_JURIDICA")
+			+pessoa-juridica('$ctrl.empreendimento.empreendimentoEU.pessoa', true)
+
+		div.row
+			div.col-md-12
+				div.row
+					label.col-md-2.text-right Denominação do empreendimento:
+					span.col-md-10 {{$ctrl.empreendimento.empreendimentoEU.denominacao}}
+
+		div.row.form-group
+			div.col-md-6
+				div.row
+					label.col-md-4.text-right Jurisdição do empreendimento:
+					span.col-md-8  {{$ctrl.empreendimento.jurisdicao}}
+
+			div.col-md-6
+				div.row
+					label.col-md-4.text-right Município/UF do empreendimento:
+					span.col-md-8 {{$ctrl.empreendimento.municipio.nome}}/{{$ctrl.empreendimento.municipio.estado.codigo}}
+
+		+contato('$ctrl.contatoPrincipalEmpreendimento')
+
+		+endereco('$ctrl.enderecos.empreendimento.principal', `"Endereço principal:"`)
+
+		+endereco('$ctrl.enderecos.empreendimento.correspondencia', `"Endereço de correspondência:"`)
+
+		div.row
+			label.col-md-2.text-right Localização do empreendimento:
+			span.col-md-10  {{$ctrl.empreendimento.localizacao === 'ZONA_URBANA' ? 'Zona urbana' : 'Zona rural'}}
+
+		div.row(ng-if="$ctrl.empreendimento.empreendimentoEU.zonaLocalizacao.codigo === $ctrl.localizacaoEmpreendimento.RURAL")
+			label.col-md-2.text-right CAR vinculado:
+			span.col-md-10  {{$ctrl.empreendimento.empreendimentoEU.imovel.codigo + " - " + $ctrl.nomeImovel + " - " + $ctrl.nomeMunicipio + " / " + $ctrl.nomeEstado}}
+
+		div(ng-if="$ctrl.geo")
+			mapa(geo='$ctrl.geo', id-mapa='"localizacaoEmpreendimento"',
+				model='$ctrl.empreendimento.coordenadas', is-visualizacao='true',
+				estilo-geo="$ctrl.estiloGeo",
+				controle-atualizacao="$ctrl.controleAtualizacao")
+
+.panel.panel-default(name='proprietarios')
+	.panel-heading
+		h4.panel-title Proprietários
+	.panel-body
+		div.row
+			div.col-md-12(ng-if="$ctrl.empreendimento.proprietarios && $ctrl.empreendimento.proprietarios.length > 0")
+				table.table.table-striped
+					thead
+						tr
+							th CPF/CNPJ
+							th Nome/Razão Social
+							th Data de Nascimento/Fundação
+					tbody
+						tr(ng-repeat="proprietario in $ctrl.empreendimento.proprietarios")
+							td {{proprietario.pessoa.cpf || proprietario.pessoa.cnpj | brCpfCnpj}}
+							td {{proprietario.pessoa.nome || proprietario.pessoa.razaoSocial }} 
+							td {{proprietario.pessoa.dataNascimento || proprietario.pessoa.dataConstituicao | date :  'dd/MM/yyyy'}}
+
+			div.col-md-12(ng-if="!$ctrl.empreendimento.proprietarios || $ctrl.empreendimento.proprietarios.length == 0")
+				p.empty-result Não existem dados a serem exibidos.
+
+.panel.panel-default(name='representantesLegais')
+	.panel-heading
+		h4.panel-title Representantes legais
+	.panel-body
+		div.row
+			div.col-md-12(ng-if="$ctrl.empreendimento.representantesLegais && $ctrl.empreendimento.representantesLegais.length > 0")
+				table.table.table-striped
+					thead
+						tr
+							th CPF
+							th Nome
+							th Data da vinculação
+							th E-mail
+					tbody
+						tr(ng-repeat="representante in $ctrl.empreendimento.representantesLegais")
+							td {{representante.pessoa.cpf | brCpfCnpj}}
+							td {{representante.pessoa.nome}}
+							td {{representante.dataVinculacao}}
+							td {{representante.email.valor}}
+
+			div.col-md-12(ng-if="!$ctrl.empreendimento.representantesLegais || $ctrl.empreendimento.representantesLegais.length == 0")
+				p.empty-result Não existem dados a serem exibidos.
+
+div(ng-if="$ctrl.empreendimento.empreendimentoEU.pessoa.tipo.codigo === $ctrl.tipoPessoa.PESSOA_FISICA")
+	.panel.panel-default(name='responsaveis')
+		.panel-heading
+			h4.panel-title Responsáveis técnicos e legais
+		.panel-body
+			div.row
+				div.col-md-12(ng-if="$ctrl.empreendimento.responsaveis && $ctrl.empreendimento.responsaveis.length > 0")
+					table.table.table-striped
+						thead
+							tr
+								th
+								th CPF
+								th Nome completo
+								th E-mail
+								th Celular
+						tbody
+							tr(ng-repeat="responsavel in $ctrl.empreendimento.responsaveis")
+								td
+									span.icone-responsavel-tecnico.legal(ng-show="responsavel.tipo === 'LEGAL'", title="Responsável legal")
+									span.icone-responsavel-tecnico.tecnico(ng-show="responsavel.tipo === 'TECNICO'", title="Responsável técnico")
+								td {{responsavel.pessoa.cpf | brCpfCnpj}}
+								td {{responsavel.pessoa.nome}}
+								td {{responsavel.email.valor}}
+								td {{(responsavel.celular.valor | brPhoneNumber)}}
+
+				div.col-md-12(ng-if="!$ctrl.empreendimento.responsaveis || $ctrl.empreendimento.responsaveis.length == 0")
+					p.empty-result Não existem dados a serem exibidos.
+								
+div(ng-if="$ctrl.empreendimento.empreendimentoEU.pessoa.tipo.codigo === $ctrl.tipoPessoa.PESSOA_JURIDICA")
+	.panel.panel-default(name='responsaveis')
+		.panel-heading
+			h4.panel-title Responsáveis técnicos e legais
+		.panel-body
+			div.row
+				div.col-md-12(ng-if="$ctrl.empreendimento.responsaveis && $ctrl.empreendimento.responsaveis.length > 0")
+					table.table.table-striped
+						thead
+							tr
+								th
+								th CPF
+								th Nome completo
+								th E-mail
+								th Celular
+						tbody
+							tr(ng-repeat="responsavel in $ctrl.empreendimento.responsaveis")
+								td
+									span.icone-responsavel-tecnico.legal(ng-show="responsavel.tipo === 'LEGAL'", title="Responsável legal")
+									span.icone-responsavel-tecnico.tecnico(ng-show="responsavel.tipo === 'TECNICO'", title="Responsável técnico")
+								td {{responsavel.pessoa.cpf | brCpfCnpj}}
+								td {{responsavel.pessoa.nome}}
+								td {{responsavel.email.valor}}
+								td {{(responsavel.celular.valor | brPhoneNumber)}}
+
+				div.col-md-12(ng-if="!$ctrl.empreendimento.responsaveis || $ctrl.empreendimento.responsaveis.length == 0")
+					p.empty-result Não existem dados a serem exibidos.

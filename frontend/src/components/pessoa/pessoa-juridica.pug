@@ -1,0 +1,99 @@
+include ../../layout/components/inputErrors
+
+mixin pessoa-juridica(form, pessoa, bloqueado, isEmpreendimento, dataAtual)
+
+	div.form-group.row
+
+		div.col-xs-4
+
+			label.control-label.obrigatorio CNPJ:
+
+			div
+				input.form-control(type="text", ng-model=`${pessoa}.cnpj`, ng-disabled='true', ui-br-cpfcnpj-mask, required)
+
+	div.form-group.row
+
+		div.col-xs-12
+
+			label.control-label.obrigatorio Razão social:
+
+			div
+				input.form-control(type="text", name='razaoSocial', 
+									ng-model=`${pessoa}.razaoSocial`,
+									maxlength="200", 
+									ng-disabled=`${bloqueado}`)
+				+inputErrors(`${form}`, 'razaoSocial', 'required')
+
+
+	div.form-group.row
+
+		div(ng-class=`!${isEmpreendimento} ? 'col-sm-8' : 'col-sm-12'`)
+
+			label.control-label.pull-left Nome fantasia:
+
+			div.checkbox.pull-left.check-inline
+				label
+					input(type='checkbox',
+						ng-model=`${pessoa}.copiarRazaoSocial`,
+						ng-change=`${pessoa}.nomeFantasia = ${pessoa}.copiarRazaoSocial ? ${pessoa}.razaoSocial : ${pessoa}.nomeFantasia`, 
+						ng-disabled=`${bloqueado}`)
+					| copiar razão social
+
+			span
+				input.form-control(type="text", name='nomeFantasia', 
+									ng-model=`${pessoa}.nomeFantasia`, 
+									ng-disabled=`${bloqueado}`,
+									ng-change=`!${pessoa}.nomeFantasia ? ${pessoa}.nomeFantasia : " - " `,
+									maxlength="200")
+				+inputErrors(`${form}`, 'nomeFantasia', 'required')
+
+	div.form-group.row
+
+		div.col-xs-4
+
+			label.control-label.pull-left Inscrição estadual:
+
+			div
+				input.form-control(type="text", 
+				name='inscricaoEstadual', 
+								ui-number-mask, 
+								ui-hide-group-sep,
+								ng-model=`${pessoa}.inscricaoEstadual`, 
+								ng-disabled=`${bloqueado}`,
+								maxlength="13")
+				div
+					+inputErrors(`${form}`, 'inscricaoEstadual')
+		div.col-xs-4
+
+			label.control-label.obrigatorio Data da fundação:
+
+			div.input-group
+
+				input.form-control(uib-datepicker-popup="dd/MM/yyyy",
+									required,
+									type='text',
+									name='dataConstituicao',
+									ng-disabled=`${pessoa}.dataConstituicao || ${bloqueado}`,
+									id="dataConstituicao",
+									ng-model=`${pessoa}.dataConstituicao`,
+									datepicker-options=`{maxDate: ${dataAtual}}`,
+									show-button-bar="false",
+									is-open='isOpenData',
+									ng-click='isOpenData = !isOpenData', mascara='data')
+
+				span.input-group-btn(ng-click='isOpenData = !isOpenData')
+					a.btn.btn-default(ng-disabled=bloqueado)
+						i.glyphicon.glyphicon-calendar
+
+			+inputErrors(`${form}`, 'dataConstituicao', 'required', 'date')
+
+		div.col-xs-4(ng-if=`!${isEmpreendimento}`)
+
+			selecao-uf-municipio(municipio=`${pessoa}.municipio`,
+								exibir-label=true,
+								disabled-estado=bloqueado,
+								disabled-municipio=bloqueado,
+								required=true,
+								form=form,
+								uf-input-name=`"ufPessoaJuridica"`,
+								municipio-input-name=`"municipioPessoaJuridica"`)

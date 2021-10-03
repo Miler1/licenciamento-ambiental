@@ -1,0 +1,106 @@
+.panel.panel.default.popover-mapa.esquerda.coordenadas(tabindex="1")
+
+	.panel-heading
+
+		h3.panel-title Adicionar coordenadas
+
+	.panel-body
+
+		div.form-group.form-inline(ng-if="$ctrl.permitirEscolherTipoGeometria")
+
+			label Tipo de geometria:&nbsp&nbsp
+
+			label.radio-inline
+				input(type='radio', name='radioTipoGeometriaManualmente',
+					ng-change="$ctrl.trocarTipoGeometria()",
+					ng-model="$ctrl.tipoGeometria", value="marker")
+				| Ponto
+
+			label.radio-inline
+				input(type='radio', name='radioTipoGeometriaManualmente',
+					ng-change="$ctrl.trocarTipoGeometria()",
+					ng-model="$ctrl.tipoGeometria", value="polygon")
+				| Polígono
+
+		div.form-group
+			label.obrigatorio Sistema de referenciamento:
+			div.dropdown
+				button.btn.btn-default.dropdown-toggle.col-sm-12(type='button', data-toggle='dropdown')
+					span {{$ctrl.sistemaCoordenadas.nome}}
+					span.caret.pull-right
+				ul.dropdown-menu.col-sm-12
+					li
+						a(tabindex='-1', ng-click="$ctrl.alterarSistemaCoordenadas('gms')") Graus, minutos e segundos
+					li
+						a(tabindex='-1', ng-click="$ctrl.alterarSistemaCoordenadas('dd')") Sirgas 2000, geográfico
+					li.dropdown-submenu
+						a(tabindex='-1')
+							| Sirgas 2000, projeção UTM
+						ul.dropdown-menu
+							li
+								a(tabindex='-1', ng-click="$ctrl.alterarSistemaCoordenadas('utm21N')") Zona 21N
+							li
+								a(tabindex='-1', ng-click="$ctrl.alterarSistemaCoordenadas('utm21S')") Zona 21S
+							li
+								a(tabindex='-1', ng-click="$ctrl.alterarSistemaCoordenadas('utm22N')") Zona 22N
+							li
+								a(tabindex='-1', ng-click="$ctrl.alterarSistemaCoordenadas('utm22S')") Zona 22S
+							li
+								a(tabindex='-1', ng-click="$ctrl.alterarSistemaCoordenadas('utm23S')") Zona 23S
+
+		div.form-group#grupo-coordenadas-manuais(ng-if="$ctrl.tipoGeometria === 'marker'")
+
+			table.table.table-condensed.tabela-mapa-coordenadas-manuais
+				thead
+					tr
+						th.col-sm-6
+							label.obrigatorio {{$ctrl.sistemaCoordenadas.labelY}}:
+						th.col-sm-6
+							label.obrigatorio {{$ctrl.sistemaCoordenadas.labelX}}:
+				tbody
+					tr
+						th
+							input.form-control.coordenadas-y(type="text", ng-model="$ctrl.coordenadas[0].y",
+												placeholder="{{$ctrl.sistemaCoordenadas.placeholderY}}")
+
+						th
+							input.form-control.coordenadas-x(type="text", ng-model="$ctrl.coordenadas[0].x",
+												placeholder="{{$ctrl.sistemaCoordenadas.placeholderX}}")
+
+		div.form-group#grupo-coordenadas-manuais(ng-if="$ctrl.tipoGeometria === 'polygon'")
+
+			table.table.table-condensed.tabela-mapa-coordenadas-manuais
+				thead
+					tr
+						th.col-sm-6
+							label.obrigatorio {{$ctrl.sistemaCoordenadas.labelY}}:
+						th.col-sm-6
+							label.obrigatorio {{$ctrl.sistemaCoordenadas.labelX}}:
+				tbody
+					tr(ng-repeat="coordenada in $ctrl.coordenadas")
+						th
+							input.form-control.coordenadas-y(type="text", ng-model="coordenada.y",
+							ng-disabled="!$last", ng-blur="$ctrl.atualizarPoligono()",
+										placeholder="{{$ctrl.sistemaCoordenadas.placeholderY}}")
+
+						th
+							input.form-control.coordenadas-x(type="text", ng-model="coordenada.x",
+							ng-disabled="!$last", ng-blur="$ctrl.atualizarPoligono()",
+										placeholder="{{$ctrl.sistemaCoordenadas.placeholderX}}")
+
+						th(ng-show="$last && !$first")
+							div.btn.btn-default(ng-click="$ctrl.removerCoordenada()", title="Remover coordenada")
+								span.glyphicon.glyphicon-trash
+
+			div.form-group.col-sm-12
+				div.btn.btn-default.pull-right.row(ng-click="$ctrl.adicionarCoordenada()", title="Adicionar coordenada")
+					span.glyphicon.glyphicon-plus
+					span  Nova coordenada
+
+		button.btn.btn-sm.btn-default.pull-left(ng-click="$ctrl.esconder()")
+			span.glyphicon.glyphicon-remove
+			|  Cancelar
+
+		button.btn.btn-sm.btn-success.pull-right(ng-click="$ctrl.aceitarCoordenadas()",
+												ng-disabled="!$ctrl.podeAdicionarCoordenadas()"
+												ng-class="{'disabled': !$ctrl.podeAdicionarCoordenadas()}") Adicionar

@@ -1,0 +1,40 @@
+div.d-inline-block.col-md-12.validacao-outorga
+    .col-md-6
+
+        label.no-padding 
+            strong Selecione o tipo de outorga - Estadual: 
+        
+        .form-group
+            label.margin-right-xs
+                input(type="radio", name="tipo_outorga", ng-model="$ctrl.caracterizacao.tipoTituloOutorga", value="OUTORGA", style="margin-right:7px", ng-change="$ctrl.caracterizacao.numeroTituloOutorga = null; $ctrl.caracterizacao.numeroTituloOutorgaAdicional = null", ng-click="$ctrl.mostrarCampo = true")
+                | Outorga
+        
+        .form-group
+            label.margin-right-xs
+                input(type="radio", name="tipo_outorga", ng-model="$ctrl.caracterizacao.tipoTituloOutorga", value="OUTORGA_PREVIA", style="margin-right:7px", ng-change="$ctrl.caracterizacao.numeroTituloOutorga = null; $ctrl.caracterizacao.numeroTituloOutorgaAdicional = null", ng-click="$ctrl.mostrarCampo = true")
+                | Outorga prévia
+        
+        .form-group
+            label.margin-right-xs
+                input(type="radio", name="tipo_outorga", ng-model="$ctrl.caracterizacao.tipoTituloOutorga", value="DISPENSA", style="margin-right:7px", ng-change="$ctrl.caracterizacao.numeroTituloOutorga = null; $ctrl.caracterizacao.numeroTituloOutorgaAdicional = null", ng-click="$ctrl.mostrarCampo = true")
+                | Dispensa
+
+
+    .col-md-6
+
+        label.no-padding(ng-if="$ctrl.mostrarCampo")
+            strong Número da outorga:
+        
+            .form-group.no-padding
+                input(type="number", class="form-control", placeholder="Informe o título da outorga", ng-model="$ctrl.caracterizacao.numeroTituloOutorga")
+                small.margin-left-xs Não informar /ano. Exemplo: 0000
+                br
+                br
+                input(ng-if="$ctrl.mostrarCampoAdicional", type="number", class="form-control", placeholder="Informe o título da outorga", ng-model="$ctrl.caracterizacao.numeroTituloOutorgaAdicional")
+                small.margin-left-xs(ng-if="$ctrl.mostrarCampoAdicional") Não informar /ano. Exemplo: 0000
+
+        div(ng-if="$ctrl.mostrarCampo", ng-click="$ctrl.mostrarCampoAdicional = true")
+            i.adicionar-campos-outorga.glyphicon.glyphicon-plus-sign(ng-if="!$ctrl.mostrarCampoAdicional && $ctrl.mostrarCampo", title="Adicionar outro título")
+
+        div(ng-if="$ctrl.mostrarCampoAdicional", ng-click="$ctrl.mostrarCampoAdicional = false; $ctrl.caracterizacao.numeroTituloOutorgaAdicional = null")
+            i.remover-campo-adicional.glyphicon.glyphicon-minus-sign(title="Remover título")

@@ -1,0 +1,29 @@
+mixin contato(form, model, disabled, disabledEmail,disabledTelefone,disebledCelular)
+
+	div.form-group.row
+
+		div.col-xs-12
+
+			label.obrigatorio.control-label E-mail:
+
+			div
+				input.form-control(type='email',required=true, name='emailContato', ng-model=`${model}.email`,
+					maxlength="150", ng-disabled=`${disabled} || ${disabledEmail}`)
+				+inputErrors(`${form}`, 'emailContato')
+				+inputErrors(`${form}`, 'emailContato', 'email')
+
+	div.form-group.row
+
+		div.col-xs-6
+
+			label.control-label Telefone fixo:
+			div
+				input.form-control(type='text', name='telefone', ng-model=`${model}.telefone`, minlength="2", maxlength="15", ng-disabled=`${disabled} || ${disabledTelefone}`)
+
+		div.col-xs-6
+
+			label.control-label Celular:
+
+			div
+				input.form-control(type='text', name='celular', ng-model=`${model}.celular`, minlength="2", maxlength="15", ng-disabled=`${disabled} || ${disebledCelular}`)
+

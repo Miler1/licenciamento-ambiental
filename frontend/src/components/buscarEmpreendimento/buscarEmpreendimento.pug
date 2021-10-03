@@ -1,0 +1,28 @@
+div.form-group
+
+	label.required.control-label(for='cpf', ng-if="!$ctrl.exibirCnpj") Informe o CPF:
+	label.required.control-label(for='cpfCnpj', ng-if="$ctrl.exibirCnpj") Informe o CPF/CNPJ: 
+
+	div.input-group
+
+		input.form-control(type='text',
+							ng-if="!$ctrl.exibirCnpj",
+							ng-model='$ctrl.cpfCnpj',
+							enter='$ctrl.buscarEmpreendimentoByCpfCnpj()',
+							placeholder='{{$ctrl.placeholderText}}',
+							name='cpf',
+							ui-br-cpf-mask
+						)
+
+		input.form-control(type='text',
+							ng-if="$ctrl.exibirCnpj",
+							ng-model='$ctrl.cpfCnpj',
+							enter='$ctrl.buscarEmpreendimentoByCpfCnpj()',
+							placeholder='{{$ctrl.placeholderText}}',
+							name='cpfCnpj',
+							ui-br-cpfcnpj-mask
+						)
+
+		span.input-group-btn
+			button.btn.btn-default(type='button', ng-click='$ctrl.buscarEmpreendimentoByCpfCnpj()', ng-disabled="!$ctrl.cpfCnpj")
+				span.glyphicon.glyphicon-search

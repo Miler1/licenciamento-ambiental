@@ -1,0 +1,10 @@
+div.row
+
+	div.col-xs-12
+
+		label.control-label Tipo do responsável:
+
+		div
+			select.form-control(ng-model="$ctrl.tipoResponsavel", ng-disabled="$ctrl.disabled",
+								ng-options="codigo as nome for (codigo, nome) in $ctrl.tiposResponsavelDisponiveis",
+								ng-change="$ctrl.onUpdate()")
