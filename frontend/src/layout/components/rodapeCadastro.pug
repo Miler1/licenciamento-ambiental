@@ -1,0 +1,35 @@
+mixin rodapeCadastro(model)
+
+	div.rodape-cadastro.row
+
+		div.pull-right.col-sm-3
+
+			div.row
+
+				div.col-sm-6
+
+					button.btn.btn-default.btn-default-success.btn-block.pull-left(ng-click=`${model}.anterior ? ${model}.anterior() : cadastro.anterior()`, tabindex="0", ng-hide=`${model}.hideVoltar`)
+						span.glyphicon.glyphicon-chevron-left
+						|  Voltar
+
+				div.col-sm-6
+
+					div(ng-if=`!${model}.concluir`, ng-hide=`${model}.isRetificacao`)
+						button#btnAvancar.btn.btn-success.btn-block.pull-right(ng-click=`${model}.proximo ? ${model}.proximo() : cadastro.proximo()`, tabindex="0")
+							| Avançar
+							span.glyphicon.glyphicon-chevron-right
+
+					div(ng-if=`${model}.concluir`)
+						button.btn.btn-success.btn-block.pull-right(ng-click=`${model}.concluir()`, tabindex="0")
+							span.glyphicon.glyphicon-ok
+							|  Concluir
+
+					div(ng-if=`${model}.isRetificacao`)
+						button.btn.btn-success.btn-block.pull-left(ng-click=`${model}.finalizarNotificacao()`, tabindex="0")
+							|  Finalizar
+
+		div.pull-left.col-sm-2(ng-if=`!${model}.isRetificacao`)
+
+			button.btn.btn-default.btn-block.pull-left(ng-click=`${model}.cancelar ? ${model}.cancelar() : cadastro.botaoCancelar()`, tabindex="0")
+				span.glyphicon.glyphicon-remove
+				|  Cancelar

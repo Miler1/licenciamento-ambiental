@@ -1,0 +1,16 @@
+doctype html
+head
+    title Licenciamento - Amapá
+    link(rel='stylesheet', href='${templatePath}/style/estilo.css')
+    meta(charset='UTF-8')
+table.rodape
+    hr
+    tr
+        td.transparent-cell.gerado-em Gerado em: ${new Date().format("dd/MM/yyyy HH:mm:ss")}
+        td.transparent-cell.qr-code
+            img.qrcode(src="${qrcode}")
+        td.transparent-cell.pagina
+            | Página:
+            b 
+                pagenumber /
+                pagecount

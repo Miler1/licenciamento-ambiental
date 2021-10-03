@@ -1,0 +1,20 @@
+.menu
+	.container
+		nav.navbar.navbar-ra(role="navigation")
+			
+			.navbar-header
+				button.navbar-toggle(type="button", data-toggle="collapse", data-target=".navbar-ex2-collapse")
+					span.sr-only Toggle navigation
+					span.icon-bar
+					span.icon-bar
+					span.icon-bar
+			
+			.collapse.navbar-collapse.navbar-ex2-collapse
+
+				ul.nav.navbar-nav
+
+					li(class="{{ location.$$path == '/empreendimentos/listagem' ? 'active' : '' }}")
+						a(href="#/empreendimentos/listagem") Empreendimento
+
+		.link-button.custom-link-menu
+			a(ng-disabled='true',href="https://sema.portal.ap.gov.br/conteudo/legislacao/leis-estaduais", target="_blank") Consultar Legislação

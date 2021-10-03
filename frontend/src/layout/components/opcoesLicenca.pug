@@ -1,0 +1,14 @@
+mixin opcoesLicenca(titulo,lista,selecao,selecionaItem,hasError)
+	label #{titulo}
+
+	div.solicita-licenca(ng-repeat = "item in " + lista, ng-class = "{'color-red' : " + hasError + "}")
+		div
+			input.pointer(id='{{item.sigla}}',
+				name = 'item',
+				type = selecao,
+				model = 'item.selecionado',
+				value = '!item.selecionado',
+				ng-required = "!item.selecionado",
+				ng-click = selecionaItem + '(item, false)')
+		div
+			span.radio-description-custom.pointer(ng-click = selecionaItem + '(item, true)') {{item.nome}}

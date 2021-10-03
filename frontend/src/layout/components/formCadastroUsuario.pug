@@ -1,0 +1,13 @@
+mixin formCadastroUsuario()
+	.row
+		div.col-md-12
+			//- Esse growl é o framework de erro gente (:
+			div.custom-error(growl inline="true" reference='1') 
+		div.col-md-12.form-group
+			.custom-label-form
+				label CPF/CNPJ do usuário (Login): 
+				label.red *
+			input.form-control(type="text", name="usuario_cpf", ng-model="login.cpfCriarConta", ng-enter="login.saveUsuarioExterno()", ui-br-cpfcnpj-mask, required, autofocus)
+			+fieldErrors(field="usuario_cpf", errors=["required", "cpfcnpj"], nameForm="cadastrarUsuarioExterno")
+
+		block

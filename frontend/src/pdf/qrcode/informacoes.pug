@@ -1,0 +1,99 @@
+doctype html
+html(lang='en')
+	head
+		title Licenciamento - Amapá
+		link(rel="stylesheet" href="../libs/bootstrap/css/bootstrap.min.css")
+		style.
+			body {
+				width: 100%;
+				height: 100%;
+				margin: 15px 0 0 0;
+				padding: 0;
+				background-color: #FFFFFF;
+				font-size: 14px;
+				font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+			}
+
+			.input-group-addon {
+				background-color: #fff;
+				font-weight: bold;
+			}
+
+			.form-control[disabled] {
+				background-color: #fbfbfb;
+			}
+
+			.titulo-jumbotron {
+				margin: -20px 0px 10px 0px;
+			}
+
+			span {
+				line-height: 0.7em;
+				text-indent: 1em;
+				margin-bottom: 20px;
+			}
+
+		meta(charset='UTF-8')
+	body
+
+		.container-fluid
+
+			.text-center
+				img.logo(src='../images/brasao_ap.png' height='170')
+
+			.panel.panel-default
+
+				.panel-body
+					.jumbotron
+						h4.titulo-jumbotron Sobre a licença
+						.row
+							.col-md-6.col-xs-12
+									label.col-md-12.col-xs-12 Tipo da licença
+									span.col-md-12.col-xs-12 ${licenca.caracterizacao.tipoLicenca.nome}
+							.col-md-6.col-xs-12
+									label.col-md-12.col-xs-12 Data da emissão
+									span.col-md-12.col-xs-12 ${new java.text.SimpleDateFormat("dd/MM/yyyy").format(licenca.dataCadastro)}
+
+						.row
+							| \#{if licenca.prorrogacao == false}
+							.col-md-6.col-xs-12
+									label.col-md-12.col-xs-12 Validade
+									span.col-md-12.col-xs-12 ${new java.text.SimpleDateFormat("dd/MM/yyyy").format(licenca.dataValidade)}
+							| \#{/if}
+							| \#{if licenca.prorrogacao == true}
+							.col-md-6.col-xs-12
+									label.col-md-12.col-xs-12 Validade
+									span.col-md-12.col-xs-12 Data prorrogada até a manifestação final do processo.
+							| \#{/if}
+							.col-md-6.col-xs-12
+									label.col-md-12.col-xs-12 Situação
+									span.col-md-12.col-xs-12 Ativa
+
+					.jumbotron
+						h4.titulo-jumbotron Sobre o empreendimento
+
+						.row
+							.col-md-6.col-xs-12
+									label.col-md-12.col-xs-12 Nome/Razão Social do empreendimento
+									span.col-md-12.col-xs-12 ${licenca.caracterizacao.empreendimento.empreendimentoEU.pessoa.tipo.nome == "FISICA" ? licenca.caracterizacao.empreendimento.empreendimentoEU.pessoa.nome : licenca.caracterizacao.empreendimento.empreendimentoEU.pessoa.razaoSocial}
+							.col-md-6.col-xs-12
+									label.col-md-12.col-xs-12 CPF/CNPJ do empreendimento
+									span.col-md-12.col-xs-12 ${licenca.caracterizacao.empreendimento.cpfCnpj}
+
+						.row
+							.col-md-6.col-xs-12
+									label.col-md-12.col-xs-12 Porte/Potencial poluidor/Degradador do empreendimento
+									span.col-md-12.col-xs-12 ${licenca.caracterizacao.atividadesCaracterizacao.porteEmpreendimento.nome}-${licenca.caracterizacao.atividadesCaracterizacao.atividade.potencialPoluidor.nome}
+							.col-md-6.col-xs-12
+									label.col-md-12.col-xs-12 Atividade licenciada
+									span.col-md-12.col-xs-12 ${licenca.caracterizacao.atividadesCaracterizacao.atividade.codigo ? licenca.caracterizacao.atividadesCaracterizacao.atividade.codigo : ''} ${licenca.caracterizacao.atividadesCaracterizacao.atividade.nome}
+
+						.row
+							.col-md-6.col-xs-12
+									label.col-md-12.col-xs-12 Parâmetros da atividade licenciada
+									| \#{list items:licenca.caracterizacao.atividadesCaracterizacao.atividadeCaracterizacaoParametros, as:'atividadeCaracterizacaoParametro' }
+									span.col-md-12.col-xs-12 ${atividadeCaracterizacaoParametro.parametroAtividade.codigo}: ${atividadeCaracterizacaoParametro.valorParametro}
+									| \#{/list}
+							.col-md-6.col-xs-12
+									label.col-md-12.col-xs-12 Município do empreendimento
+									span.col-md-12.col-xs-12 ${licenca.caracterizacao.empreendimento.municipio.nome}/${licenca.caracterizacao.empreendimento.municipio.estado.codigo}

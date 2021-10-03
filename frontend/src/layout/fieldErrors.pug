@@ -1,0 +1,18 @@
+mixin fieldErrors()
+
+	if attributes.field && attributes.errors
+		div.has-error(ng-show=`${attributes['ng-show']} || true`)
+
+			- var form = 'form';
+			if (attributes.nameForm != null)
+				- var form = attributes.nameForm;
+	
+			for e in attributes.errors
+				label.control-label(ng-show=form + "." + attributes.field + ".$dirty" && form + "." + attributes.field + ".$error." + e)
+					- var error = '' + e
+					if(error === 'cpf')
+						p CPF inválido.
+					if(error === 'cpfcnpj')
+						p CPF/CNPJ inválido.
+					
+					

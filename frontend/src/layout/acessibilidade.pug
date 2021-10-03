@@ -1,0 +1,17 @@
+div.nav-acessibilidade.hidden-xs
+	//- (ng-controller="AcessibilidadeCtrl")
+
+	a.pointer(title='Alternar contraste', id="contrastar")
+		img(src='images/acessibilidade/nav-acessibilidade-5.png', alt='')
+
+	a(title='Aumentar fonte', id="aumentar")
+		img(src='images/acessibilidade/nav-acessibilidade-4.png', alt='')
+
+	a(title='Fonte normal ', id="padrao")
+		img(src='images/acessibilidade/nav-acessibilidade-3.png', alt='')
+			
+	a(title='Diminuir fonte', id="diminuir")
+		img(src='images/acessibilidade/nav-acessibilidade-2.png', alt='')
+
+	a(href="", data-toggle="modal", ng-click="abrirModal()", title='Acessibilidade')
+		img(src='images/acessibilidade/nav-acessibilidade-1.png', alt='')

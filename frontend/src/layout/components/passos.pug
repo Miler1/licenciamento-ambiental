@@ -1,0 +1,19 @@
+// Mixin utilizado em escopo com a estrutura de 'cadastro' padrão do sistema
+
+mixin passos()
+
+	.passos.clearfix
+
+		button.passo(
+			ng-repeat="etapa in cadastro.listaEtapas",
+			ng-class="{'disabled': cadastro.etapaEstaBloqueada(etapa), 'passo-atual': etapa.nome === cadastro.etapa.nome, 'ultimo': etapa.isUltimo === true}",
+			ng-disabled="cadastro.etapaEstaBloqueada(etapa)",
+			ng-click="cadastro.escolherEtapa(etapa)"
+		)
+
+			span.icone(class="{{etapa.class}}",
+						ng-class="{'completo': etapa.passoValido(), 'disabled': cadastro.etapaEstaBloqueada(etapa)}")
+
+			label {{etapa.nome}}
+
+			span.linha(ng-show="!etapa.isUltimo")

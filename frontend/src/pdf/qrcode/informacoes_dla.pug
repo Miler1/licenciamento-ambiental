@@ -1,0 +1,127 @@
+doctype html
+html(lang='en')
+	head
+		title Licenciamento - Amapá
+		link(rel="stylesheet" href="../libs/bootstrap/css/bootstrap.min.css")
+		style.
+			body {
+				width: 100%;
+				height: 100%;
+				margin: 15px 0 0 0;
+				padding: 0;
+				background-color: #FFFFFF;
+				font-size: 14px;
+				font-family: 'Montserrat',Helvetica,Arial,sans-serif;
+			}
+
+			.input-group-addon {
+				background-color: #fff;
+				font-weight: bold;
+			}
+
+			.form-control[disabled] {
+				background-color: #fbfbfb;
+			}
+
+			.custom-jumbotron {
+				padding-top: 20px;
+				padding-bottom: 0;
+			}
+
+			.titulo-jumbotron {
+				margin: 0px 0px 15px 5px;
+				font-weight: bold;
+			}
+
+			span {
+				line-height: 0.7em;
+				text-indent: 1em;
+				margin-bottom: 20px;
+				line-height: 1.5;
+			}
+
+			.qrlogo {
+				height: 90px;
+				margin: 10px 0 20px 0;
+			}
+
+			.custom-hr {
+				margin: 15px 0 15px 0;
+			}
+
+			.margin-jumbotron {
+				margin-bottom: 20px;
+			}
+
+			.margin-small-jumbotron {
+				margin-bottom: 7px;
+			}
+
+		meta(charset='UTF-8')
+	body
+
+		.container-fluid
+
+			.text-center
+				img.logo.qrlogo(src='${utils.Configuracoes.HTTP_PATH}'+'/images/logo_verde.png')
+
+			.panel.panel-default
+
+				.panel-body
+					.jumbotron.custom-jumbotron.margin-jumbotron
+						h4.titulo-jumbotron Sobre a dispensa de licenciamento
+						hr.custom-hr
+						.row
+							.col-md-6.col-xs-12
+									label.col-md-12.col-xs-12 Número do documento
+									span.col-md-12.col-xs-12 ${dla.numero}
+							.col-md-6.col-xs-12
+									label.col-md-12.col-xs-12 Data da emissão
+									span.col-md-12.col-xs-12 ${new java.text.SimpleDateFormat("dd/MM/yyyy").format(dla.dataCadastro)}
+						|\#{if (dla.ativo == false) && (dlaCancelada != null)}
+						.row
+							.col-md-6.col-xs-12
+									label.col-md-12.col-xs-12 Situação
+									span.col-md-12.col-xs-12 Dispensa de Licenciamento Cancelada
+							.col-md-6.col-xs-12
+									label.col-md-12.col-xs-12 Data de cancelamento
+									span.col-md-12.col-xs-12 ${new java.text.SimpleDateFormat("dd/MM/yyyy").format(dlaCancelada.dataCancelada)}
+						.row
+							.col-md-12.col-xs-12
+									label.col-md-12.col-xs-12 Cancelada por
+									span.col-md-12.col-xs-12 ${executorCancelamento.pessoa.nome}
+						.row
+							.col-md-12.col-xs-12
+									label.col-md-12.col-xs-12 Justificativa
+									span.col-md-12.col-xs-12 ${dlaCancelada.justificativa}
+						|\#{/if}
+
+
+					.jumbotron.custom-jumbotron.margin-small-jumbotron
+						h4.titulo-jumbotron Sobre o empreendimento
+						hr.custom-hr
+						.row
+							.col-md-6.col-xs-12
+									label.col-md-12.col-xs-12 Nome/Razão Social do empreendimento
+									span.col-md-12.col-xs-12 ${dla.caracterizacao.empreendimento.empreendimentoEU.pessoa.tipo.nome == "FISICA" ? dla.caracterizacao.empreendimento.empreendimentoEU.pessoa.nome : dla.caracterizacao.empreendimento.empreendimentoEU.pessoa.razaoSocial}
+							.col-md-6.col-xs-12
+									label.col-md-12.col-xs-12 CPF/CNPJ do empreendimento
+									span.col-md-12.col-xs-12 ${dla.caracterizacao.empreendimento.cpfCnpj}
+
+						.row
+							.col-md-6.col-xs-12
+									label.col-md-12.col-xs-12 Atividade
+									|	%{
+									|
+									|		for(int contadorAC = 0; contadorAC < dla.caracterizacao.atividadesCaracterizacao.size(); contadorAC++) {
+									|			ac = dla.caracterizacao.atividadesCaracterizacao[contadorAC];
+									|	}%
+									span.col-md-12.col-xs-12 ${ac.atividade.nome}
+									|	%{
+									|
+									|		}
+									|
+									|	}%
+							.col-md-6.col-xs-12
+									label.col-md-12.col-xs-12 Município do empreendimento
+									span.col-md-12.col-xs-12 ${dla.caracterizacao.empreendimento.municipio.nome}/${dla.caracterizacao.empreendimento.municipio.estado.codigo}

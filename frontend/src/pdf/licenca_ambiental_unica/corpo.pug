@@ -1,0 +1,260 @@
+doctype html
+html(lang='en')
+    head
+        title Licenciamento - Amapá
+        link(rel="stylesheet" href="${templatePath}/style/estilo.css")
+        meta(charset='UTF-8')
+    body.img-background
+        div.titulo
+            p.text-center LICENÇA AMBIENTAL ÚNICA - LAU Nº ${licenca.numero}
+        table
+            tr
+                td.text-left(colspan='4') Processo Nº: ${licenca.caracterizacao.processo.numero}
+                td.text-left(colspan='4') Protocolo Nº: ${licenca.caracterizacao.numero}
+                td
+                    b
+                    | Validade da Licença: ${new java.text.SimpleDateFormat("dd/MM/yyyy").format(licenca.dataValidade)}
+            tr
+                td(colspan='10') 1. IDENTIFICAÇÃO DO INTERESSADO
+            tr
+                td(colspan='10')
+                    | RAZÃO SOCIAL/NOME: ${licenca.caracterizacao.empreendimento.empreendimentoEU.empreendedor.pessoa.tipo.codigo == 0  ? licenca.caracterizacao.empreendimento.empreendimentoEU.empreendedor.pessoa.nome : licenca.caracterizacao.empreendimento.empreendimentoEU.empreendedor.pessoa.razaoSocial}
+
+            tr
+                td(colspan='6')
+                    | INSCRIÇÃO ESTADUAL/RG: ${licenca.caracterizacao.empreendimento.empreendimentoEU.empreendedor.pessoa.tipo.codigo == 0  ? licenca.caracterizacao.empreendimento.empreendimentoEU.empreendedor.pessoa.rg ? licenca.caracterizacao.empreendimento.empreendimentoEU.empreendedor.pessoa.rg.numero : '-' : licenca.caracterizacao.empreendimento.empreendimentoEU.empreendedor.pessoa.inscricaoEstadual}
+
+                td(colspan='4')
+                    | CNPJ/CPF: ${licenca.caracterizacao.empreendimento.empreendimentoEU.empreendedor.pessoa.tipo.codigo == 0  ? utils.LicenciamentoUtils.formatarCpf(licenca.caracterizacao.empreendimento.empreendimentoEU.empreendedor.pessoa.cpf) : utils.LicenciamentoUtils.formatarCnpj(licenca.caracterizacao.empreendimento.empreendimentoEU.empreendedor.pessoa.cnpj)}
+            tr
+                | \#{if enderecoCorrespEmpreendedor.zonaLocalizacao.nome == "URBANA"}
+                td(colspan='10')
+                    | ENDEREÇO PARA CORRESPONDÊNCIA: ${enderecoCorrespEmpreendedor.logradouro}, ${enderecoCorrespEmpreendedor.numero} bairro: ${enderecoCorrespEmpreendedor.bairro}
+                | \#{/if}
+
+                | \#{if enderecoCorrespEmpreendedor.zonaLocalizacao.nome == "RURAL"}
+                td(colspan='10')
+                    | ENDEREÇO COMPLETO: Zona rural
+                | \#{/if}
+
+            tr
+                td(colspan='6')
+                    | MUNICÍPIO: ${enderecoCorrespEmpreendedor.municipio.nome}
+
+                td(colspan='2')
+                    | UF: ${enderecoCorrespEmpreendedor.municipio.estado.sigla}
+
+                td(colspan='2') CEP: ${enderecoCorrespEmpreendedor.cep ? utils.LicenciamentoUtils.formatarCep(enderecoCorrespEmpreendedor.cep.toString()) : '-'}
+
+            tr
+                td(colspan='10')
+                    | TELEFONE PARA CONTATO: ${telefone ? telefone : "-"}
+
+            tr
+
+                td(colspan='10')
+                    span COORDENADAS GEOGRÁFICAS DO EMPREENDIMENTO:
+                    li
+                        | \#{if geometry.getCoordinates().length == 1}
+                        tr.table-coordenadas
+                            th Ponto
+                            th Latitude
+                            th Longitude
+                        tr.table-coordenadas
+                            th.table-coordenadas P-1
+                            th.table-coordenadas ${utils.CoordenadasUtil.formataLatitudeString(geometry.getCoordinates()[0].y)}
+                            th.table-coordenadas ${utils.CoordenadasUtil.formataLongitudeString(geometry.getCoordinates()[0].x)}
+                        | \#{/if}
+                        | \#{else}
+                        tr.table-coordenadas
+                            th Ponto
+                            th Latitude
+                            th Longitude
+                            th Ponto
+                            th Latitude
+                            th Longitude
+                        | \#{list items:0..geometry.getCoordinates().length -2, as: 'coordenadas'}
+                        | \#{if coordenadas % 2 == 0}
+                        tr
+                            th.table-coordenadas P-${coordenadas +1}
+                            th.table-coordenadas ${utils.CoordenadasUtil.formataLatitudeString(geometry.getCoordinates()[coordenadas].y)}
+                            th.table-coordenadas ${utils.CoordenadasUtil.formataLongitudeString(geometry.getCoordinates()[coordenadas].x)}
+                            | \#{if coordenadas+1 != geometry.getCoordinates().length -1}
+                            th.table-coordenadas P-${coordenadas +2}
+                            th.table-coordenadas ${utils.CoordenadasUtil.formataLatitudeString(geometry.getCoordinates()[coordenadas+1].y) != null ? utils.CoordenadasUtil.formataLatitudeString(geometry.getCoordinates()[coordenadas+1].y) : '-'}
+                            th.table-coordenadas ${utils.CoordenadasUtil.formataLongitudeString(geometry.getCoordinates()[coordenadas+1].x) != null ? utils.CoordenadasUtil.formataLongitudeString(geometry.getCoordinates()[coordenadas+1].x) : '-' }
+                            | \#{/if}
+                        | \#{/if}
+                        | \#{/list}
+                        | \#{/else}
+
+            tr
+                td(colspan='10') 2. IDENTIFICAÇÃO DO EMPREENDIMENTO/ATIVIDADE OU OBRA LICENCIADA
+            tr
+                td(colspan='10') NOME DO EMPREENDIMENTO: ${licenca.caracterizacao.empreendimento.denominacao}
+            tr
+                td(colspan='10') LOCALIZAÇÃO DO EMPREENDIMENTO: ${enderecoPrincipalEmpreendimento.logradouro}, ${enderecoPrincipalEmpreendimento.numero} bairro: ${enderecoPrincipalEmpreendimento.bairro} - ${enderecoPrincipalEmpreendimento.municipio.nome} / ${enderecoPrincipalEmpreendimento.municipio.estado.nome}
+
+            tr
+                td(colspan="10")
+                    b ATIVIDADE(S) LICENCIADA(S):
+                    .text-justify
+                        ul
+                            | \#{list items:licenca.caracterizacao.atividadesCaracterizacao, as:'atividadeCaracterizacao' }
+                            li.cell-spacing ${atividadeCaracterizacao.atividade.codigo ? atividadeCaracterizacao.atividade.codigo : ''} - ${atividadeCaracterizacao.atividade.nome}
+                            ul
+                                | \#{list items:atividadeCaracterizacao.atividadesCnae, as:'atividadeCnae' }
+                                li CNAE ${atividadeCnae.codigo} - ${atividadeCnae.nome}
+                                | \#{/list}
+                            | \#{/list}
+
+            tr
+                td(colspan="10")
+                    b VALOR AUTORIZADO:
+                    .text-justify
+                        ul
+                        | \#{list items:licenca.caracterizacao.atividadesCaracterizacao, as:'atividadeCaracterizacao' }
+                        span.row
+                            | \#{list items:atividadeCaracterizacao.atividadeCaracterizacaoParametros, as:'atividadeCaracterizacaoParametro' }
+                            li ${atividadeCaracterizacaoParametro.parametroAtividade.codigo} : ${atividadeCaracterizacaoParametro.parametroAtividade.descricao} - <strong>${atividadeCaracterizacaoParametro.valorParametro}</strong>
+                            | \#{/list}
+                            | \#{/list}
+
+            tr
+                td(colspan="5")
+                    b Potencial Poluidor/Degradador: ${licenca.caracterizacao.atividadeCaracterizacaoMaiorPotencialPoluidorEPorte.atividade.potencialPoluidor.nome}
+
+                td(colspan="5")
+                    b Porte: ${licenca.caracterizacao.atividadeCaracterizacaoMaiorPotencialPoluidorEPorte.porteEmpreendimento.nome}
+
+            tr
+                td(colspan='10')
+                    b COORDENADAS GEOGRÁFICAS DA ÁREA DA(S) ATIVIDADE(S) LICENCIADA(S):
+                    table
+                        | \#{if licenca.caracterizacao.isComplexo()}
+                        | \#{list items:licenca.caracterizacao.atividadesCaracterizacao, as:'atividadeCaracterizacao' }
+                        li.cell-spacing ${atividadeCaracterizacao.atividade.codigo ? atividadeCaracterizacao.atividade.codigo : ''} - ${atividadeCaracterizacao.atividade.nome}
+                        | \#{/list}
+                        li.cell-spacing ${nome}
+                            tr.table-coordenadas
+                                th Ponto
+                                th Latitude
+                                th Longitude
+                                th Ponto
+                                th Latitude
+                                th Longitude
+                        | \#{list items:licenca.caracterizacao.geometriasComplexo, as:'geometriaComplexo'}
+                        | \#{list items:0..geometriaComplexo.geometria.getCoordinates().length -2, as:'coordenadas'}
+                        | \#{if coordenadas % 2 == 0}
+                        tr
+                            th.table-coordenadas P-${coordenadas +1}
+                            th.table-coordenadas ${utils.CoordenadasUtil.formataLatitudeString(geometriaComplexo.geometria.getCoordinates()[coordenadas].y)}
+                            th.table-coordenadas ${utils.CoordenadasUtil.formataLongitudeString(geometriaComplexo.geometria.getCoordinates()[coordenadas].x)}
+                            | \#{if coordenadas+1 != geometriaComplexo.geometria.getCoordinates().length -1}
+                            th.table-coordenadas P-${coordenadas +2}
+                            th.table-coordenadas ${utils.CoordenadasUtil.formataLatitudeString(geometriaComplexo.geometria.getCoordinates()[coordenadas+1].y) != null ? utils.CoordenadasUtil.formataLatitudeString(geometriaComplexo.geometria.getCoordinates()[coordenadas+1].y) : '-'}
+                            th.table-coordenadas ${utils.CoordenadasUtil.formataLongitudeString(geometriaComplexo.geometria.getCoordinates()[coordenadas+1].x) != null ? utils.CoordenadasUtil.formataLongitudeString(geometriaComplexo.geometria.getCoordinates()[coordenadas+1].x) : '-' }
+                            | \#{/if}
+                        | \#{/if}
+                        | \#{/list}
+                        | \#{/list}
+                        | \#{/if}
+                        | \#{else}
+                        | \#{list items:licenca.caracterizacao.atividadesCaracterizacao, as:'atividadeCaracterizacao'}
+                        li.cell-spacing.bottom-padding
+                            br.bottom-padding
+                            tr.table-coordenadas.cell-spacing ${atividadeCaracterizacao.getCodigoAtividade()} - ${atividadeCaracterizacao.getNomeAtividade()}
+                                th Ponto
+                                th Latitude
+                                th Longitude
+                                th Ponto
+                                th Latitude
+                                th Longitude
+                        | \#{list items:atividadeCaracterizacao.geometriasAtividade, as:'geometriaAtividade'}
+                        | \#{list items:0..geometriaAtividade.geometria.getCoordinates().length -2, as: 'coordenadas'}
+                        | \#{if coordenadas % 2 == 0}
+                        tr
+                            th.table-coordenadas P-${coordenadas +1}
+                            th.table-coordenadas ${utils.CoordenadasUtil.formataLatitudeString(geometriaAtividade.geometria.getCoordinates()[coordenadas].y)}
+                            th.table-coordenadas ${utils.CoordenadasUtil.formataLongitudeString(geometriaAtividade.geometria.getCoordinates()[coordenadas].x)}
+                            | \#{if coordenadas+1 != geometriaAtividade.geometria.getCoordinates().length -1}
+                            th.table-coordenadas P-${coordenadas +2}
+                            th.table-coordenadas ${utils.CoordenadasUtil.formataLatitudeString(geometriaAtividade.geometria.getCoordinates()[coordenadas+1].y) != null ? utils.CoordenadasUtil.formataLatitudeString(geometriaAtividade.geometria.getCoordinates()[coordenadas+1].y) : '-'}
+                            th.table-coordenadas ${utils.CoordenadasUtil.formataLongitudeString(geometriaAtividade.geometria.getCoordinates()[coordenadas+1].x) != null ? utils.CoordenadasUtil.formataLongitudeString(geometriaAtividade.geometria.getCoordinates()[coordenadas+1].x) : '-' }
+                            | \#{/if}
+                        | \#{/if}
+                        | \#{/list}
+                        | \#{/list}
+                        | \#{/list}
+                        | \#{/else}
+            tr
+                td.text-left(colspan='10') RESPONSÁVEL PELAS INFORMAÇÕES: ${licenca.caracterizacao.cadastrante.tipo.codigo == 0  ? licenca.caracterizacao.cadastrante.nome : licenca.caracterizacao.cadastrante.razaoSocial}
+            tr
+                td.text-left(colspan='6') RG/INSCRIÇÃO ESTADUAL: ${licenca.caracterizacao.cadastrante.tipo.codigo == 0  ? licenca.caracterizacao.cadastrante.rg ? licenca.caracterizacao.cadastrante.rg.numero : '-' : (licenca.caracterizacao.cadastrante.inscricaoEstadual ? licenca.caracterizacao.cadastrante.inscricaoEstadual : '-')}
+                td.text-left(colspan='4') CPF/CNPJ: ${licenca.caracterizacao.cadastrante.tipo.codigo == 0  ? utils.LicenciamentoUtils.formatarCpf(licenca.caracterizacao.cadastrante.cpf) : utils.LicenciamentoUtils.formatarCnpj(licenca.caracterizacao.cadastrante.cnpj) }
+
+        div.atencao
+            | Atenção:
+        div.texto-interno
+            | Esta Licença é composta de restrições e/ou condições, cujo não cumprimento/atendimento sujeitará a sua invalidação e/ou
+            | penalidades previstas em normas.
+        div.texto-interno
+            | Esta Licença não comprova nem substitui o documento de propriedade, de posse ou de domínio do imóvel.
+        div.texto-interno
+            | Esta licença deve permanecer na localização da atividade e exposta de forma visível.
+        div.pull-right.dataRodape
+            |  MACAPÁ - AP, ${utils.DateUtilLicenciamento.formatarMesMinusculo(new Date())}
+        br
+        table
+            tr
+                td(width='12%').transparent-cell
+                td(width='76%').text-center.transparent-cell.president
+                    p  ROBÉRIO ALEIXO ANSELMO NOBRE
+                    p  Secretário
+                td(width='12%').transparent-cell
+
+        div.titulo-table.text-center.quebra-pagina
+            b RESTRIÇÕES E/OU CONDIÇÕES DE VALIDADE DESTA LICENÇA - LAU Nº ${licenca.numero}
+        table
+            tr
+                td(colspan='10')
+                    ol
+                        li.text-justify-table
+                            | O pedido de licenciamento e a respectiva concessão da mesma, só terá validade quando publicada Diário Oficial do Estado, periódico regional local ou local de grande circulação, em 						meio eletrônico de comunicação mantido pela SEMA, ou nos murais das Prefeituras e 						Câmaras Municipais, conforme art. 24, da Lei nº.3.785 de 24 de julho de 2012;
+
+                        li.text-justify-table
+                            | A solicitação da renovação da Licença Ambiental deverá ser requerida num prazo mínimo de 120 dias, antes do vencimento, conforme art.23, da Lei nº 3.785 de 24 de julho de 2012;
+
+                        li.text-justify-table
+                            | A presente licença está sendo concedida com base nas informações constantes no processo nº.${licenca.caracterizacao.processo.numero}.
+
+                        li.text-justify-table
+                            | Toda e qualquer modificação introduzida no projeto após a emissão da Licença implicará na sua automática invalidação, devendo ser solicitada nova Licença, com ônus para o interessado.
+
+                        li.text-justify-table
+                            | Esta licença é válida apenas para a localização, atividade e finalidade constante na mesma, devendo o interessado requerer a SEMA nova Licença quando houver mudança de qualquer um destes itens.
+
+                        li.text-justify-table
+                            | Esta licença não dispensa e nem substitui nenhum documento exigido pela Legislação Federal, Estadual e Municipal.
+
+                        li.text-justify-table
+                            | A coleta e o transporte dos resíduos de qualquer natureza gerados no empreendimento devem ser efetuados por empresa licenciada para esta atividade.
+
+                        li.text-justify-table
+                            | Na eventualidade de ocorrência de vazamento de combustíveis ou sinistros nas instalações físicas do empreendimento, adotar procedimentos constantes no Plano de Emergência Individual - PEI, e encaminhar imediatamente relatório circunstanciado do evento a SEMA.
+
+                        | \#{if parecer != null && parecer.condicionantes!= null && !parecer.condicionantes.isEmpty()}
+                        | \#{list items:parecer.condicionantes, as:'condicionante'}
+                        li.text-justify-table
+                            span ${condicionante.texto}
+                            br
+                            span Prazo para atendimento de ${condicionante.prazo} dias.
+                        | \#{/list}
+                        | \#{/if}
+                        | \#{if parecer != null && parecer.restricoes != null && !parecer.restricoes.isEmpty()}
+                        | \#{list items:parecer.restricoes, as:'restricao'}
+                        li.text-justify-table
+                            span ${restricao.texto}
+                        | \#{/list}
+                        | \#{/if}
+            //- tr.quebra-pagina
