@@ -1,0 +1,72 @@
+div.modal-header
+
+	button.close(type='button', ng-click="modalCtrl.cancelar()")
+		span(aria-hidden='true') ×
+		span.sr-only Fechar
+
+	h4.modal-title Confirmação de solicitação de licença
+
+div.modal-body#caracterizacao
+
+	label A solicitação está correta?
+
+	blockquote.success
+		h4.nome-campo-caracterizacao Tipologia:
+		h5.info-caracterizacao {{modalCtrl.caracterizacao.tipologia.nome}}
+
+		h4.nome-campo Atividade(s) Licenciada(s):
+		ul
+			li(ng-repeat='atividadeCaracterizacao in modalCtrl.caracterizacao.atividadesCaracterizacao | existeAtividadeCaracterizacao')
+				span.textos-enquadramento {{atividadeCaracterizacao.atividade.nome}}
+				ul.left-padding
+					li(ng-repeat='atividadeCnae in atividadeCaracterizacao.atividadesCnae')
+						span.textos-cnaes(ng-if="empreendimento.empreendimentoEU.pessoa.cpf")
+							b CNAE:&nbsp
+							| {{atividadeCnae.nome}}
+						span.textos-cnaes(ng-if="empreendimento.empreendimentoEU.pessoa.cnpj")
+							b CNAE:&nbsp
+							| {{atividadeCnae.codigo}} - {{atividadeCnae.nome}}
+					li
+						b CÓDIGO AMBIENTAL:&nbsp
+						| {{atividadeCaracterizacao.atividade.codigo}} - {{atividadeCaracterizacao.atividade.nome}}
+
+				h5.no-margin-bottom Parâmetros:
+				div.div-params-enquadramento
+					ul.left-padding
+						li(ng-repeat='atividadeCaracterizacaoParametro in atividadeCaracterizacao.atividadeCaracterizacaoParametros')
+							span.textos-enquadramento {{atividadeCaracterizacaoParametro.parametroAtividade.codigo}} - {{getDescricao(atividadeCaracterizacao,atividadeCaracterizacaoParametro)}}:&nbsp;
+							| {{atividadeCaracterizacaoParametro.valorParametro}}
+
+	div(ng-repeat="licenca in modalCtrl.caracterizacao.tiposLicencaEmAndamento")
+		label {{licenca.nome}}
+
+		div
+			| Taxa expediente:&nbsp
+			strong.strong-padding(ng-if='licenca.isento')
+				|Isento
+			strong.strong-padding(ng-if='!licenca.isento')
+				| R$ {{modalCtrl.caracterizacao.valorTaxaAdministrativa | number: 2}}
+		//- div
+		//- 	| Taxa de Licenciamento (
+		//- 	b prevista
+		//- 	| ):&nbsp
+		//- 	strong.strong-padding(ng-if='licenca.isento || modalCtrl.caracterizacao.valorTaxaLicenciamento === 0')
+		//- 		| Isento
+		//- 	strong.strong-padding(ng-if='!licenca.isento && modalCtrl.caracterizacao.valorTaxaLicenciamento > 0')
+		//- 		| R$ {{modalCtrl.caracterizacao.valorTaxaLicenciamento | number: 2}}
+		//- div
+		//- 	| Total geral:&nbsp
+		//- 	strong.strong-padding(ng-if='licenca.isento')
+		//- 		| Isento
+		//- 	strong.strong-padding(ng-if='!licenca.isento && licenca.valorDae >= 0')
+		//- 		| R$ {{licenca.valorDae | number: 2}}
+		br
+
+div.modal-footer#footer-modal
+
+	button.btn.btn-default.pull-left(ng-click="modalCtrl.cancelar()")
+		i.glyphicon.glyphicon-arrow-left
+		| &nbsp;Cancelar
+	button.btn.btn-success.pull-right(ng-click="modalCtrl.ok()")
+		i.glyphicon.glyphicon-ok
+		| &nbsp;Confirmar

@@ -1,0 +1,9 @@
+include ../../../components/modal
+
++modal(large="true",
+		id="modalVisualizar",
+		titulo="Visualizar Empreendimento")
+
+	+modal-body()
+		div(ng-if='listagem.empreendimentoVisualizar.exibir')
+			resumo-empreendimento(empreendimento='listagem.empreendimentoVisualizar')

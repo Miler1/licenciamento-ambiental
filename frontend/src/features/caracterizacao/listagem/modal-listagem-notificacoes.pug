@@ -1,0 +1,30 @@
+div.modal-header
+
+	button.close(type='button', ng-click="modalCtrl.cancelar()")
+		span(aria-hidden='true') ×
+		span.sr-only Fechar
+
+	h4.modal-title Mensagens
+
+div.modal-body
+
+	div.mensagens
+		table.table.table-striped
+			thead
+				tr
+					th
+					th Data 
+					th Assunto
+			tbody
+				tr.pointer(ng-click='modalCtrl.abrirModalNotificacoes()')
+					td 
+						i.fa.fa-envelope.green
+					td  {{modalCtrl.notificacoes[0].dataCadastro}}
+					td Existe notificação pendente
+
+
+div.modal-footer#footer-modal
+
+	button.btn.btn-default.pull-left(ng-click="modalCtrl.cancelar()")
+		i.glyphicon.glyphicon-arrow-left
+		| &nbsp;Fechar

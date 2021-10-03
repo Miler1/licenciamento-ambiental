@@ -1,0 +1,259 @@
+include ../cadastro/simplificado/condicao/questionario-3
+
+div#visualizacao-caracterizacao
+
+	.panel.panel-default(name='licenca')
+		.panel-heading
+			h4.panel-title Dados da licença
+
+		.panel-body
+			.row
+				.col-sm-12
+					blockquote
+						.grid-container
+							.grid-item
+								b.texto-inline CPF/CNPJ: &nbsp;
+								| {{caracterizacao.cpfCnpjPessoaEmpreendimento | brCpfCnpj}}
+							.grid-item
+								b.texto-inline Processo: &nbsp;
+								| {{caracterizacao.processo.numero}}
+							.grid-item
+								b.texto-inline Nome: &nbsp;
+								| {{caracterizacao.nomePessoaEmpreendimento}}
+							.grid-item
+								b.texto-inline Protocolo: &nbsp;
+								| {{caracterizacao.numero}}
+							.grid-item
+								b.texto-inline Nome do Empreendimento: &nbsp;
+								| {{caracterizacao.empreendimento.empreendimentoEU.denominacao}}
+							.grid-item
+								b.texto-inline Número da Licença: &nbsp;
+								| {{caracterizacao.numeroLicenca}}
+
+
+	.panel.panel-default(name='atividadeParametro')
+		.panel-heading
+			h4.panel-title Atividade e parâmetro
+
+		.panel-body
+			.row
+				.col-sm-12(ng-repeat="atividadeCaracterizacao in caracterizacao.atividadesCaracterizacao")
+					blockquote
+						div(ng-if="atividadeCaracterizacao.atividade.tipologia.nome")
+							span.titulo Tipologia:&nbsp
+							span {{atividadeCaracterizacao.atividade.tipologia.nome}}
+
+						div(ng-if="atividadeCaracterizacao.atividade.nome")
+							span.titulo Atividade:&nbsp
+							span {{atividadeCaracterizacao.atividade.nome}}
+
+						div(ng-if="caracterizacao.empreendimento.pessoa.type  != 'PessoaFisica'", ng-repeat='atividadeCnae in atividadeCaracterizacao.atividadesCnae')
+							span.titulo CNAE:&nbsp
+							span {{atividadeCnae.codigo}} - {{atividadeCnae.nome}}
+
+						div(ng-if="caracterizacao.empreendimento.pessoa.type   == 'PessoaFisica'", ng-repeat='atividadeCnae in atividadeCaracterizacao.atividadesCnae')
+							span.titulo CNAE:&nbsp
+							span {{atividadeCnae.nome}}
+
+						div.parametros(ng-if="caracterizacao.tipo.nome === 'Simplificado'")
+							span.titulo Parâmetro(s) da atividade:
+							div(ng-if="atividadeCaracterizacao.atividade.parametros.length > 0")
+								div(ng-repeat='parametro in atividadeCaracterizacao.atividade.parametros')
+									span.titulo {{parametro.codigo}} - {{parametro.descricao}}:&nbsp
+									span.descricao {{atividadeCaracterizacao.atividadeCaracterizacaoParametros[$index].valorParametro}}
+							div(ng-if="atividadeCaracterizacao.atividade.parametros.length === 0")
+								p.empty-result A atividade não necessita que sejam informados parâmetros.
+
+				.col-sm-12(ng-if="caracterizacao.tipo.nome === 'Simplificado'")
+					blockquote(ng-if="condicoesParaExibirVigencia()")
+						span.titulo Vigência requerida da licença (em anos):&nbsp
+						span.descricao {{caracterizacao.vigenciaSolicitada}}
+
+				.col-sm-12(ng-if="caracterizacao.descricaoAtividade.length > 0")
+					blockquote
+						span.titulo Descrição da atividade:&nbsp
+						span {{caracterizacao.descricaoAtividade}}
+
+
+	.panel.panel-default(name='localizacaoGeografica')
+		.panel-heading
+			h4.panel-title Localização geográfica
+		.panel-body(ng-if='caracterizacao.id && controleAtualizacao')
+			mapa-caracterizacao(
+					geo='caracterizacao.limite',
+					id-mapa='"mapa-georeferenciamento-visualizacao"',
+					model='cadastro.geometry',
+					layer-group="layerGroup",
+					atividades-caracterizacao="caracterizacao.atividadesCaracterizacao",
+					controle-atualizacao="controleAtualizacao",
+					is-caracterizacao='true',
+					is-visualizacao='true',
+					is-edicao='false',
+					localizacao-empreendimento="localizacaoEmpreendimento",
+					estilo-geo="caracterizacao.estiloLimite",
+					is-complexo='caracterizacao.complexo',
+					geometrias-complexo="caracterizacao.geometriasComplexo",
+					possui-atividade-rural="temAtividadeRural()",
+					limite-estado="caracterizacao.limite")
+
+	.panel.panel-default(name='condicoes')
+		.panel-heading
+			h4.panel-title Condições
+		.panel-body
+			.row
+				.col-sm-12(ng-if="caracterizacao.tipo.nome !== 'Dispensa' && caracterizacao.respostas && caracterizacao.respostasPorAtividade", ng-repeat="respostaPorAtividade in caracterizacao.respostasPorAtividade")
+					blockquote
+						div(ng-if="caracterizacao.tipo.nome !== 'Dispensa'")
+							label {{respostaPorAtividade.atividade.nome}}
+							ul(ng-repeat="resposta in respostaPorAtividade.respostas")
+								span {{resposta.pergunta.texto}}
+								p.resposta Resposta: {{resposta.texto}}
+								br
+
+				.col-sm-12(ng-if="caracterizacao.tipo.nome === 'Dispensa' && caracterizacao.respostas")
+					blockquote
+						div
+							label {{caracterizacao.resposta.atividade.nome}}
+							ul(ng-repeat="resposta in caracterizacao.respostas", ng-if="resposta.pergunta.ativo==true")
+								span {{resposta.pergunta.texto}}
+								p.resposta Resposta: {{resposta.texto}}
+								br
+
+				.col-sm-12(ng-if="caracterizacao.questionario3")
+					blockquote
+						form(name="formCondicaoQuestionario", novalidate)
+							+questionario3('caracterizacao.questionario3', "true", "false")
+
+	.panel.panel-default(name='documentacao', ng-if="caracterizacao.tipo.nome === 'Simplificado'")
+		.panel-heading
+			h4.panel-title Documentação necessária ao licenciamento
+		.panel-body
+			div.row
+				div.col-md-12
+					label Requisitos Administrativos:
+					table.table.table-striped
+						thead
+							tr
+								th.col-md-1 Status
+								th.col-md-5 Nome documento
+								th.col-md-2 Data envio
+						tbody
+							tr(ng-repeat="solicitacaoDocumento in caracterizacao.solicitacoesDocumentoCaracterizacao")
+								td {{solicitacaoDocumento.documento ? 'Enviado' : 'Aguardando'}}
+								td(class="relative")
+									div(class="clicavel" ng-class="{truncate: !solicitacaoDocumento.isExpanded}",
+										ng-attr-title="{{!solicitacaoDocumento.isExpanded ? 'Clique para expandir' : 'Clique para comprimir'}}",
+										ng-click="solicitacaoDocumento.isExpanded = !solicitacaoDocumento.isExpanded")
+										| {{solicitacaoDocumento.tipoDocumento.nome}}
+									div(ng-class="!solicitacaoDocumento.isExpanded ? 'margin-20' : ''", ng-if="solicitacaoDocumento.tipoDocumento.caminhoModelo")
+										a.traditional(ng-Href="{{etapaDocumentacao.MODELO_URL + solicitacaoDocumento.tipoDocumento.caminhoModelo}}", target="_blank") baixar documento
+								td {{solicitacaoDocumento.documento ? solicitacaoDocumento.documento.dataCadastro : '' }}
+
+			div.row
+				div.col-md-12(ng-show = "caracterizacao.solicitacoesGruposDocumentos && caracterizacao.solicitacoesGruposDocumentos.length > 0")
+					label Requisitos Técnicos:
+					table.table.table-striped
+						thead
+							tr
+								th.col-md-1 Status
+								th.col-md-5 Nome documento
+								th.col-md-2 Data envio
+						tbody
+							tr(ng-repeat="solicitacaoDocumento in caracterizacao.solicitacoesGruposDocumentos")
+								td {{solicitacaoDocumento.documento ? 'Enviado' : 'Aguardando'}}
+								td(class="relative")
+									div(class="clicavel" ng-class="{truncate: !solicitacaoDocumento.isExpanded}",
+										ng-attr-title="{{!solicitacaoDocumento.isExpanded ? 'Clique para expandir' : 'Clique para comprimir'}}",
+										ng-click="solicitacaoDocumento.isExpanded = !solicitacaoDocumento.isExpanded")
+										| {{solicitacaoDocumento.tipoDocumento.nome}}
+									div(ng-class="!solicitacaoDocumento.isExpanded ? 'margin-20' : ''", ng-if="solicitacaoDocumento.tipoDocumento.caminhoModelo")
+										a.traditional(ng-Href="{{etapaDocumentacao.MODELO_URL + solicitacaoDocumento.tipoDocumento.caminhoModelo}}", target="_blank") baixar documento
+								td {{solicitacaoDocumento.documento ? solicitacaoDocumento.documento.dataCadastro : '' }}
+
+	.panel.panel-default(name='enquadramento', ng-if="caracterizacao.tipo.nome === 'Simplificado' && caracterizacao.status.codigo !== 'EM_ANDAMENTO'")
+		.panel-heading
+			h4.panel-title Enquadramento
+		.panel-body
+			.col-xs-6.col-md-6
+				div.panel.panel-success
+					div.panel-body
+						| Enquadramento da Solicitação
+					div.panel-footer
+						.media-div
+							.media-context
+								div
+									.row
+										span.col-md-8 Porte:
+										span.col-md-4.text-right
+											strong.strong-padding {{caracterizacao.atividadeCaracterizacaoMaiorPotencialPoluidorEPorte.porteEmpreendimento.nome}}
+									.row
+										span.col-md-8 Potencial Poluidor/Degradador (PPD):
+										span.col-md-4.text-right
+											strong.strong-padding {{caracterizacao.atividadeCaracterizacaoMaiorPotencialPoluidorEPorte.atividade.potencialPoluidor.nome}}
+					div.panel-footer.text-center(ng-if="caracterizacao.atividadeCaracterizacaoMaiorPotencialPoluidorEPorte.porteEmpreendimento.nome !== caracterizacao.atividadeCaracterizacaoMaiorPotencialPoluidorEPorte.porteEmpreendimentoParaCalculoDoPorte.nome")
+						span * De acordo com os dados cadastrados na Rede Simples, o porte deste empreendimento é {{caracterizacao.atividadeCaracterizacaoMaiorPotencialPoluidorEPorte.porteEmpreendimentoParaCalculoDoPorte.nome}}.
+
+			.col-xs-6.col-md-6
+				div.panel.panel-success
+					div.panel-body
+						| Informações de pagamento
+					div.panel-footer
+						.media-div
+							.media-context
+								div
+									.row
+										span.col-md-8 Taxa expediente:
+										span.col-md-4.text-right
+											strong.strong-padding(ng-if='caracterizacao.tipoLicenca.isento')
+												| Isento
+											strong.strong-padding(ng-if='!caracterizacao.tipoLicenca.isento')
+												| R$ {{caracterizacao.valorTaxaAdministrativa | number: 2}}
+
+									//- .row
+									//- 	span.col-md-8 Taxa de Licenciamento (
+									//- 		b prevista
+									//- 		| ):
+									//- 	span.col-md-4.text-right
+									//- 		strong.strong-padding(ng-if='caracterizacao.tipoLicenca.isento || caracterizacao.valorTaxaLicenciamento === 0')
+									//- 			| Isento
+									//- 		strong.strong-padding(ng-if='!caracterizacao.tipoLicenca.isento && caracterizacao.valorTaxaLicenciamento > 0')
+									//- 			| R$ {{caracterizacao.valorTaxaLicenciamento | number: 2}}
+
+									//- hr.hr-small
+
+						//- .row.hr-small
+						//- 	span.col-md-8 Total geral:
+						//- 	span.col-md-4.text-right
+
+						//- 		strong.strong-padding(ng-if='caracterizacao.tipoLicenca.isento')
+						//- 			| Isento
+						//- 		strong.strong-padding(ng-if='!caracterizacao.tipoLicenca.isento')
+						//- 			| R$ {{caracterizacao.tipoLicenca.valorDae | number: 2}}
+
+	.panel.panel-default(name='documentacao', ng-if="caracterizacao.ativo && caracterizacao.tipo.nome === 'Simplificado' && historicos.length > 0")
+		.panel-heading
+			h4.panel-title Histórico de alterações da solicitação
+		.panel-body
+			div.row
+				div.col-md-12
+					table.table.table-striped
+						thead
+							tr
+								th.col-md-1 Data / Hora
+								th.col-md-5 Responsável
+								th.col-md-2 Visualizar
+						tbody
+							tr(ng-repeat="historico in historicos")
+								td {{historico.data}}
+								td {{historico.nomeResponsavel}}
+								td
+									div.btn-group
+										button.btn.btn-default.btn-xs(title="Clique para visualizar o histórico",
+											ng-click="visualizarCaracterizacao(historico.idCaracterizacao)")
+											i.i.fa.fa-eye
+
+div#footer-modal
+
+	button.btn.btn-default.pull-left(ng-click="voltar()")
+		i.glyphicon.glyphicon-arrow-left
+		| &nbsp;Voltar

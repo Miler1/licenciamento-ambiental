@@ -1,0 +1,78 @@
+div.modal-header
+
+	button.close(type='button', ng-click="modalCtrl.cancelar()")
+		span(aria-hidden='true') ×
+		span.sr-only Fechar
+
+	h4.modal-title Notificações da solicitação
+
+div.modal-body
+
+	div(growl, inline='true', reference='15')
+
+	div
+		span Informamos que o processo Nª {{modalCtrl.numero}}, está pendente de atendimento. Caso a notificação não seja atendida no prazo máximo de 10 dias a partir da visualização ou leitura automática da mesma, o processo será arquivado.
+
+	div
+		label Data:
+		span  {{modalCtrl.notificacoes[0].dataCadastro}}
+
+	div(ng-repeat="notificacao in modalCtrl.notificacoes")
+		div(uib-accordion class="accordion")
+			div(uib-accordion-group class="panel-default")
+				uib-accordion-heading
+					div.truncate-notificacao(role="button", ng-attr-title='{{notificacao.analiseDocumento.documento.tipo.nome}}')
+						i.fa.fa-check.notificacao(ng-class="{'resolvida': notificacao.resolvido}")
+						| {{notificacao.analiseDocumento.documento.tipo.nome}}
+				div
+					label Parecer:
+					span  {{notificacao.analiseDocumento.parecer}}
+
+				table.table.table-striped
+					thead
+					tbody
+						tr
+							td Upload do novo documento
+							td
+								div.btn-group.pull-right
+									button.btn.btn-default.btn-xs.no-margin(title="Clique para fazer o upload do novo documento",
+																		ngf-select, ngf-multiple="false", ngf-keep="false", ngf-max-files="1",
+																		ngf-change="modalCtrl.selecionarArquivo($files, $file, notificacao)",
+																		ng-if="!notificacao.resolvido && !notificacao.documentoCorrigido && !notificacao.justificativa",
+																		ngf-accept="'application/pdf'")
+										i.fa.fa-upload
+									button.btn.btn-default.btn-xs.no-margin(title="Clique para justificar o não envio do documento",
+																		ng-click="notificacao.exibirCampoJustificativa = !notificacao.exibirCampoJustificativa",
+																		ng-if="!notificacao.documentoCorrigido")
+										i.fa.fa-file
+									button.btn.btn-default.btn-xs.no-margin(title="Clique para baixar o documento",
+																		ng-click="modalCtrl.baixarDocumento(notificacao.id)",
+																		ng-if="!!notificacao.documentoCorrigido && notificacao.resolvido", target="_blank")
+										i.fa.fa-download
+									button.btn.btn-default.btn-xs.no-margin(title="Clique para remover o documento",
+																			ng-click="modalCtrl.removerDocumento(notificacao)",
+																			ng-if="!!notificacao.documentoCorrigido && notificacao.resolvido")
+										i.fa.fa-trash
+									button.btn.btn-default.btn-xs.no-margin(title="Clique para remover a justificativa",
+																			ng-click="modalCtrl.removerJustificativa(notificacao, $index)",
+																			ng-if="!!notificacao.justificativa && notificacao.resolvido")
+										i.fa.fa-trash
+
+				form.margin-top-md(name="formularioJustificativa", novalidate, ng-if='notificacao.exibirCampoJustificativa')
+					.form-group
+						label(for="textoJustificativaNotificacao") Justificativa do não envio da documentação solicitada
+						textarea.form-control#textoJustificativaNotificacao(rows="4", ng-model="notificacao.justificativa", ng-change='modalCtrl.justificativaAlterada = true')
+						button.btn.btn-success(title='Salvar justificativa', ng-click='modalCtrl.justificarNotificacao(notificacao)', ng-disabled='!modalCtrl.podeSalvarJustificativa(notificacao)')
+							i.fa.fa-save
+
+				div.download-analise-documento.text-center
+					button.btn.btn-default(title="Clique para baixar o documento invalidado pela análise.",
+						ng-click="modalCtrl.downloadAnaliseDocumento(notificacao.analiseDocumento.documento)")
+						i.glyphicon.glyphicon-save-file
+						|  Download
+
+div.modal-footer.footer-notificacoes#footer-modal
+
+	button.btn.btn-default.pull-left(ng-click="modalCtrl.cancelar()")
+		i.glyphicon.glyphicon-arrow-left
+		| &nbsp;Fechar

@@ -1,0 +1,29 @@
+include ../../../layout/components/inputErrors
+
+div.modal-header
+
+	button.close(type='button', ng-click="modalCtrl.cancelar()")
+		span(aria-hidden='true') ×
+		span.sr-only Fechar
+
+	h4.modal-title Cancelamento de DLA
+
+div.modal-body
+
+	form(name="modalCtrl.formCancelarDla", novalidate)
+		blockquote.success
+			p.text-justify Cancelamento da Declaração de Dispensa de Licenciamento Ambiental (DLA) referente ao processo {{modalCtrl.numero}}.
+			.form-group
+				label Justificativa
+				textarea#justificativa.form-control(name='justificativa', rows='6', ng-model="modalCtrl.justificativa", required, maxlength='2200')
+				span.pull-right  Restam {{ 2200 - modalCtrl.justificativa.length }} caracteres
+				+inputErrors('modalCtrl.formCancelarDla', 'justificativa', 'required')
+
+div.modal-footer#footer-modal
+
+	button.btn.btn-default.pull-left(ng-click="modalCtrl.cancelar()")
+		i.glyphicon.glyphicon-arrow-left
+		| &nbsp;Cancelar
+	button.btn.btn-success.pull-right(ng-click="modalCtrl.ok()")
+		i.glyphicon.glyphicon-ok
+		| &nbsp;Confirmar

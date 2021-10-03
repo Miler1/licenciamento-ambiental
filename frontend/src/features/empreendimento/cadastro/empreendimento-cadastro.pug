@@ -1,0 +1,27 @@
+include ../../../layout/components/passos
+
+div(ng-init="cadastro.initPessoa()")
+
+	h1 Cadastrar empreendimento
+
+	+passos()
+
+	div
+
+		div(ng-show="cadastro.etapa.nome === cadastro.etapas.EMPREENDEDOR.nome", ng-controller='etapaEmpreendedorController as etapaEmpreendedor', ng-init="etapaEmpreendedor.inicializarPessoa()")
+			include empreendedor/etapa-empreendedor
+
+		div(ng-show="cadastro.etapa.nome === cadastro.etapas.EMPREENDIMENTO.nome", ng-controller='etapaEmpreendimentoController as etapaEmpreendimento')
+			include empreendimento/etapa-empreendimento
+
+		div(ng-show="cadastro.etapa.nome === cadastro.etapas.PROPRIETARIO.nome", ng-controller='etapaProprietarioController as etapaProprietarios')
+			include proprietario/etapa-proprietario
+
+		div(ng-show="cadastro.etapa.nome === cadastro.etapas.REPRESENTANTES.nome", ng-controller='etapaRepresentantesController as etapaRepresentantes')
+			include representantes_legais/etapa-representantes
+
+		div(ng-show="cadastro.etapa.nome === cadastro.etapas.RESPONSAVEIS.nome", ng-controller='etapaResponsaveisController as etapaResponsaveis')
+			include responsaveis/etapa-responsaveis
+
+		div(ng-show="cadastro.etapa.nome === cadastro.etapas.RESUMO.nome", ng-controller='etapaResumoController as etapaResumo')
+			include resumo/etapa-resumo

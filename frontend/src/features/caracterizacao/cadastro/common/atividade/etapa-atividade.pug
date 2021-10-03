@@ -1,0 +1,99 @@
+include ../../../../../layout/components/rodapeCadastro
+include ../../../../../layout/components/opcoesLicenca
+include ../../../../../layout/components/inputErrors
+include ../../../../../components/formulario/pergunta-sim-nao
+
+section
+
+	div(ng-if="cadastro.caracterizacao.atividadesCaracterizacao && cadastro.caracterizacao.atividadesCaracterizacao.length > 0", ng-cloak)
+		blockquote.success(ng-repeat="atividadeCaracterizacao in cadastro.caracterizacao.atividadesCaracterizacao")
+
+			button.btn.btn-danger.pull-right(ng-disabled='cadastro.renovacao || cadastro.retificacao', ng-click='etapaAtividade.removerAtividade(atividadeCaracterizacao)', tabindex="0")
+				span.glyphicon.glyphicon-remove
+				|  Remover
+
+			h4 Atividade selecionada:
+
+			h4.atividade {{atividadeCaracterizacao.atividade.nome}}
+			div(ng-if="cadastro.tipologia.nome")
+				span Tipologia: {{cadastro.tipologia.nome}}
+			div(ng-if="!cadastro.empreendimento.isPessoaFisica", ng-repeat='atividadeCnae in atividadeCaracterizacao.atividadesCnae')
+				span.textos-cnaes
+					b CNAE: 
+					| {{atividadeCnae.codigo}} - {{atividadeCnae.nome}}
+			div(ng-if="cadastro.empreendimento.isPessoaFisica", ng-repeat='atividadeCnae in atividadeCaracterizacao.atividadesCnae')
+				span.textos-cnaes
+					b CNAE: 
+					| {{atividadeCnae.nome}}
+
+			div(ng-if="etapaAtividade.cadastroSelecionadoSimplificado()")
+				h4.parametro Parâmetros da atividade:
+				div(ng-if="atividadeCaracterizacao.atividade.parametros.length > 0")
+					div(ng-repeat='parametro in atividadeCaracterizacao.atividade.parametros')
+						label.obrigatorio.parametro {{parametro.codigo}} - {{parametro.descricao}}
+						input.form-control.input-number-mask-pequeno.parametro(type='text',
+								ng-class='limitesValidos[$index] === false ? "ng-invalid" : ""',
+								ng-model="parametro.valorParametro",
+								required,
+								ui-number-mask="etapaAtividade.quantidadeCasasDecimais(parametro.casasDecimais)",
+								ng-disabled='cadastro.retificacao')
+
+				div(ng-if="atividadeCaracterizacao.atividade.parametros.length === 0")
+					p.empty-result A atividade não necessita que sejam informados parâmetros.
+
+		blockquote.success(ng-if="cadastro.tipoCaracterizacao === cadastro.tiposCaracterizacao.SIMPLIFICADO && cadastro.caracterizacao.atividadesCaracterizacao.length > 1")
+			+perguntaSimNao('As atividades serão desenvolvidas em um único complexo?',
+					'obrigatorio margin-pergunta',
+					'cadastro.caracterizacao.complexo',
+					"false")
+
+		blockquote.success(ng-if="cadastro.tipoCaracterizacao === cadastro.tiposCaracterizacao.SIMPLIFICADO && !cadastro.renovacao && !cadastro.retificacao", ng-cloak)
+			span.obrigatorio
+				b Selecione o tipo da solicitação:
+			div(ng-if="etapaAtividade.listaSolicitacoes.length > 0 || etapaAtividade.listaRenovacoes.length > 0 || etapaAtividade.listaCadastro.length > 0")
+				table.table-atividade-width
+					tr.tr-atividade-vertical-top
+						td(ng-if="etapaAtividade.listaSolicitacoes.length > 0")
+							+opcoesLicenca(" ","etapaAtividade.listaSolicitacoes","radio","etapaAtividade.selecionaItem","hasError")
+
+						td(ng-if="etapaAtividade.listaRenovacoes.length > 0")
+							+opcoesLicenca(" ","etapaAtividade.listaRenovacoes","radio","etapaAtividade.selecionaItem","hasError")
+
+					tr.tr-atividade-vertical-top
+						td(ng-if="etapaAtividade.listaCadastro.length > 0")
+							+opcoesLicenca(" ","etapaAtividade.listaCadastro","radio","etapaAtividade.selecionaItem","hasError")
+
+
+			div(ng-if="etapaAtividade.listaSolicitacoes.length === 0 && etapaAtividade.listaRenovacoes.length === 0 && etapaAtividade.listaCadastro.length === 0")
+				p.empty-result A atividade escolhida não permite solicitação ou renovação.
+
+		blockquote.success(ng-if="cadastro.tipoCaracterizacao !== cadastro.tiposCaracterizacao.DI && cadastro.finalidadeLicenca !== 'CADASTRO'")
+			div(ng-cloak)
+				label.obrigatorio Vigência requerida da licença (em anos):
+				input.form-control.input-number-mask-menor#campo-vigencia-requerida(name="vigenciaSolicitada",
+					data-toggle="tooltip",
+					data-placement="right",
+					type="number",
+					min=1, max="{{etapaAtividade.maxValidadeEmAnos}}",
+					ng-model="cadastro.caracterizacao.vigenciaSolicitada",
+					placeholder="",
+					required,
+					ng-disabled="etapaAtividade.configCampoVigenciaRequerida()")
+
+		blockquote.success(ng-if="cadastro.tipoCaracterizacao === cadastro.tiposCaracterizacao.DI")
+			label.obrigatorio Descrição da atividade
+			br
+			textarea.form-control-justificativa.rounded-0(name="descricaoAtividade",
+				ng-model="cadastro.caracterizacao.descricaoAtividade",
+				required,
+				rows=3)
+		blockquote.success(ng-if="cadastro.tipoCaracterizacao === cadastro.tiposCaracterizacao.SIMPLIFICADO && cadastro.tipoCaracterizacao !== cadastro.tiposCaracterizacao.DI")
+			label.obrigatorio Descrição da atividade
+			br
+			textarea.form-control-justificativa.rounded-0(name="descricaoAtividade",
+				ng-model="cadastro.caracterizacao.descricaoAtividade",
+				required,
+				rows=3,
+				ng-disabled='cadastro.retificacao')
+
+	+rodapeCadastro('etapaAtividade')

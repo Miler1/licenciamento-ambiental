@@ -1,0 +1,43 @@
+div.modal-header
+
+	button.close(type='button', ng-click="modalCtrl.cancelar()")
+		span(aria-hidden='true') ×
+		span.sr-only Fechar
+
+	h4.modal-title Informações de pagamento
+
+div.modal-body#caracterizacao
+
+	div
+		label {{modalCtrl.caracterizacao.tipoLicenca.nome}}
+
+	div
+		| Taxa expediente:
+		strong.strong-padding(ng-if='modalCtrl.dae.isento') Isento
+		//- strong.strong-padding(ng-if='!modalCtrl.dae.isento') R$ {{modalCtrl.dae.valor | number : 2}}
+		strong.strong-padding(ng-if='!modalCtrl.dae.isento') R$ {{modalCtrl.caracterizacao.dae.valor | number : 2}}
+	br
+
+	div
+		label(ng-if="modalCtrl.caracterizacao.status.id === modalCtrl.statusCaracterizacao.VENCIDO_AGUARDANDO_PAGAMENTO_TAXA_EXPEDIENTE.id")
+			| Atenção! Um DAR já foi emitido. Caso já tenha efetuado o pagamento, aguarde o prazo de três dias úteis após o vencimento. Caso não tenha, emita o novo DAR e efetue o pagamento dentro do prazo.
+
+	br
+
+	div(ng-if="modalCtrl.daeEmitidoOuPago()")
+		div
+			| Data de emissão:
+			strong.strong-padding {{modalCtrl.dae.dataEmissao}}
+		div
+			| Data de vencimento:
+			strong.strong-padding {{modalCtrl.dae.dataVencimento}}
+
+
+div.modal-footer#footer-modal
+
+	button.btn.btn-default.pull-left(ng-click="modalCtrl.cancelar()")
+		i.glyphicon.glyphicon-arrow-left
+		| &nbsp;Cancelar
+	button.btn.btn-success.pull-right(ng-click="modalCtrl.processaDae()")
+		i.glyphicon.glyphicon-save
+		| &nbsp;{{modalCtrl.daeEmitidoOuPago() ? 'Baixar' : 'Emitir'}} DAR

@@ -1,0 +1,153 @@
+include ../../../../../layout/components/rodapeCadastro
+
+#etapa-enquadramento
+	section
+		div.row
+
+			.col-xs-12.col-md-8
+				blockquote.success
+					h4.nome-campo Licença Solicitada:
+					div(ng-repeat="licenca in cadastro.dadosCaracterizacao.tiposLicencaEmAndamento")
+						h5.info {{licenca.nome}}
+
+				blockquote.success
+					h4.nome-campo Tipologia:
+					h5.info {{cadastro.tipologia.nome}}
+
+					h4.nome-campo Atividade(s) Licenciada(s):
+					ul
+						li(ng-repeat='atividadeCaracterizacao in cadastro.dadosCaracterizacao.atividadesCaracterizacao | existeAtividadeCaracterizacao')
+							span.textos-enquadramento {{atividadeCaracterizacao.atividade.nome}}
+							ul.left-padding
+								li(ng-repeat='atividadeCnae in atividadeCaracterizacao.atividadesCnae')
+									span.textos-cnaes(ng-if="empreendimento.empreendimentoEU.pessoa.cpf")
+										b CNAE:&nbsp
+										| {{atividadeCnae.nome}}
+									span.textos-cnaes(ng-if="empreendimento.empreendimentoEU.pessoa.cnpj")
+										b CNAE:&nbsp
+										| {{atividadeCnae.codigo}} - {{atividadeCnae.nome}}
+								li
+									b CÓDIGO AMBIENTAL:&nbsp
+									| {{atividadeCaracterizacao.atividade.codigo}} - {{atividadeCaracterizacao.atividade.nome}}
+
+							h5.no-margin-bottom Parâmetros:
+							div.div-params-enquadramento
+								ul.left-padding
+									li(ng-repeat='atividadeCaracterizacaoParametro in atividadeCaracterizacao.atividadeCaracterizacaoParametros')
+										span.textos-enquadramento {{atividadeCaracterizacaoParametro.parametroAtividade.codigo}} - {{getDescricao(atividadeCaracterizacao,atividadeCaracterizacaoParametro)}}:&nbsp;
+										| {{atividadeCaracterizacaoParametro.valorParametro}}
+
+				blockquote(ng-if="!etapaEnquadramento.isRetificacao")
+					p
+						| A emissão da licença está condicionada a confirmação do pagamento do(s) DAR(s) gerados e a aprovação da SEMA. As movimentações processuais serão encaminhadas para o e-mail cadastrado e podem ser consultadas em seu cadastro no sistema de Licenciamento.
+
+					a.traditional(ng-href="{{getLinkTabelaValoresTaxa()}}", target="_blank")
+						| Tabela vigente com valores das taxas de licenciamento da SEMA
+
+			.col-xs-12.col-md-4
+				div.panel.panel-success
+					div.panel-body
+						| Enquadramento da Solicitação
+					div.panel-footer
+						.media-div
+							.media-context
+								.row
+									span.col-md-8 Porte:
+									span.col-md-4.text-right
+											strong.strong-padding {{cadastro.dadosCaracterizacao.atividadeCaracterizacaoMaiorPotencialPoluidorEPorte.porteEmpreendimento.nome}}
+								.row.relative
+									span.col-md-8 Potencial Poluidor/Degradador (PPD):
+									span.col-md-4.text-right.bottom-aligner
+											strong.strong-padding {{cadastro.dadosCaracterizacao.atividadeCaracterizacaoMaiorPotencialPoluidorEPorte.atividade.potencialPoluidor.nome}}
+					div.panel-footer.text-left(ng-if="cadastro.dadosCaracterizacao.atividadeCaracterizacaoMaiorPotencialPoluidorEPorte.porteEmpreendimento.nome !== cadastro.dadosCaracterizacao.atividadeCaracterizacaoMaiorPotencialPoluidorEPorte.porteEmpreendimentoParaCalculoDoPorte.nome")
+						span
+							i * De acordo com os dados cadastrados na Rede Simples, o porte deste empreendimento é {{cadastro.dadosCaracterizacao.atividadeCaracterizacaoMaiorPotencialPoluidorEPorte.porteEmpreendimentoParaCalculoDoPorte.nome}}.
+
+				div.panel.panel-success(ng-if="!etapaEnquadramento.isRetificacao")
+					div.panel-body
+						| Informações de pagamento
+					div.panel-footer
+						.media-div
+							.media-context
+								div(ng-if="cadastro.modo === 'Cadastrar'" ng-repeat="licenca in cadastro.dadosCaracterizacao.tiposLicencaEmAndamento")
+									.row
+										span.col-md-8 Taxa expediente:
+										span.col-md-4.text-right
+											strong.strong-padding(ng-if='etapaEnquadramento.isEmpreendimentoIsento()')
+												| Isento
+											strong.strong-padding(ng-if='!etapaEnquadramento.isEmpreendimentoIsento()')
+												| R$ {{cadastro.dadosCaracterizacao.valorTaxaAdministrativa | number: 2}}
+
+									//- .row.relative
+									//- 	span.col-md-8 Taxa de Licenciamento (
+									//- 		b prevista
+									//- 		| ):
+									//- 	span.col-md-4.text-right.bottom-aligner
+									//- 		strong.strong-padding(ng-if='etapaEnquadramento.isCaracterizacaoIsento()')
+									//- 			| Isento
+									//- 		strong.strong-padding(ng-if='!etapaEnquadramento.isCaracterizacaoIsento()')
+									//- 			| R$ {{cadastro.dadosCaracterizacao.valorTaxaLicenciamento | number: 2}}
+
+									//- hr.hr-small
+
+								div(ng-if="cadastro.modo !== 'Cadastrar'")
+									.row
+										span.col-md-8 Taxa expediente:
+										span.col-md-4.text-right
+											strong.strong-padding(ng-if='etapaEnquadramento.isEmpreendimentoIsento()')
+												| Isento
+											strong.strong-padding(ng-if='!etapaEnquadramento.isEmpreendimentoIsento()')
+												| R$ {{cadastro.caracterizacao.valorTaxaAdministrativa | number: 2}}
+
+									.row
+										span.col-md-8 {{cadastro.dadosCaracterizacao.tipoLicenca.nome}}:
+										span.col-md-4.text-right
+											strong.strong-padding(ng-if='etapaEnquadramento.isCaracterizacaoIsento()')
+												| Isento
+											strong.strong-padding(ng-if='!etapaEnquadramento.isCaracterizacaoIsento()')
+												| R$ {{cadastro.dadosCaracterizacao.valorTaxaLicenciamento | number: 2}}
+									hr.hr-small
+
+						//- .row.hr-small
+						//- 	span.col-md-8 Total geral:
+						//- 	span.col-md-4.text-right
+						//- 		// quando taxa de expediente e de licenciamento são isentas
+						//- 		strong.strong-padding(ng-if="cadastro.modo !== 'Visualizar' && etapaEnquadramento.isEmpreendimentoIsento()")
+						//- 			| Isento
+						//- 		// quando alguma taxa não é isenta
+						//- 		strong.strong-padding(ng-if="cadastro.modo !== 'Visualizar' && !etapaEnquadramento.isEmpreendimentoIsento()")
+						//- 			| R$ {{etapaEnquadramento.getTotalGeral() | number: 2}}
+
+						//- 		strong.strong-padding(ng-if="cadastro.modo === 'Visualizar' && etapaEnquadramento.isEmpreendimentoIsento()")
+						//- 			| Isento
+						//- 		strong.strong-padding(ng-if="cadastro.modo === 'Visualizar' && !etapaEnquadramento.isEmpreendimentoIsento()")
+						//- 			| R$ {{cadastro.dadosCaracterizacao.tipoLicenca.valorDae | number: 2}}
+
+				div.panel-footer.text-left(ng-if="!etapaEnquadramento.isRetificacao")
+
+					b Atenção:
+
+					ul.left-padding(ng-if="etapaEnquadramento.isEmpreendimentoIsento()")
+						li
+							i Ao concluir sua solicitação, seu processo será analisado pela SEMA.
+						li
+							b
+								i Posteriormente à aprovação será gerada a licença solicitada.
+
+					ul.left-padding(ng-if="!etapaEnquadramento.isEmpreendimentoIsento() && etapaEnquadramento.isCaracterizacaoIsento() ")
+						li
+							i Ao concluir sua solicitação, será emitida uma Taxa de Expediente. Após o pagamento da Taxa de Expediente seu processo será analisado pela SEMA.
+						li
+							b
+								i Posteriormente à aprovação será gerada a licença solicitada.
+
+					ul.left-padding(ng-if="!etapaEnquadramento.isEmpreendimentoIsento() && !etapaEnquadramento.isCaracterizacaoIsento()")
+						li
+							i Ao concluir sua solicitação, será emitida uma Taxa de Expediente. Após o pagamento da Taxa de Expediente seu processo será analisado pela SEMA.
+						li
+							b
+								i Posteriormente à aprovação da análise, será gerada a Taxa de Licenciamento.&nbsp;
+							i O pagamento da Taxa de Licenciamento habilita a emissão da licença solicitada.
+
+
+		+rodapeCadastro('etapaEnquadramento')

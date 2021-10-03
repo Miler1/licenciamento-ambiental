@@ -1,0 +1,63 @@
+include ../../../../../layout/components/rodapeCadastro
+
+#caracterizacao
+
+	div.form-group
+		h4 Solicitação finalizada com sucesso!
+
+	// Componente dados empreendimento
+	dados-empreendimento(id="finalizacao.idEmpreendimento", empreendimento="")
+
+	section
+		div
+			blockquote.success
+				span
+					| Licença Solicitada:
+				div(ng-repeat="caracterizacao in finalizacao.caracterizacoes")
+					label {{caracterizacao.tipoLicenca.nome}}
+
+			blockquote.success
+				h4.nome-campo-caracterizacao Tipologia:
+				h5.info-caracterizacao {{finalizacao.caracterizacao.tipologia.nome}}
+
+				span.nome-campo Atividade(s) Licenciada(s):
+					ul
+						li(ng-repeat='atividadeCaracterizacao in finalizacao.caracterizacao.atividadesCaracterizacao | existeAtividadeCaracterizacao')
+							h4.atividade
+								b {{atividadeCaracterizacao.atividade.nome}}
+							ul.left-padding
+								div(ng-if='empreendimento.empreendimentoEU.pessoa.cpf', ng-repeat='atividadeCnae in atividadeCaracterizacao.atividadesCnae')
+									span.textos-cnaes
+										b CNAE:
+										| {{atividadeCnae.nome}}
+								div(ng-if="empreendimento.empreendimentoEU.pessoa.cnpj", ng-repeat='atividadeCnae in atividadeCaracterizacao.atividadesCnae')
+									span.textos-cnaes
+										b CNAE:
+										| {{atividadeCnae.codigo}} - {{atividadeCnae.nome}}
+
+			.row
+
+				.col-xs-12.col-md-4(ng-repeat="caracterizacao in finalizacao.caracterizacoes")
+					div.panel.panel-default
+						div.panel-heading
+							| Informações de pagamento
+						div.panel-body
+							span {{caracterizacao.tipoLicenca.nome}}
+
+							div
+								| Taxa de expediente: &nbsp;
+								strong.strong-padding(ng-if='caracterizacao.dae.isento')
+									| Isento
+								strong.strong-padding(ng-if='!caracterizacao.dae.isento')
+									| R$ {{caracterizacao.dae.valor | number : 2}}
+						div.panel-footer(ng-if='!caracterizacao.dae.isento && caracterizacao.dae.valor > 0')
+							button.btn.btn-success.btn-block(ng-click='finalizacao.processaDae(caracterizacao)', tabindex="0")
+								i.fa(ng-class="{'fa-download': caracterizacao.dae.status === 'EMITIDO', 'fa-money': caracterizacao.dae.status !== 'EMITIDO'}")
+								|   {{caracterizacao.dae.status === 'EMITIDO' ? 'Baixar' : 'Emitir'}} DAR
+	div.row
+
+		div.pull-right.col-sm-2
+
+			button.btn.btn-success.btn-block(ng-click='finalizacao.goCaracterizacoes()', tabindex="0")
+				| Solicitações
+				span.glyphicon.glyphicon-chevron-right

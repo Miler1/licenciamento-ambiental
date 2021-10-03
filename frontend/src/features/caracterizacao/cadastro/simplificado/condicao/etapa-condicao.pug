@@ -1,0 +1,55 @@
+include ../../../../../layout/components/rodapeCadastro
+include ../../../../../layout/components/dynamicInputErrors
+include questionario-3
+
+#etapa-condicao
+	section
+
+		blockquote(ng-if="cadastro.modo !== 'Visualizar'")
+			div
+				h4.nome-campo-caracterizacao Tipologia: {{cadastro.tipologia.nome}}
+			ul
+				li(ng-repeat='atividadeCaracterizacao in cadastro.caracterizacao.atividadesCaracterizacao | existeAtividadeCaracterizacao')
+					h4.atividade
+						span.textos-enquadramento {{atividadeCaracterizacao.atividade.nome}}
+					ul
+						div(ng-if="!cadastro.empreendimento.isPessoaFisica", ng-repeat='atividadeCnae in atividadeCaracterizacao.atividadesCnae')
+							span.textos-cnaes
+								b CNAE: 
+								| {{atividadeCnae.codigo}} - {{atividadeCnae.nome}}
+						div(ng-if="cadastro.empreendimento.isPessoaFisica", ng-repeat='atividadeCnae in atividadeCaracterizacao.atividadesCnae')
+							span.textos-cnaes 
+								b CNAE: 
+								| {{atividadeCnae.nome}}
+
+		blockquote(ng-if="cadastro.modo === 'Visualizar'")
+			div
+				span Tipologia: {{cadastro.tipologia.nome}}
+			ul
+				li(ng-repeat='atividadeCaracterizacao in cadastro.caracterizacao.atividadesCaracterizacao')
+					h4.atividade
+						b {{atividadeCaracterizacao.atividade.nome}}
+					ul
+						li(ng-repeat='atividadeCnae in atividadeCaracterizacao.atividadesCnae')
+							span
+								b CNAE: 
+								| {{atividadeCnae.codigo}} - {{atividadeCnae.nome}}
+
+		form(name="formCondicaoQuestionario", novalidate)
+			//TODO - PUMA - Squad2 - descomentar quando atividade for dsempedida
+			//blockquote(ng-repeat='atividadeCaracterizacao in cadastro.caracterizacao.atividadesCaracterizacao')
+				b {{atividadeCaracterizacao.atividade.nome}}
+				ul(ng-repeat="pergunta in atividadeCaracterizacao.atividade.perguntas")
+					h5.obrigatorio {{pergunta.texto}}
+
+					div(ng-class="{'color-red': formCondicaoQuestionario.$submitted && formCondicaoQuestionario['resposta-{{pergunta.id}}'].$error.required, 'color-off-black': !formCondicaoQuestionario.$submitted || !formCondicaoQuestionario['resposta-{{pergunta.id}}'].$error.required}")
+						.radio(ng-repeat="resposta in pergunta.respostas")
+							label
+								input(type='radio', name='resposta-{{pergunta.id}}', ng-model="etapaCondicoes.respostas[pergunta.id]",
+									ng-value="resposta", required)
+								|  {{resposta.texto}}
+
+			blockquote(ng-if="etapaCondicoes.validarPerguntasForaQuestionario()", class="animate-if")
+				+questionario3('etapaCondicoes.questionario', "false", 'formCondicaoQuestionario.$submitted')
+
+		+rodapeCadastro('etapaCondicoes')

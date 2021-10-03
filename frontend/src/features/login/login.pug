@@ -1,0 +1,107 @@
+include ../../layout/fieldErrors
+include ../../layout/components/formCadastroUsuario
+
+section.container.loginsection
+	#formContent
+		.panel-body
+			img.img-position(src="images/logo_verde.png", alt="Logo licenciamento ambiental")
+			
+			form
+				div.col-md-12
+					//- Esse growl é o framework de erro gente (:
+					div.custom-error(growl inline="true") 
+					div.custom-error(growl inline="true" reference='3')
+
+				div.col-md-12
+					div.form-group
+						input.form-control.custom-input.qa-campo-texto-cpf(ng-model="login.usuario" name="login" type="text" placeholder="Seu CPF" ng-enter="login.fazLogin()" ngRequired=true, required ui-br-cpfcnpj-mask no-validate on-enter)
+					div.form-group
+						input.form-control.custom-input.qa-campo-senha(ng-model="login.senha" name="senha" type="password" placeholder="Sua senha" ng-enter="login.fazLogin()")
+
+					input.btn.btn-success.btn-block.btn-lg.custom-login-btn.custom-btn-margin.qa-botao-entrar(value="Entrar" ng-click="login.fazLogin()")
+					.col-md-12.account-line
+						.col-lg-6.col-md-6
+							a.account-text(title='Cadastrar Usuário', ng-click="login.criarConta()") Criar conta
+						.col-lg-6.col-md-6
+							a.account-text(title='Recuperar Senha', ng-click="login.recuperaSenha()") Recuperar Senha
+
+//- Modais para recuperação de senha e criação de conta a partir do EU:
+//- div.modal.fade#modalRecuperaSenha(tabindex='-1', 
+//- 								role='dialog', 
+//- 								aria-labelledby='myModalLabel', 
+//- 								aria-hidden='false', 
+//- 								data-backdrop='static' 
+//- 								ng-esc="login.cancelarRecuperaSenha()")
+//- 	div.modal-dialog
+//- 		div.modal-content.custom-padding-form
+
+//- 			div.modal-header
+//- 				h4.modal-title#myModalLabel Redefinição de senha
+
+//- 			div.modal-body
+
+//- 				article.message-box(ng-show="msg.show && (msg.target === 'modal' || msg.target === 'all')")
+//- 					div.alert.alert-dismissable(class="alert-{{msg.tipo}}")
+//- 						a.close(type="button", ng-click="msg.show = false") ×
+//- 						span.message-icon.glyphicon(ng-class="{'glyphicon-ok-sign' : msg.tipo === 'success', 'glyphicon-exclamation-sign' : msg.tipo === 'danger'}")
+//- 						|	{{msg.texto}}
+
+//- 				form(name="formRecuperaSenha")
+
+//- 					div.form-group
+//- 						//- Esse growl é o framework de erro gente (:
+//- 						div.custom-error(growl inline="true" reference='2')
+//- 						.custom-label-form
+//- 							label CPF/CNPJ:
+//- 							label.red *
+//- 						input.form-control(type="text", name="cpf", ng-model="login.cpfDigitado", ng-enter="login.salvarRecuperacaoSenha()", ui-br-cpfcnpj-mask, required, autofocus)
+//- 						+fieldErrors(nameForm= "formRecuperaSenha", field="cpf", errors=["required", "cpfcnpj"])
+
+//- 			div.modal-footer
+
+//- 				div.text-right
+
+//- 					button.btn.btn-danger.pull-left(ng-click="login.cancelarRecuperaSenha()")
+//- 						span.glyphicon.glyphicon-remove
+//- 						span  Cancelar
+
+//- 					button.btn.btn-success(type='button', title='Solicitar nova senha', ng-click="login.recuperarSenhaViaEmail()")
+//- 						span.glyphicon.glyphicon-ok
+//- 						span  Confirmar
+
+//- div.modal.fade#cadastroUsuarioExterno(tabindex='-1', 
+//- 									role='dialog', 
+//- 									aria-labelledby='cadastroUsuarioExternoLabel',
+//- 									aria-hidden='false',
+//- 									data-backdrop='static',
+//- 									ng-esc="login.cancelarCadastrarUsuarioExterno()")
+//- 	div.modal-dialog
+//- 		div.modal-content.custom-padding-form
+
+//- 			div.modal-header
+//- 				h4.modal-title#cadastroUsuarioExternoLabel Cadastrar usuário externo
+
+//- 			div.modal-body
+
+//- 				article.message-box(ng-show="msg.show && (msg.target === 'modal' || msg.target === 'all')")
+//- 					div.alert.alert-dismissable(class="alert-{{msg.tipo}}")
+//- 						a.close(type="button", ng-click="msg.show = false") ×
+//- 						span.message-icon.glyphicon(ng-class="{'glyphicon-ok-sign' : msg.tipo === 'success', 'glyphicon-exclamation-sign' : msg.tipo === 'danger'}")
+//- 						| {{msg.texto}}
+
+//- 				form(name="cadastrarUsuarioExterno",role="form", novalidate)
+
+//- 					+formCadastroUsuario()
+
+
+//- 			div.modal-footer
+
+//- 				div.text-right
+
+//- 					button.btn.btn-danger.pull-left(ng-click="login.cancelarCadastrarUsuarioExterno()", tabindex="10")
+//- 						span.glyphicon.glyphicon-remove
+//- 						span  Cancelar
+
+//- 					button.btn.btn-success(type='button', title='Cadastrar', ng-click="login.saveUsuarioExterno()")
+//- 						span.glyphicon.glyphicon-ok
+//- 						span  Cadastrar

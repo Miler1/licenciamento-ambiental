@@ -1,0 +1,8 @@
+include ../../../../layout/components/rodapeCadastro
+
+section
+
+	//- ng-if para carregar a etapa Resumo apenas quando necessário, para atualizar as informações presentes (principalmente geometria plotada no mapa)
+	div(ng-if="cadastro.etapa.nome === cadastro.etapas.RESUMO.nome")
+		resumo-empreendimento(empreendimento='cadastro.empreendimento')
+		+rodapeCadastro('etapaResumo')

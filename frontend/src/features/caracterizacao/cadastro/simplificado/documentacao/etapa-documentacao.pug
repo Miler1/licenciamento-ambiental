@@ -1,0 +1,122 @@
+include ../../../../../layout/components/rodapeCadastro
+include ../../../../../layout/components/inputErrors
+
+section
+
+	blockquote
+		div
+			h4.nome-campo Licença solicitada:
+			div
+				h5.info <strong> {{etapaDocumentacao.tipoLicenca.nome}}  </strong>
+	blockquote
+		div
+			span Tipologia: {{cadastro.tipologia.nome}}
+		ul
+			li(ng-repeat='atividadeCaracterizacao in cadastro.caracterizacao.atividadesCaracterizacao | existeAtividadeCaracterizacao')
+				h4.atividade
+					b {{atividadeCaracterizacao.atividade.nome}}
+				ul
+					div(ng-if="!cadastro.empreendimento.isPessoaFisica", ng-repeat='atividadeCnae in atividadeCaracterizacao.atividadesCnae')
+						span.textos-cnaes
+							b CNAE: 
+							| {{atividadeCnae.codigo}} - {{atividadeCnae.nome}}
+					div(ng-if="cadastro.empreendimento.isPessoaFisica", ng-repeat='atividadeCnae in atividadeCaracterizacao.atividadesCnae')
+						span.textos-cnaes
+							b CNAE: 
+							| {{atividadeCnae.nome}}
+
+.panel.panel-default(name='documentacao')
+	.panel-heading
+		h4.panel-title Documentação necessária ao licenciamento
+	.panel-body
+		div.row
+			div.col-md-12
+				label Requisitos Administrativos:
+				table.table.table-striped
+					thead
+						tr
+							th.col-md-1 Status
+							th.col-md-7 Nome documento
+							th.col-md-1 Data envio
+							th.col-md-2 Documento
+							th.col-md-1.text-right Ações
+					tbody
+						tr(ng-repeat="solicitacaoDocumento in cadastro.caracterizacao.solicitacoesDocumentoCaracterizacao")
+							td {{solicitacaoDocumento.documento ? 'Enviado' : 'Aguardando'}}
+							td(class="relative")
+								div(class="clicavel" ng-class="{truncate: !solicitacaoDocumento.isExpanded}",
+									ng-attr-title="{{!solicitacaoDocumento.isExpanded ? 'Clique para expandir' : 'Clique para comprimir'}}",
+									ng-click="solicitacaoDocumento.isExpanded = !solicitacaoDocumento.isExpanded")
+									| {{solicitacaoDocumento.tipoDocumento.nome}}
+							td {{solicitacaoDocumento.documento ? solicitacaoDocumento.documento.dataCadastro : '' }}
+							td {{solicitacaoDocumento.documento.nome}}
+							td
+								div.btn-group.pull-right
+									button.btn.btn-default.btn-xs.no-margin(title="Clique para fazer o upload do documento",
+																		ngf-select, ngf-multiple="false", ngf-keep="false", ngf-max-files="1",
+																		ngf-change="etapaDocumentacao.selecionarArquivo($files, $file, solicitacaoDocumento, 'CARACTERIZACAO')",
+																		ng-if="!solicitacaoDocumento.documento && cadastro.modo !== 'Visualizar'",
+																		ngf-accept="'application/pdf'"
+																		ng-class="{'button-error': formDocumentacao.$submitted && (solicitacaoDocumento.obrigatorio && !solicitacaoDocumento.documento)}")
+										i.fa.fa-upload
+									button.btn.btn-default.btn-xs.no-margin(title="Clique para baixar o documento",
+																		ng-click="etapaDocumentacao.baixarDocumento(solicitacaoDocumento.id, 'CARACTERIZACAO')",
+																		ng-if="!!solicitacaoDocumento.documento", target="_blank")
+										i.fa.fa-download
+									button.btn.btn-default.btn-xs.no-margin(title="Clique para remover o documento",
+																			ng-click="etapaDocumentacao.removerDocumento(solicitacaoDocumento, 'CARACTERIZACAO')",
+																			ng-if="!!solicitacaoDocumento.documento && (cadastro.modo === 'Cadastrar' || solicitacaoDocumento.novo)",
+																			ng-disabled="!etapaDocumentacao.podeRemoverDocumento()")
+										i.fa.fa-trash
+	.panel-body
+		div.row
+			div.col-md-12(ng-if="cadastro.caracterizacao.solicitacoesGruposDocumentos && cadastro.caracterizacao.solicitacoesGruposDocumentos.length > 0")
+				label Requisitos Técnicos:
+				table.table.table-striped
+					thead
+						tr
+							th.col-md-1 Status
+							th.col-md-7 Nome documento
+							th.col-md-1 Data envio
+							th.col-md-2 Documento
+							th.col-md-1.text-right Ações
+					tbody
+						tr(ng-repeat="solicitacaoDocumento in cadastro.caracterizacao.solicitacoesGruposDocumentos")
+							td {{solicitacaoDocumento.documento ? 'Enviado' : 'Aguardando'}}
+							td(class="relative")
+								div(class="clicavel" ng-class="{truncate: !solicitacaoDocumento.isExpanded}",
+									ng-attr-title="{{!solicitacaoDocumento.isExpanded ? 'Clique para expandir' : 'Clique para comprimir'}}",
+									ng-click="solicitacaoDocumento.isExpanded = !solicitacaoDocumento.isExpanded")
+									| {{solicitacaoDocumento.tipoDocumento.nome}}
+							td {{solicitacaoDocumento.documento ? solicitacaoDocumento.documento.dataCadastro : '' }}
+							td {{solicitacaoDocumento.documento.nome}}
+							td
+								div.btn-group.pull-right
+									button.btn.btn-default.btn-xs.no-margin(title="Clique para fazer o upload do documento",
+										ngf-select, ngf-multiple="false", ngf-keep="false", ngf-max-files="1",
+										ngf-change="etapaDocumentacao.selecionarArquivo($files, $file, solicitacaoDocumento, 'GRUPO')",
+										ng-if="!solicitacaoDocumento.documento && cadastro.modo !== 'Visualizar'",
+										ngf-accept="'application/pdf'"
+										ng-class="{'button-error': formDocumentacao.$submitted && (solicitacaoDocumento.obrigatorio && !solicitacaoDocumento.documento)}")
+										i.fa.fa-upload
+									button.btn.btn-default.btn-xs.no-margin(title="Clique para baixar o documento",
+										ng-click="etapaDocumentacao.baixarDocumento(solicitacaoDocumento.id, 'GRUPO')",
+										ng-if="!!solicitacaoDocumento.documento", target="_blank")
+										i.fa.fa-download
+									button.btn.btn-default.btn-xs.no-margin(title="Clique para remover o documento",
+										ng-click="etapaDocumentacao.removerDocumento(solicitacaoDocumento, 'GRUPO')",
+										ng-if="!!solicitacaoDocumento.documento && (cadastro.modo === 'Cadastrar' || solicitacaoDocumento.novo)",
+										ng-disabled="!etapaDocumentacao.podeRemoverDocumento()")
+										i.fa.fa-trash
+
+		div.row
+			div.col-md-12
+				form(name="formDocumentacao", novalidate)
+					hr#hr-principal(align='LEFT')
+					div.checkbox
+						label(ng-class="{'error-message': formDocumentacao.$submitted && formDocumentacao.declaracao.$error.required}")
+							input(type='checkbox', name="declaracao", ng-model='cadastro.caracterizacao.declaracaoVeracidadeInformacoes', required, ng-disabled="cadastro.modo === 'Visualizar'")
+							| DECLARO que as informações por mim prestadas junto à Secretaria de Estado do Meio Ambiente - SEMA, são VERDADEIRAS.
+							| Fico ciente que ao declarar fato inverídico posso vir a ser responsabilizado nas esferas administrativa, cível e penal.
+							
++rodapeCadastro('etapaDocumentacao')

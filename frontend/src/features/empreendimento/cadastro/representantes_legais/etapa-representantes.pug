@@ -1,0 +1,137 @@
+include ../../../../layout/components/panel
+
+include ../../../../layout/components/rodapeCadastro
+
+include ../../../../components/pessoa/pessoa-fisica
+include ../../../../components/pessoa/contato
+
+section
+
+	div(ng-if="!etapaRepresentantes.atualizandoRepresentante")
+		.panel.panel-default
+			.panel-heading
+				h3.panel-title Vincular representante legal
+			.panel-body
+				div
+					buscar-pessoa(exibir-cnpj='false',
+						pessoa='etapaRepresentantes.representanteAtual.pessoa',
+						placeholder-text='Informe o CPF do representante legal',
+						on-update='etapaRepresentantes.cpfBuscado')
+
+	div.form-dados-extras-representante(ng-show="etapaRepresentantes.representanteAtual.pessoa")
+		form(name="formDadosRepresentanteLegal", novalidate)
+
+			+panel('Dados do representante legal')
+
+				+pessoa-fisica('formDadosRepresentanteLegal', 'etapaRepresentantes.representanteAtual.pessoa', '!etapaRepresentantes.representanteAtual.pessoa.editavel', 'cadastro.dataAtual')
+
+			+panel('Contato')
+
+				+contato('formDadosRepresentanteLegal', 'etapaRepresentantes.contatoPrincipalRepresentanteLegal', '!etapaRepresentantes.representanteAtual.pessoa.editavel')
+
+			+panel('Endereço do Representante Legal')
+
+				div.form-group
+					label.radio-inline
+						input(type="radio", ng-value="'ZONA_URBANA'",
+								ng-model="etapaRepresentantes.enderecoRepresentanteLegal.principal.zonaLocalizacao.codigo",
+								ng-checked="etapaRepresentantes.enderecoRepresentanteLegal.principal.zonaLocalizacao.codigo === etapaRepresentantes.localizacoesEmpreendimento.URBANA",
+								name="radioTipoEnderecoRepresentante",
+								ng-disabled="!etapaRepresentantes.representanteAtual.pessoa.editavel")
+						| Zona urbana
+
+					label.radio-inline
+						input(type="radio", ng-value="'ZONA_RURAL'",
+								ng-model="etapaRepresentantes.enderecoRepresentanteLegal.principal.zonaLocalizacao.codigo",
+								ng-checked="etapaRepresentantes.enderecoRepresentanteLegal.principal.zonaLocalizacao.codigo === etapaRepresentantes.localizacoesEmpreendimento.RURAL",
+								name="radioTipoEnderecoRepresentante",
+								ng-disabled="!etapaRepresentantes.representanteAtual.pessoa.editavel")
+						| Zona rural
+
+				div(ng-if="etapaRepresentantes.enderecoRepresentanteLegal.principal.zonaLocalizacao.codigo === etapaRepresentantes.localizacoesEmpreendimento.URBANA || etapaRepresentantes.enderecoRepresentanteLegal.principal.zonaLocalizacao.codigo === 'ZONA_URBANA'", disabled="!etapaRepresentantes.representanteAtual.pessoa.editavel")
+					endereco(endereco='etapaRepresentantes.enderecoRepresentanteLegal.principal', 
+							zona-rural="false", 
+							correspondencia="false",
+							required="true", 
+							form=`formDadosRepresentanteLegal`, 
+							disabled="!etapaRepresentantes.representanteAtual.pessoa.editavel")
+
+				div(ng-if="etapaRepresentantes.enderecoRepresentanteLegal.principal.zonaLocalizacao.codigo === etapaRepresentantes.localizacoesEmpreendimento.RURAL || etapaRepresentantes.enderecoRepresentanteLegal.principal.zonaLocalizacao.codigo === 'ZONA_RURAL'", disabled="!etapaRepresentantes.representanteAtual.pessoa.editavel")
+					endereco(endereco='etapaRepresentantes.enderecoRepresentanteLegal.principal', 
+							zona-rural="true", 
+							correspondencia="false",
+							required="true", 
+							form=`formDadosRepresentanteLegal`, 
+							disabled="!etapaRepresentantes.representanteAtual.pessoa.editavel")
+
+			+panel('Endereço de correspondência')
+				div.checkbox
+
+					label
+						input(type='checkbox',
+							ng-checked='etapaRepresentantes.representanteAtual.enderecoCorrespondenciaCopiado',
+							ng-click='etapaRepresentantes.copiarEnderecoRepresentante()',
+							ng-disabled="etapaRepresentantes.enderecoRepresentanteLegal.principal.zonaLocalizacao.codigo === etapaRepresentantes.localizacoesEmpreendimento.RURAL || !etapaRepresentantes.representanteAtual.pessoa.editavel")
+						| Utilizar o endereço do Empreendedor para correspondência?
+
+				endereco(endereco='etapaRepresentantes.enderecoRepresentanteLegal.correspondencia',
+						zona-rural="false",
+						correspondencia="true",
+						required="true",
+						form=`etapaRepresentantes`,
+						cep-input-name=`"cepCorrespondecia"`,
+						logradouro-input-name=`"logradouroCorrespondecia"`,
+						numero-input-name=`"numeroCorrespondecia"`,
+						uf-input-name=`"ufCorrespondecia"`,
+						municipio-input-name=`"municipioCorrespondecia"`,
+						roteiro-input-name=`"roteiroCorrespondecia"`,
+						disabled=`!etapaRepresentantes.representanteAtual.pessoa.editavel`)
+	
+	div.vincular-representante(ng-if="etapaRepresentantes.representanteAtual.pessoa && !etapaRepresentantes.atualizandoRepresentante")
+		button.btn.btn-success.pull-right.col-sm-2(ng-click='etapaRepresentantes.vincularRepresentante()')
+			span Vincular representante
+
+	button.btn.btn-success.pull-right.col-sm-2(ng-click="etapaRepresentantes.atualizarRepresentante()",
+		ng-show="etapaRepresentantes.atualizandoRepresentante && etapaRepresentantes.representanteAtual.pessoa.nome")
+			span Atualizar representante
+	
+	button.btn.btn-default.pull-right.col-sm-2(ng-click="etapaRepresentantes.cancelarAlteracao()",
+		ng-show="etapaRepresentantes.atualizandoProprietario && etapaRepresentantes.representanteAtual.pessoa.nome", style="margin-right: 10px")
+		span Cancelar alteração
+
+	div.form-group.row
+
+		.col-sm-12
+
+			h4 Representantes legais vinculados ao empreendimento:
+
+			div(ng-if="cadastro.empreendimento.representantesLegais && cadastro.empreendimento.representantesLegais.length > 0")
+
+				table.table.table-striped
+					thead
+						tr
+							th CPF/CNPJ
+							th Nome/Razão Social
+							th E-mail
+							th 
+					tbody
+						tr(ng-repeat="representante in cadastro.empreendimento.representantesLegais")
+							td {{representante.pessoa.cpf || representante.pessoa.cnpj | brCpfCnpj}}
+							td {{representante.pessoa.nome || representante.pessoa.razaoSocial}}		
+							td(ng-repeat="contato in representante.pessoa.contatos", ng-if="contato.principal") {{contato.valor}}
+							td.icones
+								span
+									button.btn.btn-default.btn-xs.no-margin(ng-if="representante.pessoa.excluivel",
+											title="Clique para desvincular este representante",
+											ng-click='etapaRepresentantes.desvincularRepresentante($index)')
+										i.fa.fa-trash
+									button.btn.btn-default.btn-xs.no-margin(ng-if="representante.pessoa.editavel",
+											title="Clique para alterar o representante selecionado",
+											ng-click="etapaRepresentantes.iniciarAtualizacaoRepresentante($index)")
+										i.fa.fa-pencil
+
+		.row(ng-show="!cadastro.empreendimento.representantesLegais || cadastro.empreendimento.representantesLegais.length == 0")
+			.col-md-12
+				p.empty-result Não existem dados a serem exibidos.
+
+	+rodapeCadastro('etapaRepresentantes')

@@ -1,0 +1,99 @@
+include ../../../../../layout/components/panel
+include ../../../../../components/pessoa/pessoa-fisica
+include ../../../../../components/pessoa/pessoa-juridica
+include ../../../../../components/pessoa/contato
+include ../../../../../layout/components/rodapeCadastro
+
+div(ng-if="cadastro.origemEmpreendimento === cadastro.origensEmpreendimento.OUTRO_CPF_CNPJ")
+
+	buscar-empreendimento(
+		exibir-cnpj="true",
+		empreendimento="cadastro.empreendimento",
+		placeholder-text="Informe o CPF/CNPJ do empreendimento",
+		on-update="dadosEmpreendimento.pessoaBuscada",
+		buscar-service="dadosEmpreendimento.buscarEmpreendimentoPorCpfCnpj",
+		on-before-update="dadosEmpreendimento.onBeforeUpdateCpfCnpj"
+	)
+
+form(name="formDadosEmpreendimento", ng-show="cadastro.cpfCnpjPesquisado === true", novalidate)
+
+	+panel('Dados do empreendimento')
+
+		div(ng-if="dadosEmpreendimento.validaPessoaFisica() === true")
+
+			+pessoa-fisica('formDadosEmpreendimento', 'cadastro.empreendimento.empreendimentoEU.pessoa', 'dadosEmpreendimento.validaPessoaFisica()', 'cadastro.dataAtual')
+			
+		div(ng-if="dadosEmpreendimento.validaPessoaFisica() === false")
+
+			+pessoa-juridica('formDadosEmpreendimento', 'cadastro.empreendimento.empreendimentoEU.pessoa', 'dadosEmpreendimento.bloqueaCNPJ()', true, 'cadastro.dataAtual')
+
+		div.form-group.row
+
+			div.form-group.row
+
+			div.col-xs-12
+				label.control-label.obrigatorio Denominação do empreendimento:
+				div
+					input.form-control(type="text", name="denominacao", ng-model="cadastro.empreendimento.denominacao", maxlength='200', required, ng-disabled="cadastro.edicao || dadosEmpreendimento.bloqueaCNPJ()")
+					+inputErrors('formDadosEmpreendimento', 'denominacao', 'required')
+
+		div.form-group.row
+
+			div.col-xs-3
+				esfera-atuacao(esfera-atuacao="cadastro.empreendimento.jurisdicao", disabled="cadastro.edicao", required="true", label=`"Jurisdição do empreendimento:"`, form=`formDadosEmpreendimento`)
+
+			div.col-xs-9
+				selecao-uf-municipio(uf="cadastro.empreendimento.municipio.estado",
+					municipio="cadastro.empreendimento.municipio",
+					exibir-label=true,
+					disabled-estado="true",
+					disabled-municipio="cadastro.edicao || dadosEmpreendimentos.bloqueaCNPJ()",
+					required=true,
+					form=`formDadosEmpreendimento`,
+					uf-input-name=`"ufEmpreendimento"`,
+					municipio-input-name=`"municipioEmpreendimento"`,
+					label-uf=`"UF do empreendimento"`,
+					label-municipio=`"Município do empreendimento"`,
+					limitar-municipios-amapa=true)
+
+	+panel('Contato')
+
+		+contato('formDadosEmpreendimento', 'cadastro.contatoPrincipalEmpreendimento', "false", "false", "false", "false")
+
+	+panel('Endereço do empreendimento')
+		endereco(endereco='cadastro.enderecoEmpreendimento.principal', 
+				zona-rural="(cadastro.enderecoEmpreendimento.principal.zonaLocalizacao.codigo === cadastro.localizacoesEmpreendimento.RURAL)", 
+				correspondencia="false", 
+				disabled="dadosEmpreendimento.bloqueaCNPJ()", 
+				required="true",
+				disabled-uf="true",
+				disabled-municipio="true",
+				form=`formDadosEmpreendimento`)
+			
+	+panel('Endereço de correspondência')
+		div.checkbox
+			label
+				input(type='checkbox',
+					ng-checked='cadastro.enderecoCorrespondenciaCopiado',
+					ng-click='dadosEmpreendimento.copiarEnderecoEmpreendimento()',
+					ng-disabled="cadastro.enderecoEmpreendimento.principal.zonaLocalizacao.codigo === cadastro.localizacoesEmpreendimento.RURAL || cadastro.bloqueaCNPJ()")
+				| Utilizar o endereço do Empreendimento para correspondência?
+
+		endereco(endereco='cadastro.enderecoEmpreendimento.correspondencia',
+			zona-rural="false",
+			correspondencia="true",
+			required="true",
+			form=`formDadosEmpreendimento`,
+			cep-input-name=`"cepCorrespondecia"`,
+			logradouro-input-name=`"logradouroCorrespondecia"`,
+			numero-input-name=`"numeroCorrespondecia"`,
+			uf-input-name=`"ufCorrespondecia"`,
+			municipio-input-name=`"municipioCorrespondecia"`,
+			roteiro-input-name=`"roteiroCorrespondecia"`,
+			disabled="dadosEmpreendimento.bloqueaCNPJ() ")
+
+	+rodapeCadastro('dadosEmpreendimento')
+
+div(ng-if='cadastro.empreendimento.pessoa && !dadosEmpreendimento.mostrarDados()')
+	p.empty-result CNPJ não encontrado, favor cadastrar ou atualizar o cadastro em: 
+					a(href="http://portalservicos.jucap.ap.gov.br") portalservicos.jucap.ap.gov.br

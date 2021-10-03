@@ -1,0 +1,99 @@
+include ../../../../../layout/components/rodapeCadastro
+include ../../../../../layout/components/inputErrors
+include ../../../../../layout/components/dynamicInputErrors
+
+form(name="formLocalizacaoEmpreendimento", novalidate)
+	//-
+		div.clearfix(ng-class="{'color-red': formLocalizacaoEmpreendimento.$submitted && formLocalizacaoEmpreendimento.radioLocalizacaoEmpreendimento.$error.required}")
+			label.control-label.col-sm-4 O empreendimento está localizado:
+
+			label.col-sm-2.radio-inline
+				input(type="radio", required, value="ZONA_URBANA",
+						name="radioLocalizacaoEmpreendimento",
+						checked)
+				| Zona urbana	
+
+		
+			label.col-sm-2.radio-inline
+				input(type="radio", required, value="ZONA_RURAL",
+						ng-model="cadastro.empreendimento.localizacao",
+						ng-change="localizacaoEmpreendimento.getImoveis()",
+						ng-disabled="true"
+						name="radioLocalizacaoEmpreendimento")
+				| Zona rural
+
+		+inputErrors('formLocalizacaoEmpreendimento', 'radioLocalizacaoEmpreendimento', 'required')
+
+		div
+			hr
+
+	div(ng-show="cadastro.empreendimento.localizacao === 'ZONA_URBANA'")
+		.panel.panel-default(ng-if="cadastro.empreendimento.localizacao === 'ZONA_URBANA' && localizacaoEmpreendimento.municipio && cadastro.etapas.EMPREENDIMENTO.tabIndex === cadastro.etapas.EMPREENDIMENTO.abas.LOCALIZACAO.indice")
+			.panel-heading
+				h3.panel-title Selecione no mapa ou informe as coordenadas geográficas do Empreendimento
+			.panel-body
+				mapa(geo='localizacaoEmpreendimento.municipio.limite',
+						id-mapa='"zonaUrbana"',
+						model='cadastro.empreendimento.coordenadas',
+						is-visualizacao='false',
+						controle-atualizacao='localizacaoEmpreendimento.controleAtualizacao',
+						cadastro="cadastro",
+						estilo-geo="localizacaoEmpreendimento.estiloGeo",
+						tipo-geometry="localizacaoEmpreendimento.tipoGeometria")
+
+	div(ng-show="cadastro.empreendimento.localizacao === 'ZONA_RURAL'")
+
+		div(ng-show="imoveisPesquisados && localizacaoEmpreendimento.imoveis")
+			p
+				| Foram encontrados (
+				strong {{localizacaoEmpreendimento.imoveis.length}}
+				| ) CARs vinculados ao CPF/CNPJ do empreendimento
+			p
+				strong
+					| {{cadastro.empreendimento.pessoa.cpf ? cadastro.empreendimento.pessoa.cpf : cadastro.empreendimento.pessoa.cnpj | brCpfCnpj}}
+					| - {{cadastro.empreendimento.denominacao}}
+
+		div.form-group.col-md-12
+			label.obrigatorio.control-label Roteiro de Acesso:
+			div
+				textarea.form-control(ng-class="{'error-roteiro-acesso': localizacaoEmpreendimento.errors.roteiroAcesso === true}",
+									rows='5', name='roteiro', ng-model='$ctrl.endereco.roteiroAcesso',
+									ng-disabled='$ctrl.disabled || $ctrl.disabledRoteiro',
+									ng-required='$ctrl.required && $ctrl.zonaRural',
+									placeholder="Roteiro de acesso")
+
+				+dynamicInputErrors(`$ctrl.form`, `$ctrl.roteiroInputName`, 'required')
+
+
+		div.form-group(ng-show="imoveisPesquisados && localizacaoEmpreendimento.imoveis")
+
+			label.control-label(for="car") Selecione o CAR onde se encontra o empreendimento:
+
+			div
+
+				select.form-control(id="car", name='car', ng-model="cadastro.empreendimento.imovel",
+					ng-options='i.codigo + " - " + i.nome + " - " + i.municipio.nome + " / " + i.municipio.estado.nome for i in localizacaoEmpreendimento.imoveis track by i.id',
+					ng-required="cadastro.empreendimento.localizacao === 'ZONA_RURAL'",
+					ng-change="localizacaoEmpreendimento.getDadosImovel(cadastro.empreendimento.imovel.codigo)")
+
+				+inputErrors('formLocalizacaoEmpreendimento', 'car', 'required')
+
+
+		div.form-group.col-md-12(ng-show="imoveisPesquisados && !localizacaoEmpreendimento.imoveis")
+
+			div.alert.alert-warning
+				| Para atividades localizadas em imóvel rural é necessário vincular um Cadastro Ambiental Rural (CAR). Para o CNPJ/CPF deste Empreendimento no município informado não foi encontrado nenhum CAR vinculado.
+
+		.panel.panel-default(ng-if="cadastro.empreendimento.localizacao === 'ZONA_RURAL' && localizacaoEmpreendimento.imovelSelecionado && cadastro.etapas.EMPREENDIMENTO.tabIndex === cadastro.etapas.EMPREENDIMENTO.abas.LOCALIZACAO.indice")
+			.panel-heading
+				h3.panel-title Selecione no mapa ou informe as coordenadas geográficas do Empreendimento
+			.panel-body
+				mapa(geo='localizacaoEmpreendimento.imovelSelecionado.geo',
+						id-mapa='"zonaRural"',
+						model='cadastro.empreendimento.coordenadas',
+						is-visualizacao='false',
+						controle-atualizacao='localizacaoEmpreendimento.controleAtualizacao',
+						estilo-geo="localizacaoEmpreendimento.estiloGeo",
+						tipo-geometry="localizacaoEmpreendimento.tipoGeometria")
+
+	+rodapeCadastro('localizacaoEmpreendimento')

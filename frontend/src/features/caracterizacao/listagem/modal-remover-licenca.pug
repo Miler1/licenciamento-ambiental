@@ -1,0 +1,23 @@
+include ../../../layout/components/inputErrors
+
+div.modal-header
+
+	button.close(type='button', ng-click="modalCtrl.cancelar()")
+		span(aria-hidden='true') ×
+		span.sr-only Fechar
+
+	h4.modal-title Remover licença
+
+div.modal-body
+
+	form(name="modalCtrl.formRemoverLicenca", novalidate)
+		p.text-justify Tem certeza que deseja remover a solicitação {{modalCtrl.numero}}.
+
+div.modal-footer#footer-modal
+
+	button.btn.btn-default.pull-left(ng-click="modalCtrl.cancelar()")
+		i.glyphicon.glyphicon-arrow-left
+		| &nbsp;Cancelar
+	button.btn.btn-success.pull-right(ng-click="modalCtrl.ok()")
+		i.glyphicon.glyphicon-ok
+		| &nbsp;Confirmar

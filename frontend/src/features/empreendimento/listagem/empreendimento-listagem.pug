@@ -1,0 +1,92 @@
+include ../../../layout/components/paginacao
+include ./empreendimento-visualizar
+
+div.qa-pagina-pesquisar-empreendimento
+
+	h2 Pesquisar empreendimento
+
+		.dropdown.pull-right
+
+			a.btn.btn-success.btn(name="botaoCadastrarEmpdorEmpmento", type='button', href="#/empreendimentos/cadastrar?origem=outro")
+				span.glyphicon.glyphicon-plus(aria-hidden='true')
+				|  Novo empreendimento
+
+	br
+
+	.input-group
+		input.form-control.input-lg.typeahead(type="text", enter="listagem.pesquisar(1)", autofocus,
+			placeholder="Pesquisar empreendimento (CNPJ/CPF, nome, município ou empreendedor)",
+			ng-model="listagem.campoPesquisa")
+		span.input-group-btn
+			button.btn.btn-default.input-lg.btn-success(ng-click="listagem.pesquisar(1)")
+				span.glyphicon.glyphicon-search
+				|  Pesquisar
+
+	br
+
+	.panel.panel-default(name='empreendimentos_vinculados')
+		.panel-heading
+			h4.panel-title Empreendimentos vinculados
+		.panel-body
+			.row
+				.col-md-12
+					div(ng-if="listagem.empreendimentos && listagem.empreendimentos.length > 0")
+
+						table.table.table-striped
+							thead
+								tr
+									th.col-md-2 CNPJ/CPF do empreendimento
+									th.col-md-3 Nome do empreendimento
+									th.col-md-2 Município/UF do empreendimento
+									th.col-md-3.col-sm-2 Empreendedor 
+									th.col-md-2.col-sm-2.text-right Ações
+							tbody
+								tr(ng-repeat="empreendimento in listagem.empreendimentos")
+									td {{empreendimento.empreendimentoEU.pessoa.cpf ? empreendimento.empreendimentoEU.pessoa.cpf : empreendimento.empreendimentoEU.pessoa.cnpj | brCpfCnpj}}
+									td {{empreendimento.empreendimentoEU.denominacao}}
+									//- td(ng-if="listagem.retornaEnderecoPrincipal(empreendimento.empreendimentoEU.enderecos) !== null") 
+									//- 	| {{listagem.enderecoPrincipalFormatado}}
+									td {{empreendimento.municipio.nome}}/{{empreendimento.municipio.estado.codigo}}
+									td {{empreendimento.empreendimentoEU.empreendedor.pessoa.nome ? empreendimento.empreendimentoEU.empreendedor.pessoa.nome : empreendimento.empreendimentoEU.empreendedor.pessoa.razaoSocial}}
+
+									td
+										span.pull-right
+
+											.dropdown.action-table
+												button#dropdownMenu1.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='true')
+													| Ações &nbsp;
+													span.caret
+												ul.dropdown-menu.dropdown-menu-right(aria-labelledby='dropdownMenu1')
+													li
+														a(ng-click="listagem.cadastrarCaracterizacao(empreendimento.id)")
+															i.fa.fa-plus
+															span Nova solicitação
+													li
+														a(ng-click="listagem.caracterizacoes(empreendimento.id)")
+															i.fa.fa-list-alt
+															span Listar solicitações
+													li(ng-if="empreendimento.empreendimentoEU.pessoa.cnpj")
+														a(ng-click="listagem.buscarEmpreendimento(empreendimento.empreendimentoEU.pessoa.cnpj)")
+															i.fa.fa-search
+															span Visualizar empreendimento
+													li(ng-if="empreendimento.empreendimentoEU.pessoa.cpf")
+														a(ng-click="listagem.buscarEmpreendimento(empreendimento.empreendimentoEU.pessoa.cpf)")
+															i.fa.fa-search
+															span Visualizar empreendimento
+													li(ng-class="{'disabled' : empreendimento.possuiCaracterizacoes }")
+														a(ng-click="!empreendimento.possuiCaracterizacoes? listagem.alterarEmpreendimento(empreendimento.id): '' ")
+															//a(ng-click="listagem.alterarEmpreendimento(empreendimento.id)", ng-disabled="empreendimento.possuiCaracterizacoes")
+															i.fa.fa-pencil
+															span Alterar empreendimento
+													li(ng-class="{'disabled': !empreendimento.removivel}",
+															ng-attr-title="{{empreendimento.removivel ? '' : 'O empreendimento não pode ser excluído pois possui solicitações vinculadas.'}}")
+														a(ng-click="listagem.removerEmpreendimento(empreendimento)")
+															i.fa.fa-times
+															span Excluir empreendimento
+
+
+			.row(ng-show="!listagem.empreendimentos || listagem.empreendimentos.length == 0")
+				.col-md-12
+					p.empty-result Não existem dados a serem exibidos.
+
+	+paginacao('listagem.paginacao', 'listagem.onPaginaAlterada')

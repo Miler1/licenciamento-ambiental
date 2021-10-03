@@ -1,0 +1,151 @@
+include ../../../../layout/components/panel
+include ../../../../layout/components/inputErrors
+
+include ../../../../layout/components/rodapeCadastro
+
+include ../../../../components/pessoa/pessoa-fisica
+include ../../../../components/pessoa/contato
+
+section()
+
+	div.form-group
+
+		tipo-responsavel-empreendimento(tipo-responsavel="etapaResponsaveis.responsavelAtual.tipo", disabled="etapaResponsaveis.atualizandoResponsavel", tipos-responsavel-disponiveis="cadastro.tiposResponsavelDisponiveis")
+
+	div.form-group(ng-show="!etapaResponsaveis.atualizandoResponsavel && etapaResponsaveis.responsavelAtual.tipo")
+
+		buscar-pessoa(exibir-cnpj="false",
+					pessoa="etapaResponsaveis.responsavelAtual.pessoa",
+					placeholder-text="Informe o CPF do responsável",
+					on-update='etapaResponsaveis.cpfBuscado')
+
+	form(name="formResponsaveisTecnicos", ng-show="etapaResponsaveis.responsavelAtual.pessoa", novalidate)
+
+		+panel('Dados do responsável')
+
+			+pessoa-fisica('formResponsaveisTecnicos', 'etapaResponsaveis.responsavelAtual.pessoa', '!etapaResponsaveis.responsavelAtual.pessoa.editavel', 'cadastro.dataAtual')
+
+		+panel('Contato')
+
+			+contato('formResponsaveisTecnicos', 'etapaResponsaveis.contatoPrincipalResponsavel')
+
+		+panel('Endereço do Responsável')
+
+			div.form-group
+				label.radio-inline
+					input(type="radio", ng-value="'ZONA_URBANA'",
+							ng-model="etapaResponsaveis.enderecoResponsavel.principal.zonaLocalizacao.codigo",
+							ng-checked="etapaResponsaveis.enderecoResponsavel.principal.zonaLocalizacao.codigo === etapaResponsaveis.zonaLocalizacao.URBANA",
+							name="radioTipoEnderecoResponsavel",
+							ng-disabled="!etapaResponsaveis.responsavelAtual.pessoa.editavel")
+					| Zona urbana
+
+				label.radio-inline
+					input(type="radio", ng-value="'ZONA_RURAL'",
+							ng-model="etapaResponsaveis.enderecoResponsavel.principal.zonaLocalizacao.codigo",
+							ng-checked="etapaResponsaveis.enderecoResponsavel.principal.zonaLocalizacao.codigo === etapaResponsaveis.zonaLocalizacao.RURAL",
+							name="radioTipoEnderecoResponsavel",
+							ng-disabled="!etapaResponsaveis.responsavelAtual.pessoa.editavel")
+					| Zona rural
+
+			div(ng-if="etapaResponsaveis.enderecoResponsavel.principal.zonaLocalizacao.codigo === etapaResponsaveis.zonaLocalizacao.URBANA || etapaResponsaveis.enderecoResponsavel.principal.zonaLocalizacao.codigo === 'ZONA_URBANA'", disabled="!etapaResponsaveis.responsavelAtual.pessoa.editavel")
+				endereco(endereco='etapaResponsaveis.enderecoResponsavel.principal', zona-rural="false", correspondencia="false",
+					required="true", form=`formResponsaveisTecnicos`, disabled="!etapaResponsaveis.responsavelAtual.pessoa.editavel")
+
+			div(ng-if="etapaResponsaveis.enderecoResponsavel.principal.zonaLocalizacao.codigo === etapaResponsaveis.zonaLocalizacao.RURAL || etapaResponsaveis.enderecoResponsavel.principal.zonaLocalizacao.codigo === 'ZONA_RURAL'", disabled="!etapaResponsaveis.responsavelAtual.pessoa.editavel")
+				endereco(endereco='etapaResponsaveis.enderecoResponsavel.principal', zona-rural="true", correspondencia="false",
+					required="true", form=`formResponsaveisTecnicos`, disabled="!etapaResponsaveis.responsavelAtual.pessoa.editavel")
+
+		+panel('Endereço de correspondência')
+			div.checkbox
+
+				label
+					input(type='checkbox',
+						ng-checked='etapaResponsaveis.responsavelAtual.enderecoCorrespondenciaCopiado',
+						ng-click='etapaResponsaveis.copiarEnderecoResponsavel()',
+						ng-disabled="etapaResponsaveis.enderecoResponsavel.principal.zonaLocalizacao.codigo === etapaResponsaveis.zonaLocalizacao.RURAL || !etapaResponsaveis.responsavelAtual.pessoa.editavel")
+					| Utilizar o endereço do Empreendedor para correspondência?
+
+
+			endereco(endereco='etapaResponsaveis.enderecoResponsavel.correspondencia',
+					zona-rural="false",
+					correspondencia="true",
+					required="true",
+					form=`formResponsaveisTecnicos`,
+					cep-input-name=`"cepCorrespondecia"`,
+					logradouro-input-name=`"logradouroCorrespondecia"`,
+					numero-input-name=`"numeroCorrespondecia"`,
+					uf-input-name=`"ufCorrespondecia"`,
+					municipio-input-name=`"municipioCorrespondecia"`,
+					roteiro-input-name=`"roteiroCorrespondecia"`,
+					disabled=`!etapaResponsaveis.responsavelAtual.pessoa.editavel`)
+
+		//+panel('Endereço de correspondência')
+
+			endereco(endereco='etapaResponsaveis.responsavelAtual.enderecoCorrespondencia', zona-rural="false",
+					correspondencia="true", disabled="false", required="true", form=`formResponsaveisTecnicos`)
+
+	div.form-group(ng-show="etapaResponsaveis.responsavelAtual.pessoa")
+
+		button.btn.btn-success.pull-right.col-sm-2(ng-click="etapaResponsaveis.vincularResponsavel()",
+										ng-show="!etapaResponsaveis.atualizandoResponsavel")
+			span Vincular responsável
+
+	button.btn.btn-success.pull-right.col-sm-2(ng-click="etapaResponsaveis.atualizarResponsavel()",
+									ng-show="etapaResponsaveis.atualizandoResponsavel")
+		span Atualizar responsável
+		
+	button.btn.btn-default.pull-right.col-sm-2(ng-click="etapaResponsaveis.cancelarAlteracao()",
+									ng-show="etapaResponsaveis.atualizandoResponsavel", style="margin-right: 10px")
+		span Cancelar alteração
+
+
+	div.form-group.row
+
+		.col-sm-12
+
+			h4 Responsáveis vinculados ao empreendimento
+
+			div(ng-if="cadastro.empreendimento.responsaveis.length > 0")
+
+				table.table.table-striped
+					thead
+						tr
+							th
+							th CPF/CNPJ
+							th Nome completo/Razão Social
+							th E-mail
+							th Celular/Telefone
+							th 
+						
+					tbody
+						tr(ng-repeat="responsavel in cadastro.empreendimento.responsaveis")
+							td
+								span.icone-responsavel-tecnico.legal(ng-show="responsavel.tipo === etapaResponsaveis.tiposResponsaveis.LEGAL", title="Responsável legal")
+								span.icone-responsavel-tecnico.tecnico(ng-show="responsavel.tipo === etapaResponsaveis.tiposResponsaveis.TECNICO", title="Responsável técnico")
+							td {{responsavel.pessoa.cpf || responsavel.pessoa.cnpj | brCpfCnpj}}
+							td {{responsavel.pessoa.nome || responsavel.pessoa.razaoSocial}}
+							td(ng-repeat="email in responsavel.pessoa.contatos", ng-if="email.principal") {{email.valor}}
+							td(ng-repeat="contato in responsavel.pessoa.contatos", ng-if="contato.tipo.id === etapaResponsaveis.tipoContato.TELEFONE_CELULAR") {{contato.valor | brPhoneNumber}}
+							td.icones
+								span
+									button.btn.btn-default.btn-xs.no-margin(ng-if="responsavel.pessoa.excluivel",
+											title="Clique para desvincular o responsável selecionado",
+											ng-click='etapaResponsaveis.desvincularResponsavel($index)')
+										i.fa.fa-trash
+									button.btn.btn-default.btn-xs.no-margin(ng-if="responsavel.pessoa.editavel",
+											title="Clique para alterar o responsável selecionado", 
+											ng-click='etapaResponsaveis.iniciarAtualizacaoResponsavel($index)')
+										i.fa.fa-pencil
+
+				div.legenda-responsaveis
+					span.icone-responsavel-tecnico.legal
+					span Responsável legal
+					span.icone-responsavel-tecnico.tecnico
+					span Responsável técnico
+
+	div(ng-if="!cadastro.empreendimento.responsaveis || cadastro.empreendimento.responsaveis.length === 0")
+		.col-sm-12.form-group
+			p.empty-result Nenhum responsável vinculado. Utilize o formulário acima para vincular responsáveis.
+
+	+rodapeCadastro('etapaResponsaveis')

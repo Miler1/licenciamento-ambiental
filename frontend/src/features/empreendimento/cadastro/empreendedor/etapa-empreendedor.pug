@@ -1,0 +1,127 @@
+include ../../../../layout/components/panel
+
+include ../../../../layout/components/rodapeCadastro
+
+include ../../../../components/pessoa/pessoa-fisica
+include ../../../../components/pessoa/pessoa-juridica
+include ../../../../components/pessoa/contato
+
+section(ng-if="etapaEmpreendedor.eRenovacao() && cadastro.origemEmpreendedor !== cadastro.origensEmpreendedor.OUTRO_CPF_CNPJ")
+
+	div.col-xs-12(style="margin-bottom: 25px; padding-right: 0px;")
+		button.btn.btn-success.pull-right(ng-click="etapaEmpreendedor.novoEmpreendedor()")
+				span Novo empreendedor
+
+section
+
+	div(ng-show="cadastro.origemEmpreendedor === cadastro.origensEmpreendedor.OUTRO_CPF_CNPJ || cadastro.edicao")
+
+		buscar-pessoa(exibir-cnpj="true",
+					pessoa="cadastro.empreendimento.empreendedor",
+					placeholder-text="Informe o CPF/CNPJ do empreendedor",
+					on-update='etapaEmpreendedor.pessoaBuscada',
+					on-before-update="etapaEmpreendedor.onBeforeUpdateCpfCnpj",
+					buscar-service="etapaEmpreendedor.buscarPessoaPorCpfCnpj")
+
+
+	form(name="formDadosEmpreendedor", ng-show="etapaEmpreendedor.mostrarDados()", novalidate)
+
+
+		+panel('Dados do empreendedor')
+
+			div(ng-if="etapaEmpreendedor.isPessoaFisica()")
+				
+				+pessoa-fisica('formDadosEmpreendedor', 'cadastro.empreendimento.empreendedor.pessoa',
+							'!cadastro.empreendimento.empreendedor.pessoa.nova',
+							'cadastro.dataAtual')
+
+			div(ng-if="etapaEmpreendedor.isPessoaJuridica()")
+
+				+pessoa-juridica('formDadosEmpreendedor',
+					'cadastro.empreendimento.empreendedor.pessoa',
+					'!cadastro.empreendimento.empreendedor.pessoa.nova',
+					'etapaEmpreendedor.bloqueaCNPJ()',
+					'cadastro.dataAtual')(
+					modelEsfera="cadastro.empreendimento.empreendedor.esfera",
+					esferaBloqueada="!!cadastro.empreendimento.empreendedor.id")
+
+		+panel('Contato')
+			
+			+contato('formDadosEmpreendedor', 'cadastro.contatoPrincipalEmpreendedor',
+					"false",
+					"false",
+					"false",
+					"false")
+
+		+panel('Endereço do empreendedor')
+
+			div.form-group
+				label.radio-inline
+					input(type="radio", ng-value="0",
+							ng-model="cadastro.empreendimento.empreendedor.pessoa.enderecos[0].zonaLocalizacao.codigo",
+							ng-checked="cadastro.empreendimento.empreendedor.pessoa.enderecos[0].zonaLocalizacao.codigo === etapaEmpreendedor.zonaLocalizacao.URBANA || cadastro.empreendimento.empreendedor.pessoa.nova",
+							name="radioTipoEnderecoEmpreendedor",
+							ng-disabled="cadastro.empreendimentoJaCadastrado || etapaEmpreendedor.bloqueaCNPJ() || !cadastro.empreendimento.empreendedor.pessoa.nova")
+					| Zona urbana
+
+				label.radio-inline
+					input(type="radio", ng-value="1",
+							ng-model="cadastro.empreendimento.empreendedor.pessoa.enderecos[0].zonaLocalizacao.codigo",
+							ng-checked="cadastro.empreendimento.empreendedor.pessoa.enderecos[0].zonaLocalizacao.codigo === etapaEmpreendedor.zonaLocalizacao.RURAL",
+							name="radioTipoEnderecoEmpreendedor",
+							ng-disabled="cadastro.empreendimentoJaCadastrado || etapaEmpreendedor.bloqueaCNPJ() || !cadastro.empreendimento.empreendedor.pessoa.nova")
+					| Zona rural
+
+			div(ng-disabled="!cadastro.empreendedorCnpjJaCadastrado")
+				endereco(endereco='cadastro.enderecoEmpreendedor.principal',
+					zona-rural="(etapaEmpreendedor.enderecoEmpreendedor.principal.zonaLocalizacao.codigo === etapaEmpreendedor.zonaLocalizacao.RURAL)", correspondencia="false",
+					required="true", form=`formDadosEmpreendedor`, disabled="false",
+					disabled-cep="etapaEmpreendedor.controleCampos.disabledCep",
+					disabled-logradouro="etapaEmpreendedor.controleCampos.disabledLogradouro",
+					disabled-numero="etapaEmpreendedor.controleCampos.disabledNumero",
+					disabled-caixa-postal="etapaEmpreendedor.controleCampos.disabledCaixaPostal",
+					disabled-complemento="etapaEmpreendedor.controleCampos.disabledComplemento",
+					disabled-bairro="etapaEmpreendedor.controleCampos.disabledBairro",
+					disabled-uf="etapaEmpreendedor.controleCampos.disabledUf ",
+					disabled-municipio="etapaEmpreendedor.controleCampos.disabledMunicipio",
+					disabled-roteiro="etapaEmpreendedor.controleCampos.disabledRoteiro")
+
+		+panel('Endereço de correspondência')
+			div.checkbox
+
+				label
+					input(type='checkbox',
+						ng-checked='etapaEmpreendimento.enderecoCorrespondenciaCopiado',
+						ng-model='etapaEmpreendedor.enderecoCorrespondenciaCopiado',
+						ng-click='etapaEmpreendedor.copiarEnderecoEmpreendedor()',
+						ng-disabled="etapaEmpreendedor.bloqueaCNPJ() || cadastro.edicao == null || etapaEmpreendedor.enderecoEmpreendedor.principal.zonaLocalizacao.codigo === etapaEmpreendedor.zonaLocalizacao.RURAL ")
+					| Utilizar o endereço do Empreendedor para correspondência? {{cadastro.edicao}}
+
+			endereco(endereco='cadastro.enderecoEmpreendedor.correspondencia',
+					zona-rural="false",
+					correspondencia="true",
+					disabled=`false`,
+					required="true",
+					form=`formDadosEmpreendedor`,
+					cep-input-name=`"cepCorrespondecia"`,
+					logradouro-input-name=`"logradouroCorrespondecia"`,
+					numero-input-name=`"numeroCorrespondecia"`,
+					uf-input-name=`"ufCorrespondecia"`,
+					municipio-input-name=`"municipioCorrespondecia"`,
+					roteiro-input-name=`"roteiroCorrespondecia"`,
+					disabled-cep="etapaEmpreendedor.controleCampos.disabledCepCorresp",
+					disabled-logradouro="etapaEmpreendedor.controleCampos.disabledLogradouroCorresp",
+					disabled-numero="etapaEmpreendedor.controleCampos.disabledNumeroCorresp",
+					disabled-caixa-postal="etapaEmpreendedor.controleCampos.disabledCaixaPostalCorresp",
+					disabled-complemento="etapaEmpreendedor.controleCampos.disabledComplementoCorresp",
+					disabled-bairro="etapaEmpreendedor.controleCampos.disabledBairroCorresp",
+					disabled-uf="etapaEmpreendedor.controleCampos.disabledUfCorresp",
+					disabled-municipio="etapaEmpreendedor.controleCampos.disabledMunicipioCorresp",
+					disabled-roteiro="etapaEmpreendedor.controleCampos.disabledRoteiroCorresp")
+
+		+rodapeCadastro('etapaEmpreendedor')
+
+	div(ng-if="etapaEmpreendedor.mostrarMensagemRedeSim()")
+			p.empty-result CNPJ não encontrado, favor cadastrar ou atualizar o cadastro em:
+				//a(ng-click="etapaEmpreendedor.redirecionar()") portalservicos.jucap.ap.gov.br
+				a(href="http://portalservicos.jucap.ap.gov.br") portalservicos.jucap.ap.gov.br

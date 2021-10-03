@@ -1,0 +1,177 @@
+include ../../../layout/components/paginacao
+
+div#caracterizacao
+
+	h2 Solicitação
+		.pull-right
+			button.relative.btn.btn-success.btn(name="botaoCadastrarcaracterizacao", type='button', ng-click="listagemCaracterizacoes.cadastrarCaracterizacao()")
+				span.glyphicon.glyphicon-plus
+				|  Nova Solicitação
+
+	.panel.panel-default(name='empreendimento')
+		.panel-heading
+			h4.panel-title Empreendimento
+		.panel-body
+			.grid-container
+				.grid-item
+					b.texto-inline Empreendedor:&nbsp;
+					| {{listagemCaracterizacoes.empreendimento.empreendimentoEU.empreendedor.pessoa.cpf != null ? listagemCaracterizacoes.empreendimento.empreendimentoEU.empreendedor.pessoa.nome : listagemCaracterizacoes.empreendimento.empreendimentoEU.empreendedor.pessoa.razaoSocial}}
+				.grid-item(ng-if="listagemCaracterizacoes.empreendimento.empreendimentoEU.pessoa.razaoSocial")
+					b.texto-inline Razão Social do Empreendimento:&nbsp;
+					| {{listagemCaracterizacoes.empreendimento.empreendimentoEU.pessoa.razaoSocial}} ({{listagemCaracterizacoes.empreendimento.empreendimentoEU.pessoa.cnpj | brCnpj}})
+				.grid-item(ng-if="listagemCaracterizacoes.empreendimento.empreendimentoEU.pessoa.razaoSocial")
+					b.texto-inline Nome Fantasia:&nbsp;
+					| {{listagemCaracterizacoes.empreendimento.empreendimentoEU.pessoa.nomeFantasia ? listagemCaracterizacoes.empreendimento.empreendimentoEU.pessoa.nomeFantasia : '-'}}
+				.grid-item
+					b.texto-inline Nome do Empreendimento:&nbsp;
+					| {{listagemCaracterizacoes.empreendimento.empreendimentoEU.denominacao}}
+				.grid-item
+					b.texto-inline Município:&nbsp;
+					| {{listagemCaracterizacoes.empreendimento.municipio.nome}} / {{listagemCaracterizacoes.empreendimento.municipio.estado.codigo}}
+					
+	.panel.panel-default(name='empreendimento')
+		.panel-heading
+			h4.panel-title Solicitações do empreendimento
+		.panel-body
+
+			.row
+				.col-md-12
+					div(ng-if="listagemCaracterizacoes.caracterizacoes && listagemCaracterizacoes.caracterizacoes.length > 0")
+
+						table.table.table-striped
+							thead
+								tr
+									th
+									th.order-by
+										a(ng-click='listagemCaracterizacoes.getCaracterizacoes("Processo", listagemCaracterizacoes.ordenacaoReversa = !listagemCaracterizacoes.ordenacaoReversa)')
+											| Processo
+											span(ng-show='listagemCaracterizacoes.campo == "Processo"')
+												span.glyphicon.glyphicon-chevron-down(ng-if='!listagemCaracterizacoes.ordenacaoReversa')
+												span.glyphicon.glyphicon-chevron-up(ng-if='listagemCaracterizacoes.ordenacaoReversa')
+									th.order-by
+										a(ng-click='listagemCaracterizacoes.getCaracterizacoes("Protocolo", listagemCaracterizacoes.ordenacaoReversa = !listagemCaracterizacoes.ordenacaoReversa)')
+											| Protocolo
+											span(ng-show='listagemCaracterizacoes.campo == "Protocolo"')
+												span.glyphicon.glyphicon-chevron-down(ng-if='!listagemCaracterizacoes.ordenacaoReversa')
+												span.glyphicon.glyphicon-chevron-up(ng-if='listagemCaracterizacoes.ordenacaoReversa')
+									th.order-by
+										a( ng-click='listagemCaracterizacoes.getCaracterizacoes("NumeroDla", listagemCaracterizacoes.ordenacaoReversa = !listagemCaracterizacoes.ordenacaoReversa)')
+											| Número da licença
+											span(ng-show='listagemCaracterizacoes.campo == "NumeroDla"')
+												span.glyphicon.glyphicon-chevron-down(ng-if='!listagemCaracterizacoes.ordenacaoReversa')
+												span.glyphicon.glyphicon-chevron-up(ng-if='listagemCaracterizacoes.ordenacaoReversa')
+									th.order-by
+										a(ng-click='listagemCaracterizacoes.getCaracterizacoes("DataCadastro", listagemCaracterizacoes.ordenacaoReversa = !listagemCaracterizacoes.ordenacaoReversa)')
+											| Data da solicitação
+											span(ng-show='listagemCaracterizacoes.campo == "DataCadastro"')
+												span(ng-if='!listagemCaracterizacoes.ordenacaoReversa').glyphicon.glyphicon-chevron-down
+												span(ng-if='listagemCaracterizacoes.ordenacaoReversa').glyphicon.glyphicon-chevron-up
+									th Tipo de licença
+									th Potencial poluidor/Degradador
+									th.order-by
+										a(ng-click='listagemCaracterizacoes.getCaracterizacoes("Status", listagemCaracterizacoes.ordenacaoReversa = !listagemCaracterizacoes.ordenacaoReversa)')
+											| Status
+											span(ng-show='listagemCaracterizacoes.campo == "Status"')
+												span(ng-if='!listagemCaracterizacoes.ordenacaoReversa').glyphicon.glyphicon-chevron-down
+												span(ng-if='listagemCaracterizacoes.ordenacaoReversa').glyphicon.glyphicon-chevron-up
+									th
+							tbody
+								tr(ng-repeat="caracterizacao in listagemCaracterizacoes.caracterizacoes")
+
+									td
+										span.icone-revisao-solicitada(ng-if="mostrarIconeNotificacao(caracterizacao,statusCaracterizacao)")
+
+									td {{caracterizacao.processo.numero || ' - '}}
+
+									td {{caracterizacao.numero || ' - '}}
+
+									td {{caracterizacao.numeroLicenca || ' - '}}
+
+									td {{caracterizacao.dataCadastro}}
+
+									td(ng-show="caracterizacao.tipoLicenca") {{caracterizacao.tipoLicenca.nome}}
+
+									td(ng-hide="caracterizacao.tipoLicenca")
+										div(ng-repeat="tipoLicenca in caracterizacao.tiposLicencaEmAndamento") {{tipoLicenca.nome}}
+
+									td {{caracterizacao.atividadeCaracterizacaoMaiorPotencialPoluidorEPorte.atividade.potencialPoluidor.nome || ' - '}}
+
+									td {{caracterizacao.status.nome}}
+									td
+
+										span.pull-right
+
+											.dropdown.action-table
+												button#dropdownMenu1.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown',
+																									aria-haspopup='true', aria-expanded='true')
+													| Ações &nbsp;
+													span.caret
+												ul.dropdown-menu(aria-labelledby='dropdownMenu1')
+													li
+														a(ng-click="visualizarCaracterizacao(caracterizacao.id)")
+															i.fa.fa-search
+															span Visualizar Solicitação
+													li(ng-if="caracterizacao.status.id === statusCaracterizacao.EM_ANDAMENTO.id && !caracterizacao.bloqueada")
+														a(ng-click="continuarCaracterizacao(caracterizacao.id)")
+															i.fa.fa-list-alt
+															span Continuar
+													li(ng-if="caracterizacao.status.id === statusCaracterizacao.EM_ANDAMENTO.id && !caracterizacao.bloqueada")
+														a(ng-click="removerSolicitacao(caracterizacao)")
+															i.fa.fa-trash
+															span Remover
+													li(ng-if="caracterizacao.tipoLicenca && caracterizacao.tipoLicenca.id === tipoLicencaDDLA.id && caracterizacao.status.id === statusCaracterizacao.FINALIZADO.id && !caracterizacao.bloqueada")
+														a(ng-click="baixarDla(caracterizacao.id)")
+															i.fa.fa-file-o
+															span Baixar Dispensa de Licenciamento
+													li(ng-if="caracterizacao.tipoLicenca && caracterizacao.tipoLicenca.id === tipoLicencaDDLA.id && caracterizacao.status.id === statusCaracterizacao.FINALIZADO.id && !caracterizacao.bloqueada")
+														a(ng-click="abrirModalCancelarDla(caracterizacao)")
+															i.fa.fa-times
+															span Cancelar Dispensa de Licenciamento
+													li(ng-if="caracterizacao.tipoLicenca && caracterizacao.tipoLicenca.id !== tipoLicencaDDLA.id && (caracterizacao.status.id === statusCaracterizacao.FINALIZADO.id || caracterizacao.status.id === statusCaracterizacao.EM_ANALISE_RENOVACAO_SEM_ALTERACOES.id || caracterizacao.status.id === statusCaracterizacao.EM_ANALISE_RENOVACAO_COM_ALTERACOES.id)",
+														ng-class="{'disabled': !caracterizacao.numero}"
+														ng-attr-title="{{!caracterizacao.numero ? 'Aguardando deferimento das outras licenças pertencentes ao mesmo processo.' : ''}}")
+														a(ng-click="baixarLicenca(caracterizacao)")
+															i.fa.fa-file-o
+															span Baixar Licença
+													li(ng-if="caracterizacao.tipoLicenca && !caracterizacao.bloqueada && (caracterizacao.status.id === statusCaracterizacao.AGUARDANDO_EMISSAO_TAXA_EXPEDIENTE.id || caracterizacao.status.id === statusCaracterizacao.VENCIDO_AGUARDANDO_EMISSAO_TAXA_EXPEDIENTE.id || caracterizacao.status.id === statusCaracterizacao.VENCIDO_AGUARDANDO_PAGAMENTO_TAXA_EXPEDIENTE.id)")
+														a(ng-click="emitirDae(caracterizacao)")
+															i.fa.fa-money
+															span Emitir Taxa de Expediente
+													li(ng-if="caracterizacao.tipoLicenca && !caracterizacao.bloqueada && (caracterizacao.status.id === statusCaracterizacao.AGUARDANDO_QUITACAO_TAXA_EXPEDIENTE.id)")
+														a(ng-click="baixarDae(caracterizacao)")
+															i.fa.fa-money
+															span Baixar Taxa de Expediente
+													li(ng-if="caracterizacao.tipoLicenca && !caracterizacao.bloqueada && (caracterizacao.status.id === statusCaracterizacao.AGUARDANDO_EMISSAO_TAXA_LICENCIAMENTO.id || caracterizacao.status.id === statusCaracterizacao.VENCIDO_AGUARDANDO_EMISSAO_TAXA_LICENCIAMENTO.id || caracterizacao.status.id === statusCaracterizacao.VENCIDO_AGUARDANDO_PAGAMENTO_TAXA_LICENCIAMENTO.id)")
+														a(ng-click="emitirDaeLicenciamento(caracterizacao)")
+															i.fa.fa-money
+															span Emitir Taxa de Licenciamento
+													li(ng-if="caracterizacao.tipoLicenca && !caracterizacao.bloqueada && (caracterizacao.status.id === statusCaracterizacao.AGUARDANDO_QUITACAO_TAXA_LICENCIAMENTO.id)")
+														a(ng-click="baixarDaeLicenciamento(caracterizacao)")
+															i.fa.fa-money
+															span Baixar Taxa de Licenciamento
+													li(ng-if="mostrarIconeNotificacao(caracterizacao,statusCaracterizacao)")
+														a(ng-click="irParaNotificacao(caracterizacao.idcaracterizacaoOrigem || caracterizacao.id)")
+															i.fa.fa-bell-o
+															span Notificação
+													li(ng-if="mostrarBotaoAtualizacao(caracterizacao, statusCaracterizacao, tiposLicencaSimplificado)")
+														a(ng-click="atualizarCaracterizacao(caracterizacao.id, acoesFluxoLicenca.atualizacao.const)")
+															i.fa.fa-list-alt
+															span Atualizar Licença Prévia
+													li(ng-if="mostrarBotaoRenovacao(caracterizacao, statusCaracterizacao, tiposLicencaSimplificado, tiposLicencaAtualizacao)")
+														a(ng-click="atualizarCaracterizacao(caracterizacao.id, acoesFluxoLicenca.renovacao.const)")
+															i.fa.fa-list-alt
+															span Renovar Licença
+													li(ng-if="mostrarBotaoNovaFase(caracterizacao, statusCaracterizacao, tiposLicencaSimplificado, tipoLicencaRenovacao)")
+														a(ng-click="atualizarCaracterizacao(caracterizacao.id, acoesFluxoLicenca.solicitacao.const)")
+															i.fa.fa-list-alt
+															span Solicitar Nova Fase
+						div
+							span.icone-revisao-solicitada.legenda(style="margin-lef") Notificado
+
+
+
+			.row(ng-show="!listagemCaracterizacoes.caracterizacoes || listagemCaracterizacoes.caracterizacoes.length == 0")
+				.col-md-12
+					p.empty-result Não existem dados a serem exibidos.
+
+	+paginacao('listagemCaracterizacoes.paginacao', 'listagemCaracterizacoes.onPaginaAlterada')

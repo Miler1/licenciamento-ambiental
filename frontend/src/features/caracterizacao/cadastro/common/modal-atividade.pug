@@ -1,0 +1,46 @@
+div.modal-header
+
+	button.close(type='button', ng-click="modalCtrl.cancelar()")
+		span(aria-hidden='true') ×
+		span.sr-only Fechar
+
+	h4.modal-title Seleção de atividades equivalentes
+
+div.modal-body
+
+	p Você selecionou a seguinte atividade:
+	p
+		strong {{modalCtrl.atividade.nome}}
+
+	p 
+		span Esta atividade está relacionada na Lei Estadual Nº 3.785, de 24 de Julho de 2012. Selecione na lista abaixo a(s) descrição(ões) que se refere(m) à sua atividade.
+
+	label.pull-right {{modalCtrl.qtdAtividade}} descrições encontradas
+
+	br
+	br
+	form.selecionar-atividade-radio-list
+		div(ng-if="modalCtrl.empreendimento.empreendimentoEU.pessoa.tipo.codigo === app.TIPO_PESSOA.PESSOA_FISICA", ng-repeat="atividade in modalCtrl.atividadesCnae")
+
+			.checkbox
+				label
+					input(type='checkbox', name='{{atividade.codigo}}', id='{{atividade.nome}}', ng-model="atividade.checked", ng-change='modalCtrl.selectedAtividades()')
+					| CNAE: {{atividade.codigo}} - {{atividade.nome}}
+
+		div(ng-if="modalCtrl.empreendimento.empreendimentoEU.pessoa.tipo.codigo !== app.TIPO_PESSOA.PESSOA_FISICA", ng-repeat="atividade in modalCtrl.atividadesCnae")
+
+			.checkbox
+				label
+					input(type='checkbox', name='{{atividade.codigo}}', id='{{atividade.nome}}', ng-model="atividade.checked", ng-change='modalCtrl.selectedAtividades()')
+					| CNAE: {{atividade.nome}}
+
+
+
+div.modal-footer#footer-modal
+
+	button.btn.btn-default.pull-left(ng-click="modalCtrl.cancelar()")
+		i.glyphicon.glyphicon-arrow-left
+		| &nbsp;Fechar
+	button.btn.btn-success.pull-right(ng-click="modalCtrl.ok()", ng-disabled="modalCtrl.canSelectAtividade()")
+		i.glyphicon.glyphicon-ok
+		| &nbsp;Selecionar Atividade

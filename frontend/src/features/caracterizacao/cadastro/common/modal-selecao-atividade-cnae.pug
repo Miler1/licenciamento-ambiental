@@ -1,0 +1,34 @@
+div.modal-header
+
+	button.close(type='button', ng-click="modalCtrl.cancelar()")
+		span(aria-hidden='true') ×
+		span.sr-only Fechar
+
+	h4.modal-title Seleção de atividades equivalentes
+
+div.modal-body
+
+	p Você selecionou a seguinte CNAE: 
+	p
+		strong {{modalCtrl.atividadeCnae.codigo}} - {{modalCtrl.atividadeCnae.nome}}
+
+	br
+	br
+	form.selecionar-atividade-radio-list
+		div(ng-repeat="atividade in modalCtrl.atividadeCnae.atividades")
+
+			.checkbox
+				label
+					input(type='checkbox', name='{{atividade.codigo}}', id='{{atividade.nome}}', ng-model="atividade.checked", ng-change='modalCtrl.selectedAtividades()')
+					| CNAE {{atividade.codigo}} - {{atividade.nome}}
+
+
+
+div.modal-footer#footer-modal
+
+	button.btn.btn-default.pull-left(ng-click="modalCtrl.cancelar()")
+		i.glyphicon.glyphicon-arrow-left
+		| &nbsp;Fechar
+	button.btn.btn-success.pull-right(ng-click="modalCtrl.ok()", ng-disabled="modalCtrl.canSelectAtividade()")
+		i.glyphicon.glyphicon-ok
+		| &nbsp;Selecionar Atividade

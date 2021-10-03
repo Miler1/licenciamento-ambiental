@@ -1,0 +1,155 @@
+include ../../../../layout/components/panel
+include ../../../../layout/components/inputErrors
+
+include ../../../../layout/components/rodapeCadastro
+
+include ../../../../components/pessoa/pessoa-fisica
+include ../../../../components/pessoa/pessoa-juridica
+include ../../../../components/pessoa/contato
+
+section
+
+	div(ng-if="!etapaProprietarios.atualizandoProprietario")
+		.panel.panel-default
+			.panel-heading
+				h3.panel-title Vincular proprietário
+			.panel-body 
+				div
+					buscar-pessoa(exibir-cnpj="true",
+						pessoa="etapaProprietarios.proprietarioAtual.pessoa",
+						placeholder-text="Informe o CPF/CNPJ do proprietário",
+						on-update='etapaProprietarios.pessoaBuscada')
+
+	form(name="formProprietarios", ng-show="etapaProprietarios.proprietarioAtual.pessoa", novalidate)
+
+		+panel('Dados do proprietário')
+
+			div(ng-if="etapaProprietarios.isPessoaFisica()")
+				+pessoa-fisica('formProprietarios',
+						'etapaProprietarios.proprietarioAtual.pessoa',
+						'!etapaProprietarios.proprietarioAtual.pessoa.editavel',
+						'cadastro.dataAtual')
+
+			div(ng-if="etapaProprietarios.isPessoaJuridica()")
+
+				+pessoa-juridica('formProprietarios',
+						'etapaProprietarios.proprietarioAtual.pessoa',
+						'!etapaProprietarios.proprietarioAtual.pessoa.editavel',
+						'etapaProprietarios.bloqueaCNPJ()',
+						'cadastro.dataAtual')(
+						modelEsfera="cadastro.empreendimento.empreendedor.esfera",
+						esferaBloqueada="!!cadastro.empreendimento.empreendedor.id")
+
+		+panel('Contato')
+
+			+contato('formProprietarios', 'etapaProprietarios.contatoPrincipalProprietario', '!etapaProprietarios.proprietarioAtual.pessoa.editavel')
+
+		+panel('Endereço do proprietário')
+
+			div.form-group
+				label.radio-inline
+					input(type="radio", ng-value="'ZONA_URBANA'",
+							ng-model="etapaProprietarios.enderecoProprietario.principal.zonaLocalizacao.codigo",
+							ng-checked="etapaProprietarios.enderecoProprietario.principal.zonaLocalizacao.codigo === etapaProprietarios.localizacoesEmpreendimento.URBANA",
+							name="radioTipoEnderecoProprietario",
+							ng-disabled="!etapaProprietarios.proprietarioAtual.pessoa.editavel")
+					| Zona urbana
+
+				label.radio-inline
+					input(type="radio", ng-value="'ZONA_RURAL'",
+							ng-model="etapaProprietarios.enderecoProprietario.principal.zonaLocalizacao.codigo",
+							ng-checked="etapaProprietarios.enderecoProprietario.principal.zonaLocalizacao.codigo === etapaProprietarios.localizacoesEmpreendimento.RURAL",
+							name="radioTipoEnderecoProprietario",
+							ng-disabled="!etapaProprietarios.proprietarioAtual.pessoa.editavel")
+					| Zona rural
+
+			div(ng-if="etapaProprietarios.enderecoProprietario.principal.zonaLocalizacao.codigo === etapaProprietarios.localizacoesEmpreendimento.URBANA || etapaProprietarios.enderecoProprietario.principal.zonaLocalizacao.codigo === 'ZONA_URBANA'" , disabled="!etapaProprietarios.proprietarioAtual.pessoa.editavel")
+				endereco(endereco='etapaProprietarios.enderecoProprietario.principal', zona-rural="false", correspondencia="false",
+					required="true", form=`formProprietarios`, disabled="!etapaProprietarios.proprietarioAtual.pessoa.editavel")
+
+			div(ng-if="etapaProprietarios.enderecoProprietario.principal.zonaLocalizacao.codigo === etapaProprietarios.localizacoesEmpreendimento.RURAL || etapaProprietarios.enderecoProprietario.principal.zonaLocalizacao.codigo === 'ZONA_RURAL'", disabled="!etapaProprietarios.proprietarioAtual.pessoa.editavel")
+				endereco(endereco='etapaProprietarios.enderecoProprietario.principal',
+						zona-rural="true", 
+						correspondencia="false",
+						required="true", 
+						form=`formProprietarios`, 
+						disabled="!etapaProprietarios.proprietarioAtual.pessoa.editavel")
+
+		+panel('Endereço de correspondência')
+			div.checkbox
+
+				label
+					input(type='checkbox',
+						ng-checked='etapaProprietarios.proprietarioAtual.enderecoCorrespondenciaCopiado',
+						ng-click='etapaProprietarios.copiarEnderecoProprietario()',
+						ng-disabled="etapaProprietarios.enderecoProprietario.principal.zonaLocalizacao.codigo === etapaProprietarios.localizacoesEmpreendimento.RURAL || !etapaProprietarios.proprietarioAtual.pessoa.editavel")
+					| Utilizar o endereço do Empreendedor para correspondência?
+
+
+			endereco(endereco='etapaProprietarios.enderecoProprietario.correspondencia',
+					zona-rural="false",
+					correspondencia="true",
+					required="true",
+					form=`formProprietarios`,
+					cep-input-name=`"cepCorrespondecia"`,
+					logradouro-input-name=`"logradouroCorrespondecia"`,
+					numero-input-name=`"numeroCorrespondecia"`,
+					uf-input-name=`"ufCorrespondecia"`,
+					municipio-input-name=`"municipioCorrespondecia"`,
+					roteiro-input-name=`"roteiroCorrespondecia"`,
+					disabled=`!etapaProprietarios.proprietarioAtual.pessoa.editavel`)
+
+		//- +panel('Endereço de correspondência')
+
+		//- 	endereco(endereco='etapaProprietarios.proprietarioAtual.enderecoCorrespondencia', zona-rural="false",
+		//- 			correspondencia="true", disabled="!etapaProprietarios.proprietarioAtual.pessoa.editavel", required="true", form=`formProprietarios`)
+
+	div(ng-if="etapaProprietarios.proprietarioAtual.pessoa && !etapaProprietarios.atualizandoProprietario")
+		button.btn.btn-success.pull-right.col-sm-2(ng-click="etapaProprietarios.vincularProprietario()",
+		ng-show="!etapaProprietarios.atualizandoProprietario")
+			span Vincular proprietário
+
+	button.btn.btn-success.pull-right.col-sm-2(ng-click="etapaProprietarios.atualizarProprietario()",
+		ng-show="etapaProprietarios.atualizandoProprietario && etapaProprietarios.proprietarioAtual.pessoa.nome")
+		span Atualizar proprietário
+
+	button.btn.btn-default.pull-right.col-sm-2(ng-click="etapaProprietarios.cancelarAlteracao()",
+		ng-show="etapaProprietarios.atualizandoProprietario && etapaProprietarios.proprietarioAtual.pessoa.nome", style="margin-right: 10px")
+		span Cancelar alteração
+
+	div.form-group.row
+
+		.col-sm-12
+
+			h4 Proprietários vinculados ao empreendimento.
+
+			div(ng-if="cadastro.empreendimento.proprietarios && cadastro.empreendimento.proprietarios.length > 0")
+			
+				table.table.table-striped
+					thead
+						tr
+							th CPF/CNPJ
+							th Nome/Razão Social
+							th Data de Nascimento/Constituição
+							th 
+					tbody
+						tr(ng-repeat="proprietario in cadastro.empreendimento.proprietarios")
+							td {{proprietario.pessoa.cpf || proprietario.pessoa.cnpj | brCpfCnpj}}
+							td {{proprietario.pessoa.nome || proprietario.pessoa.razaoSocial }}
+							td {{proprietario.pessoa.dataNascimento || proprietario.pessoa.dataConstituicao | date :  'dd/MM/yyyy'}}
+							td.icones
+								span
+									button.btn.btn-default.btn-xs.no-margin(ng-if="proprietario.pessoa.excluivel",
+											title="Clique para desvincular o proprietário selecionado",
+											ng-click="etapaProprietarios.desvincularProprietario($index)")
+										i.fa.fa-trash
+									button.btn.btn-default.btn-xs.no-margin(ng-if="proprietario.pessoa.editavel",
+											title="Clique para alterar o proprietário selecionado",
+											ng-click="etapaProprietarios.iniciarAtualizacaoProprietario($index)")
+										i.fa.fa-pencil
+
+			div(ng-if="!cadastro.empreendimento.proprietarios || cadastro.empreendimento.proprietarios.length === 0")
+				.col-sm-12.form-group
+					p.empty-result Nenhum proprietário vinculado.
+
+	+rodapeCadastro('etapaProprietarios')
