@@ -1,0 +1,183 @@
+#!/bin/bash
+
+color_default="\e[m"
+color_red="\e[1;31m"
+color_green="\e[1;32m"
+color_yellow="\e[1;33m"
+config_msg_prefix=" >> "
+config_msg_prefix_color=$color_green
+
+
+error() {
+
+	ui_show_error "$1"
+	echo ""
+
+	if [ ! -z "$LOG_FILE" ] && [ -f "$LOG_FILE" ]; then
+		echo "------ LOG:"
+		tail -n 20 $LOG_FILE
+	fi
+
+	exit 1
+}
+
+
+ui_show_error() {
+
+	echo ""
+	ui_print_line $color_red
+	echo ""
+	ui_print "    ERRO: $1" $color_red
+	echo ""
+}
+
+
+ui_show_msg() {
+
+	local msg_color="$2"
+
+	if [ -z "$msg_color" ]; then
+		msg_color="$color_default"
+	fi
+
+	echo ""
+	printf "${config_msg_prefix_color}$config_msg_prefix${msg_color} $1 ${color_default}\n"
+}
+
+
+ui_print() {
+
+	local title="$1" 
+	local color=${2:-$color_default}
+	printf "$color%*s\n$color_default" 1 "$title"
+}
+
+
+ui_print_line () {
+
+	local color=${1:-$color_default}
+	local c=${2:-'-'}
+
+	printf "$color%*s\n$color_default" "${COLUMNS:-$(tput cols)}" '' | tr ' ' "$c"
+}
+
+
+verify_cmd_result () {
+	
+	local result=$1
+	local msg=$2
+
+	if [ $result -ne 0 ]; then
+
+		error "$msg"
+	fi
+}
+
+
+download_release() {
+
+	ui_show_msg "Efetuando o download da release.
+     URL: $url_release_download
+"
+
+	wget "$url_release_download"
+
+	verify_cmd_result $? "Não foi possível efetuar o download da release.
+     URL: $url_release_download"
+}
+
+
+validate_files_exist () {
+
+	for dir in "$@"
+	do
+		if [ ! -d "$dir" ] && [ ! -f "$dir" ]; then
+
+			error "O dirétorio/arquivo não existe: $dir"
+		fi
+	done
+}
+
+
+clean_tmp_folders () {
+
+	if [ -d "$temp_deploy_folder" ]; then
+
+		rm -Rf $temp_deploy_folder
+		verify_cmd_result $? "Não foi possível remover o diretório $temp_deploy_folder"
+	fi
+}
+
+
+show_usage() {
+
+	ui_show_msg "USAGE: deploy-play-app <url_download_release> <temp_deploy_folder>" $color_yellow
+}
+
+
+validate_required_param () {
+
+	local param_value="$1"
+	local msg="$2"
+
+	if [ -z "$param_value" ]; then
+
+		show_usage
+		error "$msg"
+	fi
+}
+
+
+### Execução
+
+
+url_release_download="$1"
+release_tmp_folder="$2"
+release_file_name="${url_release_download##*/}"
+temp_deploy_folder="$2/tmp_deploy_files"
+
+# Validações
+
+validate_required_param "$url_release_download" "A URL de download da release não foi informada."
+validate_required_param "$release_tmp_folder" "O caminho para a pasta temporária de deploy não foi informado."
+
+if [ ! -d $release_tmp_folder ]; then
+	error "A pasta temporária de deploy informada ($release_tmp_folder) não foi encontrada."
+fi
+
+# Removendo arquivos e pastas de deploys anteriores
+
+clean_tmp_folders
+
+if [ -f "$release_tmp_folder/$release_file_name" ]; then
+
+	rm $release_tmp_folder/$release_file_name
+	verify_cmd_result $? "Não foi possível remover o arquivo $release_tmp_folder/$release_file_name"
+fi
+
+# Acessando a pasta de arquivos de deploy
+
+ui_show_msg "Acessando o diretório: $release_tmp_folder"
+cd "$release_tmp_folder"
+verify_cmd_result $? "Não foi possível acessar o diretório: $release_tmp_folder"
+
+# Efetuando download e verificando arquivos da release
+
+download_release
+
+unzip -q $release_file_name -d $temp_deploy_folder
+verify_cmd_result $? "Não foi possível extrair o arquivo $release_tmp_folder/$release_file_name"
+
+dist_folder="$(ls $temp_deploy_folder)"
+
+validate_files_exist \
+	"$temp_deploy_folder/$dist_folder/.deploy" \
+	"$temp_deploy_folder/$dist_folder/.deploy/configs.sh" \
+	"$temp_deploy_folder/$dist_folder/.deploy/deploy.sh"
+
+/bin/bash $temp_deploy_folder/$dist_folder/.deploy/deploy.sh
+result=$?
+
+clean_tmp_folders
+
+verify_cmd_result $result "Não foi possível efetuar o deploy da aplicação."
